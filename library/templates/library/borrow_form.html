@@ -1,0 +1,29 @@
+{% extends 'library/base.html' %}
+{% block title %}Borrow Book{% endblock %}
+
+{% block content %}
+<div class="form-box">
+    <h2>🔄 Borrow a Book</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Book</label>
+            <select name="book" required>
+                {% for book in books %}
+                <option value="{{ book.pk }}">{{ book.title }} ({{ book.available_copies }} available)</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Member</label>
+            <select name="member" required>
+                {% for member in members %}
+                <option value="{{ member.pk }}">{{ member.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Borrow</button>
+        <a href="{% url 'borrow_list' %}" class="btn" style="background:#aaa; color:white; margin-left:10px;">Cancel</a>
+    </form>
+</div>
+{% endblock %}

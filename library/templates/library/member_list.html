@@ -1,0 +1,41 @@
+{% extends 'library/base.html' %}
+{% block title %}Members{% endblock %}
+
+{% block content %}
+<div class="top-bar">
+    <h2>👥 Members</h2>
+    <a href="{% url 'member_add' %}" class="btn btn-primary">+ Add Member</a>
+</div>
+
+<div class="table-box">
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Joined</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member in members %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ member.name }}</td>
+                <td>{{ member.email }}</td>
+                <td>{{ member.phone }}</td>
+                <td>{{ member.joined_date }}</td>
+                <td>
+                    <a href="{% url 'member_edit' member.pk %}" class="btn btn-edit">Edit</a>
+                    <a href="{% url 'member_delete' member.pk %}" class="btn btn-delete">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" style="text-align:center;">কোনো member নেই</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

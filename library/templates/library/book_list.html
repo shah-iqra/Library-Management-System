@@ -1,0 +1,49 @@
+{% extends 'library/base.html' %}
+{% block title %}Books{% endblock %}
+
+{% block content %}
+<div class="top-bar">
+    <h2>📖 Books</h2>
+    <a href="{% url 'book_add' %}" class="btn btn-primary">+ Add Book</a>
+</div>
+
+<div class="table-box">
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>ISBN</th>
+                <th>Total</th>
+                <th>Available</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ book.title }}</td>
+                <td>{{ book.author }}</td>
+                <td>{{ book.isbn }}</td>
+                <td>{{ book.total_copies }}</td>
+                <td>
+                    {% if book.available_copies > 0 %}
+                    <span class="badge-available">{{ book.available_copies }}</span>
+                    {% else %}
+                    <span class="badge-unavailable">0</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'book_edit' book.pk %}" class="btn btn-edit">Edit</a>
+                    <a href="{% url 'book_delete' book.pk %}" class="btn btn-delete">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7" style="text-align:center;">কোনো বই নেই</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

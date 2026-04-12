@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Nest - {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'library/css/style.css' %}">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <a href="{% url 'home' %}" class="logo">📚 Book Nest</a>
+    <div>
+        <span style="color:white; margin-right:10px;">👤 {{ user.username }}</span>
+        <a href="{% url 'logout' %}">Logout</a>
+    </div>
+</nav>
+
+<!-- Layout -->
+<div class="layout">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="menu-title">Menu</div>
+        <a href="{% url 'home' %}">🏠 Dashboard</a>
+        <div class="menu-title">Library</div>
+        <a href="{% url 'book_list' %}">📖 Books</a>
+        <a href="{% url 'member_list' %}">👥 Members</a>
+        <a href="{% url 'borrow_list' %}">🔄 Borrowings</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</div>
+
+<script src="{% static 'library/js/main.js' %}"></script>
+</body>
+</html>

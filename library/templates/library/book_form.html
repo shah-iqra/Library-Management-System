@@ -1,0 +1,29 @@
+{% extends 'library/base.html' %}
+{% block title %}{{ action }} Book{% endblock %}
+
+{% block content %}
+<div class="form-box">
+    <h2>📖 {{ action }} Book</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Title</label>
+            <input type="text" name="title" value="{{ book.title }}" required>
+        </div>
+        <div class="form-group">
+            <label>Author</label>
+            <input type="text" name="author" value="{{ book.author }}" required>
+        </div>
+        <div class="form-group">
+            <label>ISBN</label>
+            <input type="text" name="isbn" value="{{ book.isbn }}" required>
+        </div>
+        <div class="form-group">
+            <label>Total Copies</label>
+            <input type="number" name="total_copies" value="{{ book.total_copies|default:1 }}" min="1" required>
+        </div>
+        <button type="submit" class="btn btn-primary">{{ action }} Book</button>
+        <a href="{% url 'book_list' %}" class="btn" style="background:#aaa; color:white; margin-left:10px;">Cancel</a>
+    </form>
+</div>
+{% endblock %}

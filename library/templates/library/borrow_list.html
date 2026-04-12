@@ -1,0 +1,38 @@
+{% extends 'library/base.html' %}
+{% block title %}Borrowings{% endblock %}
+
+{% block content %}
+<div class="top-bar">
+    <h2>🔄 Active Borrowings</h2>
+    <a href="{% url 'borrow_book' %}" class="btn btn-primary">+ Borrow Book</a>
+</div>
+
+<div class="table-box">
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Book</th>
+                <th>Member</th>
+                <th>Borrow Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for borrow in borrows %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ borrow.book.title }}</td>
+                <td>{{ borrow.member.name }}</td>
+                <td>{{ borrow.borrow_date }}</td>
+                <td>
+                    <a href="{% url 'return_book' borrow.pk %}" class="btn btn-return">Return</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" style="text-align:center;">কোনো active borrowing নেই</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
