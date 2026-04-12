@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Book, Member, Borrow
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 # ── Auth Views ──
 @login_required
@@ -32,6 +33,33 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+
+
+def register_view(request):
+    error = ''
+    if request.method == 'POST':
+        username = request.POST['username']
+        email = request.POST['email']
+        password1 = request.POST['password1']
+        password2 = request.POST['password2']
+
+        if password1 != password2:
+            error = 'Password দুটো মিলছে না!'
+        elif User.objects.filter(username=username).exists():
+            error = 'এই Username টি আগে থেকেই আছে!'
+        elif User.objects.filter(email=email).exists():
+            error = 'এই Email টি আগে থেকেই আছে!'
+        else:
+            user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=password1
+            )
+            login(request, user)
+            return redirect('home')
+
+    return render(request, 'library/register.html', {'error': error})
 
 # ── Book Views ──
 @login_required
