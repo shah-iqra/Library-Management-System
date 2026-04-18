@@ -7,7 +7,6 @@
     <title>Book Nest - Login</title>
 
     <link rel="stylesheet" href="{% static 'library/css/style.css' %}">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
@@ -48,8 +47,15 @@
 
                 <div class="modern-form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password"
-                           placeholder="Enter your password" required>
+                    <div style="position: relative;">
+                        <input type="password" id="password" name="password"
+                               placeholder="Enter your password" required
+                               style="padding-right: 45px; width: 100%; box-sizing: border-box;">
+                        <span onclick="togglePassword()"
+                              style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px; user-select: none;">
+                            👁️
+                        </span>
+                    </div>
                 </div>
 
                 <div class="forgot-pass">
@@ -71,13 +77,27 @@
         </div>
 
         <div class="login-image-side">
-            <img src="{% static 'library/images/stack_of_books.png' %}" 
+            <img src="{% static 'library/images/stack_of_books.png' %}"
                  alt="Stack of Books Illustration"
                  class="login-img">
         </div>
 
     </div>
 </div>
+
+<script>
+function togglePassword() {
+    const input = document.getElementById('password');
+    const icon = document.querySelector('.toggle-icon');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+    }
+}
+</script>
 
 </body>
 </html>
