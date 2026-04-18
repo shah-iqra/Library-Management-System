@@ -3,47 +3,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Book Nest - Register</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Nest - Sign Up</title>
     <link rel="stylesheet" href="{% static 'library/css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
-<div class="login-container">
-    <div class="login-box">
-        <h2><span class="logo-text">📚 Book</span> Nest</h2>
-        <p style="text-align:center; color:#777; margin-bottom:20px;">Create a new account</p>
+<body class="modern-login-body">
+<div class="modern-login-wrapper" style="height: auto; padding-bottom: 40px;">
+    <div class="card-header">
+        <div class="logo">
+            📚 <span class="brand-first" style="color: #b58055;">Book</span> Nest
+        </div>
+        <div class="header-right">
+            Already have an account? <a href="{% url 'login' %}" class="dark-pill-btn">Log In</a>
+        </div>
+    </div>
+    <div class="login-content-box">
+        <div class="login-form-side">
+            <h1>Create Account</h1>
 
-        {% if error %}
-        <div class="error-msg">{{ error }}</div>
-        {% endif %}
-
-        <form method="POST">
-            {% csrf_token %}
-            <div class="form-group">
-                <label>Username</label>
-                <input type="text" name="username" placeholder="Give username" required>
-            </div>
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" name="email" placeholder="abc@gmail.com" required>
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" name="password1" id="password" placeholder="Enter the password" required>
-                <span id="togglePassword" style="cursor:pointer; font-size:20px;">👁️</span>
-            </div>
-            <div class="form-group">
-                <label>Confirm Password</label>
-                <input type="password" name="password2" placeholder="Enter password again" required>
-            </div>
-            <button type="submit" class="login-btn">Register</button>
-        </form>
-
-        <p style="text-align:center; margin-top:15px; color:#777;">
-            Already have an account?
-            <a href="{% url 'login' %}" style="color:#e94560;">Log in</a>
-        </p>
+            <form method="POST">
+                {% csrf_token %}
+                <div style="display: flex; gap: 15px;">
+                    <div class="modern-form-group" style="flex: 1;">
+                        <label>First Name</label>
+                        <input type="text" name="first_name" placeholder="John" required>
+                    </div>
+                    <div class="modern-form-group" style="flex: 1;">
+                        <label>Last Name</label>
+                        <input type="text" name="last_name" placeholder="Doe" required>
+                    </div>
+                </div>
+                <div class="modern-form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" placeholder="Choose a unique username" required>
+                </div>
+                <div class="modern-form-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" placeholder="email@example.com" required>
+                </div>
+                <div class="modern-form-group">
+                    <label>Password</label>
+                    <div style="position: relative;">
+                        <input type="password" id="password" name="password"
+                               placeholder="Create a strong password" required
+                               style="padding-right: 45px; width: 100%; box-sizing: border-box;">
+                        <span onclick="togglePassword()"
+                              style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px; user-select: none;">
+                            👁️
+                        </span>
+                    </div>
+                </div>
+                <button type="submit" class="dark-full-btn">Create Account</button>
+            </form>
+        </div>
+        <div class="login-image-side">
+            <img src="{% static 'library/images/stack_of_books.png' %}" alt="Books Illustration" class="login-img">
+        </div>
     </div>
 </div>
-<script src="{% static 'library/js/main.js' %}"></script>
+
+<script>
+function togglePassword() {
+    const input = document.getElementById('password');
+    input.type = input.type === 'password' ? 'text' : 'password';
+}
+</script>
+
 </body>
 </html>
