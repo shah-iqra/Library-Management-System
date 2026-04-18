@@ -27,7 +27,7 @@ def login_view(request):
             login(request, user)
             return redirect('home')
         else:
-            error = 'Username অথবা Password ভুল!'
+            error = 'Invalid username or password!'
     return render(request, 'library/login.html', {'error': error})
 
 def logout_view(request):
@@ -45,11 +45,11 @@ def register_view(request):
         password2 = request.POST['password2']
 
         if password1 != password2:
-            error = 'Password দুটো মিলছে না!'
+            error = 'Passwords do not match!'
         elif User.objects.filter(username=username).exists():
-            error = 'এই Username টি আগে থেকেই আছে!'
+            error = 'This username already exists!'
         elif User.objects.filter(email=email).exists():
-            error = 'এই Email টি আগে থেকেই আছে!'
+            error = 'This email already exists!'
         else:
             user = User.objects.create_user(
                 username=username,
