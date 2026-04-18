@@ -209,68 +209,180 @@ tr:hover td { background: #f9f9f9; }
     border-color: #e94560;
 }
 
-/* ── Login ── */
-.login-container {
+/* ── login ── */
+.modern-login-body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: #e5ebf1; /* Cool, very light blue-gray background from dribbble */
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: #f0f4f8;
 }
 
-.login-box {
-    background: white;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    width: 380px;
+/* ── The main rounded cream card ── */
+.modern-login-wrapper {
+    background-color: #f7f3e8; /* Soft cream/beige card color */
+    width: 1050px;
+    height: 700px; /* Specific height to match dribbble look */
+    border-radius: 40px; /* Very rounded corners */
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.1); /* Deep soft shadow */
+    display: flex;
+    flex-direction: column;
 }
 
-.login-box h2 {
-    text-align: center;
-    color: #1a1a2e;
-    margin-bottom: 25px;
+/* ── Card Top Header ── */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 50px;
+    background: white; /* Header bar is white */
+}
+
+.card-header .logo {
     font-size: 26px;
+    font-weight: bold;
+    color: #333;
 }
 
-.logo-text { color: #e94560; }
+.card-header .logo span.brand-first {
+    color: #b58055; /* Book logo's first color */
+}
 
-.login-btn {
-    width: 100%;
-    padding: 12px;
-    background: #e94560;
+.header-right {
+    font-size: 15px;
+    color: #777;
+    display: flex;
+    align-items: center;
+}
+
+.dark-pill-btn {
+    background: #2e3b33; /* Dark forest green button from dribbble */
     color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 5px;
-}
-
-.login-btn:hover { background: #c73652; }
-
-.error-msg {
-    background: #ffe0e0;
-    color: #c0392b;
-    padding: 10px;
-    border-radius: 6px;
-    margin-bottom: 15px;
-    text-align: center;
+    padding: 10px 25px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 15px;
     font-size: 14px;
 }
 
-.badge-available {
-    background: #d4edda;
-    color: #155724;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 12px;
+/* ── Main content area with columns ── */
+.login-content-box {
+    display: flex;
+    padding: 60px 50px;
+    align-items: flex-start; /* Form stays at top, image centers vertically locally */
 }
 
-.badge-unavailable {
-    background: #f8d7da;
-    color: #721c24;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 12px;
+/* ── Left Form Side ── */
+.login-form-side {
+    flex: 1.2; /* Form is slightly wider */
+    padding-right: 70px;
+}
+
+.login-form-side h1 {
+    font-size: 44px;
+    color: #333;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 40px;
+}
+
+.modern-form-group {
+    margin-bottom: 25px;
+}
+
+.modern-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    color: #555;
+}
+
+.modern-form-group input {
+    width: 100%;
+    padding: 16px 18px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    background: white;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.modern-form-group input:focus {
+    border-color: #2e3b33;
+    outline: none;
+}
+
+.forgot-pass {
+    text-align: right;
+    margin-top: -10px;
+    margin-bottom: 25px;
+}
+
+.forgot-pass a {
+    font-size: 14px;
+    color: #888;
+    text-decoration: none;
+}
+
+.dark-full-btn {
+    width: 100%;
+    padding: 16px;
+    background: #2e3b33;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+/* ── Right Image Side (Using your actual saved image) ── */
+.login-image-side {
+    flex: 1; /* Image column is slightly narrower */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 50px;
+}
+
+.login-image-side img {
+    max-width: 100%; /* Resize but keep proportions */
+    height: auto;
+    object-fit: contain;
+}
+
+/* ── Social Login Section ── */
+.social-login-section {
+    margin-top: 40px;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 25px;
+}
+
+.social-login-section p {
+    font-size: 15px;
+    color: #777;
+    margin-bottom: 15px;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icons i {
+    font-size: 20px;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.social-icons i:hover {
+    color: #333;
 }
