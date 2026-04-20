@@ -4,35 +4,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Nest - {% block title %}{% endblock %}</title>
+    <title>Book Nest - {% block title %}LMS{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'library/css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
-<!-- Navbar -->
-<nav class="navbar">
-    <a href="{% url 'home' %}" class="logo">📚 Book Nest</a>
-    <div>
-        <span style="color:white; margin-right:10px;">👤 {{ user.username }}</span>
-        <a href="{% url 'logout' %}">Logout</a>
+<nav class="navbar" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: #2c3e50; color: white;">
+    <a href="{% url 'home' %}" class="logo" style="text-decoration: none; color: white; font-size: 20px; font-weight: bold;">
+        📚 <span style="color: #b58055;">Book</span> Nest
+    </a>
+    <div class="nav-user-info">
+        <span style="margin-right: 15px;">
+            <i class="fas fa-user-circle"></i> {{ user.username }} 
+            <small style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px; font-size: 10px; text-transform: uppercase;">
+                {{ user.role }}
+            </small>
+        </span>
+        <a href="{% url 'logout' %}" style="color: #ff7675; text-decoration: none; font-weight: 600;">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
     </div>
 </nav>
 
-<!-- Layout -->
-<div class="layout">
+<div class="layout" style="display: flex; min-height: calc(100vh - 50px);">
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="menu-title">Menu</div>
-        <a href="{% url 'home' %}">🏠 Dashboard</a>
-        <div class="menu-title">Library</div>
-        <a href="{% url 'book_list' %}">📖 Books</a>
-        <a href="{% url 'member_list' %}">👥 Members</a>
-        <a href="{% url 'borrow_list' %}">🔄 Borrowings</a>
+    <div class="sidebar" style="width: 250px; background: #f8f9fa; border-right: 1px solid #ddd; padding: 20px 0;">
+        <div class="menu-title" style="padding: 10px 20px; font-size: 12px; color: #888; text-transform: uppercase; font-weight: bold;">General</div>
+        <a href="{% url 'home' %}" style="display: block; padding: 12px 20px; color: #333; text-decoration: none;">
+            <i class="fas fa-th-large"></i> Dashboard
+        </a>
+        <a href="{% url 'book_list' %}" style="display: block; padding: 12px 20px; color: #333; text-decoration: none;">
+            <i class="fas fa-book"></i> Browse Books
+        </a>
+
+        {% if user.role == 'librarian' or user.role == 'admin' %}
+            <div class="menu-title" style="padding: 20px 20px 10px; font-size: 12px; color: #888; text-transform: uppercase; font-weight: bold;">Management</div>
+            
+            <a href="{% url 'member_list' %}" style="display: block; padding: 12px 20px; color: #333; text-decoration: none;">
+                <i class="fas fa-users"></i> Manage Members
+            </a>
+            
+            <a href="{% url 'borrow_list' %}" style="display: block; padding: 12px 20px; color: #333; text-decoration: none;">
+                <i class="fas fa-exchange-alt"></i> Active Borrowings
+            </a>
+            
+            <a href="{% url 'borrow_book' %}" style="display: block; padding: 12px 20px; color: #333; text-decoration: none;">
+                <i class="fas fa-plus-circle"></i> Issue New Book
+            </a>
+        {% endif %}
+
+        {% if user.role == 'admin' %}
+            <div class="menu-title" style="padding: 20px 20px 10px; font-size: 12px; color: #888; text-transform: uppercase; font-weight: bold;">System</div>
+            <a href="/admin/" target="_blank" style="display: block; padding: 12px 20px; color: #c0392b; text-decoration: none; font-weight: bold;">
+                <i class="fas fa-user-shield"></i> Django Admin
+            </a>
+        {% endif %}
     </div>
 
-    <!-- Main Content -->
-    <div class="main">
+    <div class="main" style="flex: 1; padding: 30px; background: #fff;">
         {% block content %}
         {% endblock %}
     </div>

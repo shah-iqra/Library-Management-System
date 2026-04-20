@@ -1,27 +1,29 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Book, Borrow
 from django.utils import timezone
+from .models import Book, Borrow
 
+# কাস্টম ইউজার মডেল পাওয়ার জন্য
 User = get_user_model()
 
 # --- Role Check Helper Functions ---
 def is_admin(user):
-    return user.is_authenticated and user.role == 'admin'
+    return user.is_authenticated and user.role == User.ADMIN
 
 def is_librarian(user):
-    return user.is_authenticated and user.role == 'librarian'
+    return user.is_authenticated and user.role == User.LIBRARIAN
 
 def is_librarian_or_admin(user):
-    return user.is_authenticated and (user.role == 'librarian' or user.role == 'admin')
+    return user.is_authenticated and (user.role == User.LIBRARIAN or user.role == User.ADMIN)
 
 # ── Auth Views ──
 
 @login_required
 def home(request):
     total_books = Book.objects.count()
-    total_members = User.objects.filter(role='user').count()
+    # শুধুমাত্র 'user' রোলের মেম্বারদের গণনা করবে
+    total_members = User.objects.filter(role=User.REGULAR_USER).count()
     total_borrows = Borrow.objects.filter(is_returned=False).count()
     return render(request, 'library/home.html', {
         'total_books': total_books,
@@ -49,29 +51,29 @@ def logout_view(request):
 def register_view(request):
     error = ''
     if request.method == 'POST':
-        username = request.POST['username']
-        email = request.POST['email']
-        password1 = request.POST['password1']
-        password2 = request.POST['password2']
-        role = request.POST.get('role', 'user')
-        first_name = request.POST.get('first_name', '')  # ✅
-        last_name = request.POST.get('last_name', '')    # ✅
-
-        if password1 != password2:
-            error = 'Passwords do not match!'
-        elif User.objects.filter(username=username).exists():
-            error = 'This username already exists!'
+        fname = request.POST.get('first_name')
+        lname = request.POST.get('last_name')
+        uname = request.POST.get('username')
+        uemail = request.POST.get('email')
+        pass1 = request.POST.get('password1')
+        pass2 = request.POST.get('password2')
+        
+        if pass1 != pass2:
+            error = "Passwords do not match!"
+        elif User.objects.filter(username=uname).exists():
+            error = "Username already taken!"
         else:
+            # create_user ব্যবহার করলে পাসওয়ার্ড অটোমেটিক হ্যাশ হয়
             user = User.objects.create_user(
-                username=username,
-                email=email,
-                password=password1,
-                role=role,
-                first_name=first_name,  # ✅
-                last_name=last_name,    # ✅
+                username=uname,
+                email=uemail,
+                password=pass1,
+                first_name=fname,
+                last_name=lname,
+                role=User.REGULAR_USER  # ডিফল্টভাবে সবাই Regular User হবে
             )
-            login(request, user)
-            return redirect('home')
+            return redirect('login')
+    
     return render(request, 'library/register.html', {'error': error})
 
 # ── Book Views ──
@@ -103,7 +105,12 @@ def book_edit(request, pk):
         book.title = request.POST['title']
         book.author = request.POST['author']
         book.isbn = request.POST['isbn']
-        book.total_copies = int(request.POST['total_copies'])
+        old_total = book.total_copies
+        new_total = int(request.POST['total_copies'])
+        
+        diff = new_total - old_total
+        book.total_copies = new_total
+        book.available_copies += diff
         book.save()
         return redirect('book_list')
     return render(request, 'library/book_form.html', {'action': 'Edit', 'book': book})
@@ -115,12 +122,13 @@ def book_delete(request, pk):
     book.delete()
     return redirect('book_list')
 
-# ── Member Views ──
+# ── Member Views (Frontend Admin) ──
 
 @login_required
 @user_passes_test(is_librarian_or_admin)
 def member_list(request):
-    members = User.objects.filter(role='user')
+    # সব ইউজারদের লিস্ট দেখাবে যাতে লাইব্রেরিয়ান ম্যানেজ করতে পারে
+    members = User.objects.all().order_by('-date_joined')
     return render(request, 'library/member_list.html', {'members': members})
 
 @login_required
@@ -131,6 +139,7 @@ def member_add(request):
         username = request.POST['username']
         email = request.POST['email']
         password = request.POST['password']
+        role = request.POST.get('role', User.REGULAR_USER)
 
         if User.objects.filter(username=username).exists():
             error = 'This username already exists!'
@@ -139,28 +148,35 @@ def member_add(request):
                 username=username,
                 email=email,
                 password=password,
-                role='user'
+                role=role
             )
             return redirect('member_list')
-    return render(request, 'library/member_form.html', {'action': 'Add', 'error': error})
+    return render(request, 'library/member_form.html', {'action': 'Add', 'error': error, 'roles': User.ROLE_CHOICES})
 
 @login_required
 @user_passes_test(is_librarian_or_admin)
 def member_edit(request, pk):
     member = get_object_or_404(User, pk=pk)
-    error = ''
     if request.method == 'POST':
         member.username = request.POST['username']
         member.email = request.POST['email']
+        # শুধুমাত্র অ্যাডমিন অন্য কারো রোল পরিবর্তন করতে পারবে
+        if request.user.role == User.ADMIN:
+            member.role = request.POST.get('role', member.role)
         member.save()
         return redirect('member_list')
-    return render(request, 'library/member_form.html', {'action': 'Edit', 'member': member, 'error': error})
+    return render(request, 'library/member_form.html', {
+        'action': 'Edit', 
+        'member': member, 
+        'roles': User.ROLE_CHOICES
+    })
 
 @login_required
 @user_passes_test(is_admin)
 def member_delete(request, pk):
     member = get_object_or_404(User, pk=pk)
-    member.delete()
+    if member != request.user: # নিজেকে নিজে ডিলিট করা রোধ করতে
+        member.delete()
     return redirect('member_list')
 
 # ── Borrow Views ──
@@ -182,8 +198,9 @@ def borrow_book(request):
             book.available_copies -= 1
             book.save()
             return redirect('borrow_list')
+            
     books = Book.objects.filter(available_copies__gt=0)
-    members = User.objects.filter(role='user')
+    members = User.objects.filter(role=User.REGULAR_USER)
     return render(request, 'library/borrow_form.html', {'books': books, 'members': members})
 
 @login_required
@@ -194,6 +211,7 @@ def return_book(request, pk):
         borrow.is_returned = True
         borrow.return_date = timezone.now().date()
         borrow.save()
+        
         borrow.book.available_copies += 1
         borrow.book.save()
     return redirect('borrow_list')
