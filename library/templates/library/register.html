@@ -92,10 +92,12 @@ function togglePassword(fieldId, el) {
     const input = document.getElementById(fieldId);
     if (input.type === 'password') {
         input.type = 'text';
-        el.innerHTML = '🙈';
+        // আপনি যে ইমোজি দিয়েছেন সেটাই রাখা হয়েছে (পাসওয়ার্ড দেখালে যা হবে)
+        el.innerHTML = '👁️'; 
     } else {
         input.type = 'password';
-        el.innerHTML = '👁️';
+        // ডিফল্ট ইমোজি (পাসওয়ার্ড লুকানো থাকলে)
+        el.innerHTML = '🙈';
     }
 }
 </script>
