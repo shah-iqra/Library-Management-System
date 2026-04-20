@@ -31,7 +31,6 @@
             <form method="POST">
                 {% csrf_token %}
 
-                <!-- First & Last Name -->
                 <div style="display: flex; gap: 12px;">
                     <div style="flex: 1;">
                         <label style="font-size:13px; font-weight:600; display:block; margin-bottom:4px;">First Name</label>
@@ -45,54 +44,41 @@
                     </div>
                 </div>
 
-                <!-- Username -->
                 <div style="margin-top:10px;">
                     <label style="font-size:13px; font-weight:600; display:block; margin-bottom:4px;">Username</label>
                     <input type="text" name="username" placeholder="Choose a unique username" required
                            style="width:100%; padding:9px 12px; border:1.5px solid #ddd; border-radius:8px; font-size:14px; box-sizing:border-box; background:#f8f9ff;">
                 </div>
 
-                <!-- Email -->
                 <div style="margin-top:10px;">
                     <label style="font-size:13px; font-weight:600; display:block; margin-bottom:4px;">Email Address</label>
                     <input type="email" name="email" placeholder="email@example.com" required
                            style="width:100%; padding:9px 12px; border:1.5px solid #ddd; border-radius:8px; font-size:14px; box-sizing:border-box; background:#f8f9ff;">
                 </div>
 
-                <!-- Role -->
-                <div style="margin-top:10px;">
-                    <label style="font-size:13px; font-weight:600; display:block; margin-bottom:4px;">Account Type</label>
-                    <select name="role" required
-                            style="width:100%; padding:9px 12px; border:1.5px solid #ddd; border-radius:8px; font-size:14px; background:#f8f9ff; color:#333; box-sizing:border-box;">
-                        <option value="user">👤 Regular User</option>
-                        <option value="librarian">📖 Librarian</option>
-                        <option value="admin">🛡️ Administrator</option>
-                    </select>
-                </div>
+                <input type="hidden" name="role" value="user">
 
-                <!-- Password -->
                 <div style="margin-top:10px;">
                     <label style="font-size:13px; font-weight:600; display:block; margin-bottom:4px;">Password</label>
                     <div style="position:relative;">
                         <input type="password" id="password1" name="password1" placeholder="Create a strong password" required
                                style="width:100%; padding:9px 45px 9px 12px; border:1.5px solid #ddd; border-radius:8px; font-size:14px; box-sizing:border-box; background:#f8f9ff;">
-                        <span onclick="togglePassword('password1')"
-                              style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:16px;">👁️</span>
+                        <span onclick="togglePassword('password1', this)"
+                              style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:16px; user-select: none;">🙈</span>
                     </div>
                 </div>
 
-                <!-- Confirm Password -->
                 <div style="margin-top:10px;">
                     <label style="font-size:13px; font-weight:600; display:block; margin-bottom:4px;">Confirm Password</label>
                     <div style="position:relative;">
                         <input type="password" id="password2" name="password2" placeholder="Re-enter your password" required
                                style="width:100%; padding:9px 45px 9px 12px; border:1.5px solid #ddd; border-radius:8px; font-size:14px; box-sizing:border-box; background:#f8f9ff;">
-                        <span onclick="togglePassword('password2')"
-                              style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:16px;">👁️</span>
+                        <span onclick="togglePassword('password2', this)"
+                              style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:16px; user-select: none;">🙈</span>
                     </div>
                 </div>
 
-                <button type="submit" class="dark-full-btn" style="margin-top:15px;">Create Account</button>
+                <button type="submit" class="dark-full-btn" style="margin-top:20px;">Create Account</button>
             </form>
         </div>
         <div class="login-image-side">
@@ -102,9 +88,15 @@
 </div>
 
 <script>
-function togglePassword(fieldId) {
+function togglePassword(fieldId, el) {
     const input = document.getElementById(fieldId);
-    input.type = input.type === 'password' ? 'text' : 'password';
+    if (input.type === 'password') {
+        input.type = 'text';
+        el.innerHTML = '🙈';
+    } else {
+        input.type = 'password';
+        el.innerHTML = '👁️';
+    }
 }
 </script>
 </body>
