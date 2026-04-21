@@ -16,26 +16,26 @@
         
         <div class="menu-section">
             <div class="menu-title">Main</div>
-            <a href="{% url 'home' %}" class="menu-item active"><i class="fas fa-th-large"></i> Dashboard</a>
+            <a href="{% url 'home' %}" class="menu-item"><i class="fas fa-th-large"></i> Dashboard</a>
             <a href="{% url 'book_list' %}" class="menu-item"><i class="fas fa-search"></i> Book Search</a>
-            <a href="#" class="menu-item"><i class="fas fa-file-pdf"></i> Digital Resources</a>
-            <a href="#" class="menu-item"><i class="fas fa-microscope"></i> Research Papers</a>
-            <a href="#" class="menu-item premium"><i class="fas fa-crown"></i> Premium Content</a>
+            <a href="{% url 'digital_resources' %}" class="menu-item"><i class="fas fa-file-pdf"></i> Digital Resources</a>
+            <a href="{% url 'research_papers' %}" class="menu-item"><i class="fas fa-microscope"></i> Research Papers</a>
+            <a href="{% url 'premium_content' %}" class="menu-item premium"><i class="fas fa-crown"></i> Premium Content</a>
         </div>
 
         <div class="menu-section">
             <div class="menu-title">Services</div>
             <a href="{% url 'borrow_list' %}" class="menu-item"><i class="fas fa-exchange-alt"></i> Borrow & Return</a>
-            <a href="#" class="menu-item"><i class="fas fa-credit-card"></i> Online Payment</a>
-            <a href="#" class="menu-item"><i class="fas fa-clock"></i> Fines & Dues</a>
+            <a href="{% url 'online_payment' %}" class="menu-item"><i class="fas fa-credit-card"></i> Online Payment</a>
+            <a href="{% url 'fines_dues' %}" class="menu-item"><i class="fas fa-clock"></i> Fines & Dues</a>
         </div>
 
         {% if user.role == 'admin' or user.role == 'librarian' %}
         <div class="menu-section">
             <div class="menu-title">Administrative</div>
             <a href="{% url 'member_list' %}" class="menu-item"><i class="fas fa-users-cog"></i> Manage Users</a>
-            <a href="#" class="menu-item"><i class="fas fa-chart-line"></i> System Monitoring</a>
-            <a href="#" class="menu-item"><i class="fas fa-file-invoice"></i> Reports & Analytics</a>
+            <a href="{% url 'system_monitoring' %}" class="menu-item"><i class="fas fa-chart-line"></i> System Monitoring</a>
+            <a href="{% url 'reports_analytics' %}" class="menu-item"><i class="fas fa-file-invoice"></i> Reports & Analytics</a>
         </div>
         {% endif %}
         
@@ -56,17 +56,18 @@
 
         {% block content %}
         <div class="dashboard-grid">
-            <div class="card-stat">
+            <!-- ✅ class এখন সব জায়গায় "stat-card" -->
+            <div class="stat-card">
                 <h4>{{ total_books|default:"0" }}</h4>
-                <p>Total Books</p>
+                <p><i class="fas fa-book"></i> Total Books</p>
             </div>
             <div class="stat-card">
                 <h4>{{ total_members|default:"0" }}</h4>
-                <p>Total Members</p>
+                <p><i class="fas fa-users"></i> Total Members</p>
             </div>
             <div class="stat-card">
-                <h4>{{ active_borrows|default:"0" }}</h4>
-                <p>Active Borrowings</p>
+                <h4>{{ total_borrows|default:"0" }}</h4>
+                <p><i class="fas fa-exchange-alt"></i> Active Borrowings</p>
             </div>
         </div>
         {% endblock %}
