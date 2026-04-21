@@ -4,25 +4,27 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils import timezone
 from .models import Book, Borrow
 
-# কাস্টম ইউজার মডেল পাওয়ার জন্য
 User = get_user_model()
 
 # --- Role Check Helper Functions ---
 def is_admin(user):
-    return user.is_authenticated and user.role == User.ADMIN
+    return user.is_authenticated and (user.role == User.ADMIN or user.is_superuser)
 
 def is_librarian(user):
     return user.is_authenticated and user.role == User.LIBRARIAN
 
 def is_librarian_or_admin(user):
-    return user.is_authenticated and (user.role == User.LIBRARIAN or user.role == User.ADMIN)
+    return user.is_authenticated and (
+        user.role == User.LIBRARIAN or 
+        user.role == User.ADMIN or 
+        user.is_superuser  # ✅ superuser ও access পাবে
+    )
 
 # ── Auth Views ──
 
 @login_required
 def home(request):
     total_books = Book.objects.count()
-    # শুধুমাত্র 'user' রোলের মেম্বারদের গণনা করবে
     total_members = User.objects.filter(role=User.REGULAR_USER).count()
     total_borrows = Borrow.objects.filter(is_returned=False).count()
     return render(request, 'library/home.html', {
@@ -63,17 +65,15 @@ def register_view(request):
         elif User.objects.filter(username=uname).exists():
             error = "Username already taken!"
         else:
-            # create_user ব্যবহার করলে পাসওয়ার্ড অটোমেটিক হ্যাশ হয়
             user = User.objects.create_user(
                 username=uname,
                 email=uemail,
                 password=pass1,
                 first_name=fname,
                 last_name=lname,
-                role=User.REGULAR_USER  # ডিফল্টভাবে সবাই Regular User হবে
+                role=User.REGULAR_USER
             )
             return redirect('login')
-    
     return render(request, 'library/register.html', {'error': error})
 
 # ── Book Views ──
@@ -84,7 +84,7 @@ def book_list(request):
     return render(request, 'library/book_list.html', {'books': books})
 
 @login_required
-@user_passes_test(is_librarian_or_admin)
+@user_passes_test(is_librarian_or_admin, login_url='/')
 def book_add(request):
     if request.method == 'POST':
         Book.objects.create(
@@ -98,7 +98,7 @@ def book_add(request):
     return render(request, 'library/book_form.html', {'action': 'Add'})
 
 @login_required
-@user_passes_test(is_librarian_or_admin)
+@user_passes_test(is_librarian_or_admin, login_url='/')
 def book_edit(request, pk):
     book = get_object_or_404(Book, pk=pk)
     if request.method == 'POST':
@@ -107,7 +107,6 @@ def book_edit(request, pk):
         book.isbn = request.POST['isbn']
         old_total = book.total_copies
         new_total = int(request.POST['total_copies'])
-        
         diff = new_total - old_total
         book.total_copies = new_total
         book.available_copies += diff
@@ -116,23 +115,22 @@ def book_edit(request, pk):
     return render(request, 'library/book_form.html', {'action': 'Edit', 'book': book})
 
 @login_required
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='/')
 def book_delete(request, pk):
     book = get_object_or_404(Book, pk=pk)
     book.delete()
     return redirect('book_list')
 
-# ── Member Views (Frontend Admin) ──
+# ── Member Views ──
 
 @login_required
-@user_passes_test(is_librarian_or_admin)
+@user_passes_test(is_librarian_or_admin, login_url='/')
 def member_list(request):
-    # সব ইউজারদের লিস্ট দেখাবে যাতে লাইব্রেরিয়ান ম্যানেজ করতে পারে
     members = User.objects.all().order_by('-date_joined')
     return render(request, 'library/member_list.html', {'members': members})
 
 @login_required
-@user_passes_test(is_librarian_or_admin)
+@user_passes_test(is_librarian_or_admin, login_url='/')
 def member_add(request):
     error = ''
     if request.method == 'POST':
@@ -140,7 +138,6 @@ def member_add(request):
         email = request.POST['email']
         password = request.POST['password']
         role = request.POST.get('role', User.REGULAR_USER)
-
         if User.objects.filter(username=username).exists():
             error = 'This username already exists!'
         else:
@@ -154,41 +151,44 @@ def member_add(request):
     return render(request, 'library/member_form.html', {'action': 'Add', 'error': error, 'roles': User.ROLE_CHOICES})
 
 @login_required
-@user_passes_test(is_librarian_or_admin)
+@user_passes_test(is_librarian_or_admin, login_url='/')
 def member_edit(request, pk):
     member = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
         member.username = request.POST['username']
         member.email = request.POST['email']
-        # শুধুমাত্র অ্যাডমিন অন্য কারো রোল পরিবর্তন করতে পারবে
-        if request.user.role == User.ADMIN:
+        if request.user.role == User.ADMIN or request.user.is_superuser:
             member.role = request.POST.get('role', member.role)
         member.save()
         return redirect('member_list')
     return render(request, 'library/member_form.html', {
-        'action': 'Edit', 
-        'member': member, 
+        'action': 'Edit',
+        'member': member,
         'roles': User.ROLE_CHOICES
     })
 
 @login_required
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='/')
 def member_delete(request, pk):
     member = get_object_or_404(User, pk=pk)
-    if member != request.user: # নিজেকে নিজে ডিলিট করা রোধ করতে
+    if member != request.user:
         member.delete()
     return redirect('member_list')
 
 # ── Borrow Views ──
 
 @login_required
-@user_passes_test(is_librarian_or_admin)
 def borrow_list(request):
-    borrows = Borrow.objects.filter(is_returned=False)
+    if is_librarian_or_admin(request.user):
+        # admin/librarian সব borrow দেখবে
+        borrows = Borrow.objects.filter(is_returned=False)
+    else:
+        # regular user শুধু নিজের borrow দেখবে
+        borrows = Borrow.objects.filter(member=request.user, is_returned=False)
     return render(request, 'library/borrow_list.html', {'borrows': borrows})
 
 @login_required
-@user_passes_test(is_librarian_or_admin)
+@user_passes_test(is_librarian_or_admin, login_url='/')
 def borrow_book(request):
     if request.method == 'POST':
         book = get_object_or_404(Book, pk=request.POST['book'])
@@ -198,20 +198,74 @@ def borrow_book(request):
             book.available_copies -= 1
             book.save()
             return redirect('borrow_list')
-            
     books = Book.objects.filter(available_copies__gt=0)
     members = User.objects.filter(role=User.REGULAR_USER)
     return render(request, 'library/borrow_form.html', {'books': books, 'members': members})
 
 @login_required
-@user_passes_test(is_librarian_or_admin)
+@user_passes_test(is_librarian_or_admin, login_url='/')
 def return_book(request, pk):
     borrow = get_object_or_404(Borrow, pk=pk)
     if not borrow.is_returned:
         borrow.is_returned = True
         borrow.return_date = timezone.now().date()
         borrow.save()
-        
         borrow.book.available_copies += 1
         borrow.book.save()
     return redirect('borrow_list')
+
+# ── Extra Pages ──
+
+@login_required
+def digital_resources(request):
+    return render(request, 'library/digital_resources.html')
+
+@login_required
+def research_papers(request):
+    return render(request, 'library/research_papers.html')
+
+@login_required
+def premium_content(request):
+    return render(request, 'library/premium_content.html')
+
+@login_required
+def online_payment(request):
+    borrows = Borrow.objects.filter(member=request.user, is_returned=False)
+    return render(request, 'library/online_payment.html', {'borrows': borrows})
+
+@login_required
+def fines_dues(request):
+    borrows = Borrow.objects.filter(member=request.user)
+    fines = []
+    for b in borrows:
+        if not b.is_returned:
+            days = (timezone.now().date() - b.borrow_date).days
+            overdue = max(0, days - 14)  # 14 দিন free
+            fine = overdue * 5           # প্রতিদিন ৫ টাকা
+            if fine > 0:
+                fines.append({'borrow': b, 'days_overdue': overdue, 'fine': fine})
+    return render(request, 'library/fines_dues.html', {'fines': fines})
+
+@login_required
+@user_passes_test(is_librarian_or_admin, login_url='/')
+def system_monitoring(request):
+    total_books = Book.objects.count()
+    total_members = User.objects.filter(role=User.REGULAR_USER).count()
+    active_borrows = Borrow.objects.filter(is_returned=False).count()
+    returned_borrows = Borrow.objects.filter(is_returned=True).count()
+    return render(request, 'library/system_monitoring.html', {
+        'total_books': total_books,
+        'total_members': total_members,
+        'active_borrows': active_borrows,
+        'returned_borrows': returned_borrows,
+    })
+
+@login_required
+@user_passes_test(is_librarian_or_admin, login_url='/')
+def reports_analytics(request):
+    books = Book.objects.all()
+    recent_borrows = Borrow.objects.order_by('-borrow_date')[:10]
+    return render(request, 'library/reports_analytics.html', {
+        'books': books,
+        'recent_borrows': recent_borrows,
+    })
