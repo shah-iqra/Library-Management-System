@@ -1,17 +1,16 @@
-"""
-Django settings for booknest project.
-"""
-
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-588m1gm6+o-j(n9=7x%phtw=x_$_m^6oz58tag7_%2robde)ra'
+
+SECRET_KEY = 'django-insecure-588m1gm6+o-j(n9-7x%phtw=x_$_m^6oz58tag7_%2robde)ra'
 
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
+
+# ---------------- INSTALLED APPS ----------------
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -19,9 +18,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'library',
 ]
 
+
+# ---------------- MIDDLEWARE ----------------
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -32,8 +34,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 ROOT_URLCONF = 'booknest.urls'
 
+
+# ---------------- TEMPLATES ----------------
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -49,8 +54,11 @@ TEMPLATES = [
     },
 ]
 
+
 WSGI_APPLICATION = 'booknest.wsgi.application'
 
+
+# ---------------- DATABASE ----------------
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -58,36 +66,42 @@ DATABASES = {
     }
 }
 
+
+# ---------------- PASSWORD VALIDATION ----------------
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
+
+# ---------------- INTERNATIONALIZATION ----------------
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'Asia/Dhaka'   # ✅ Dhaka timezone সেট করা হয়েছে
+TIME_ZONE = 'Asia/Dhaka'
 USE_I18N = True
 USE_TZ = True
 
+
+# ---------------- STATIC FILES ----------------
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'library' / 'static']
 
+
+# ---------------- MEDIA FILES (IMPORTANT FOR BOOK IMAGE) ----------------
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+
+# ---------------- DEFAULT AUTO FIELD ----------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# --- Custom User Model ---
+
+# ---------------- CUSTOM USER MODEL ----------------
 AUTH_USER_MODEL = 'library.User'
 
-# --- Login / Logout URLs ---
+
+# ---------------- LOGIN SETTINGS ----------------
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
-AUTH_USER_MODEL = 'library.User'
