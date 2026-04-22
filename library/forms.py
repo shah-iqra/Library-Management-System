@@ -11,6 +11,5 @@ class BookForm(forms.ModelForm):
             'isbn',
             'description',
             'total_copies',
-            'available_copies',
-            'cover_image'   # 📸 added image field
+            'cover_image'
         ]
