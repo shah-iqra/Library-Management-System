@@ -79,8 +79,19 @@ def register_view(request):
 # ---------------- BOOKS ----------------
 @login_required
 def book_list(request):
+    books = Book.objects.all()
+    query = request.GET.get('q', '')
+    if query:
+        books = books.filter(
+            title__icontains=query
+        ) | books.filter(
+            author__icontains=query
+        ) | books.filter(
+            isbn__icontains=query
+        )
     return render(request, 'library/book_list.html', {
-        'books': Book.objects.all()
+        'books': books,
+        'query': query
     })
 
 
