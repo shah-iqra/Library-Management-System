@@ -6,11 +6,11 @@
 
 body {
     font-family: 'Segoe UI', sans-serif;
-    background: #e5ebf1; 
+    background: #e5ebf1;
     color: #333;
 }
 
-/* ── Navbar ── */
+/* Navbar */
 .navbar {
     background: #1a1a2e;
     padding: 15px 40px;
@@ -33,27 +33,32 @@ body {
     font-size: 15px;
 }
 
-.navbar a:hover { color: #e94560; }
+.navbar a:hover {
+    color: #e94560;
+}
 
-/* ── Sidebar ── */
+/* Layout */
 .layout {
     display: flex;
     min-height: calc(100vh - 60px);
 }
 
+/* Sidebar */
 .sidebar {
     width: 280px;
-    background: #2e3b33; /* লগইন বাটনের ডার্ক ফরেস্ট গ্রিন */
+    background: #2e3b33;
     padding: 40px 10px;
     margin: 20px;
     border-radius: 40px;
     color: white;
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebar a {
     display: flex;
     align-items: center;
-    color: rgba(255,255,255,0.7);
+    color: rgba(255, 255, 255, 0.7);
     text-decoration: none;
     padding: 15px 25px;
     font-size: 15px;
@@ -62,10 +67,10 @@ body {
     transition: 0.3s;
 }
 
-.sidebar a:hover, .sidebar a.active {
+.sidebar a:hover,
+.sidebar a.active {
     color: #fff;
-    background: rgba(255,255,255,0.1); /* হালকা হোভার ইফেক্ট */
-    border-left: none; /* আগের লাল বর্ডারটি সরিয়ে দিন */
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .sidebar .menu-title {
@@ -76,18 +81,109 @@ body {
     letter-spacing: 1px;
 }
 
-/* ── Main Content ── */
+/* Profile Section - সাইডবারে প্রোফাইল লিংক */
+.profile-sidebar-section {
+    margin-top: auto;
+    padding: 20px 15px 25px 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.profile-link-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 30px;
+    padding: 10px 16px 10px 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.profile-link-card:hover {
+    background: rgba(255, 255, 255, 0.18);
+    transform: translateX(3px);
+}
+
+.avatar-icon {
+    width: 42px;
+    height: 42px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e94560;
+    font-size: 1.3rem;
+}
+
+.profile-info-text {
+    flex: 1;
+}
+
+.profile-name {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #ffffff;
+    margin-bottom: 3px;
+}
+
+.profile-role {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.profile-chevron {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    transition: transform 0.2s;
+}
+
+.profile-link-card:hover .profile-chevron {
+    transform: translateX(3px);
+    color: #e94560;
+}
+
+.logout-link {
+    margin-top: 12px;
+    text-align: center;
+    padding: 8px 5px;
+}
+
+.logout-link a {
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    font-size: 0.7rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+}
+
+.logout-link a:hover {
+    color: #e94560;
+}
+
+/* Main Content */
 .main {
     flex: 1;
     padding: 40px;
-    background: #f7f3e8; /* লগইন কার্ডের ক্রিম কালার */
+    background: #f7f3e8;
     margin: 20px 20px 20px 0;
-    border-radius: 40px; /* প্রিমিয়াম রাউন্ডেড কর্নার */
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border-radius: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     overflow-y: auto;
 }
 
-/* ── Cards ── */
+.main-container {
+    flex: 1;
+    background: #f7f3e8;
+    margin: 15px 15px 15px 0;
+    border-radius: 35px;
+    padding: 30px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.02);
+}
+
+/* Cards */
 .cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -99,15 +195,15 @@ body {
     background: white;
     border-radius: 25px;
     padding: 30px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-    border: 1px solid #efe9d9; /* হালকা ক্রিম বর্ডার */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+    border: 1px solid #efe9d9;
     text-align: center;
 }
 
 .card .number {
     font-size: 42px;
     font-weight: bold;
-    color: #b58055; /* লোগোর ব্রাউন কালার */
+    color: #b58055;
 }
 
 .card .label {
@@ -116,12 +212,26 @@ body {
     font-size: 15px;
 }
 
-/* ── Table ── */
+.card-stat {
+    background: #ffffff;
+    border: none;
+    border-radius: 25px;
+    padding: 35px 20px;
+    transition: 0.3s;
+}
+
+.card-stat h4 {
+    color: #b58055;
+    font-size: 45px;
+    margin-bottom: 10px;
+}
+
+/* Table */
 .table-box {
     background: white;
     border-radius: 10px;
     padding: 25px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
 .table-box h2 {
@@ -149,14 +259,15 @@ td {
     font-size: 14px;
 }
 
-tr:hover td { background: #f9f9f9; }
+tr:hover td {
+    background: #f9f9f9;
+}
 
-/* ── Buttons ── */
-/* ── Buttons (Updated to Cream/Dark Green Theme) ── */
+/* Buttons */
 .btn {
     padding: 10px 22px;
     border: none;
-    border-radius: 12px; /* লগইন বাটনের মতো রাউন্ডেড কর্নার */
+    border-radius: 12px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 600;
@@ -165,43 +276,44 @@ tr:hover td { background: #f9f9f9; }
     transition: all 0.3s ease;
 }
 
-/* Primary Button (Dark Green from Login) */
-.btn-primary { 
-    background: #2e3b33; 
-    color: white; 
+.btn-primary {
+    background: #2e3b33;
+    color: white;
     box-shadow: 0 4px 12px rgba(46, 59, 51, 0.2);
 }
-.btn-primary:hover { 
-    background: #1e2923; 
+
+.btn-primary:hover {
+    background: #1e2923;
     transform: translateY(-2px);
 }
 
-/* Edit Button (Brown Accent) */
-.btn-edit { 
-    background: #b58055; 
-    color: white; 
-}
-.btn-edit:hover { 
-    background: #966a46; 
+.btn-edit {
+    background: #b58055;
+    color: white;
 }
 
-/* Delete Button (Soft Muted Red) */
-.btn-delete { 
-    background: #d63031; 
-    color: white; 
-}
-.btn-delete:hover { 
-    background: #b32d2e; 
+.btn-edit:hover {
+    background: #966a46;
 }
 
-/* Return/Success Button (Muted Green) */
-.btn-return { 
-    background: #556b2f; 
-    color: white; 
+.btn-delete {
+    background: #d63031;
+    color: white;
 }
-.btn-return:hover { 
-    background: #3e4f22; 
+
+.btn-delete:hover {
+    background: #b32d2e;
 }
+
+.btn-return {
+    background: #556b2f;
+    color: white;
+}
+
+.btn-return:hover {
+    background: #3e4f22;
+}
+
 .top-bar {
     display: flex;
     justify-content: space-between;
@@ -209,14 +321,16 @@ tr:hover td { background: #f9f9f9; }
     margin-bottom: 20px;
 }
 
-.top-bar h2 { color: #1a1a2e; }
+.top-bar h2 {
+    color: #1a1a2e;
+}
 
-/* ── Form ── */
+/* Form */
 .form-box {
     background: white;
     border-radius: 10px;
     padding: 35px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
     max-width: 500px;
 }
 
@@ -252,37 +366,35 @@ tr:hover td { background: #f9f9f9; }
     border-color: #e94560;
 }
 
-/* ── login ── */
+/* Login Page */
 .modern-login-body {
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background-color: #e5ebf1; /* Cool, very light blue-gray background from dribbble */
+    background-color: #e5ebf1;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
 }
 
-/* ── The main rounded cream card ── */
 .modern-login-wrapper {
-    background-color: #f7f3e8; /* Soft cream/beige card color */
+    background-color: #f7f3e8;
     width: 1050px;
-    height: 700px; /* Specific height to match dribbble look */
-    border-radius: 40px; /* Very rounded corners */
+    height: 700px;
+    border-radius: 40px;
     overflow: hidden;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.1); /* Deep soft shadow */
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
 }
 
-/* ── Card Top Header ── */
 .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 25px 50px;
-    background: white; /* Header bar is white */
+    background: white;
 }
 
 .card-header .logo {
@@ -292,7 +404,7 @@ tr:hover td { background: #f9f9f9; }
 }
 
 .card-header .logo span.brand-first {
-    color: #b58055; /* Book logo's first color */
+    color: #b58055;
 }
 
 .header-right {
@@ -303,7 +415,7 @@ tr:hover td { background: #f9f9f9; }
 }
 
 .dark-pill-btn {
-    background: #2e3b33; /* Dark forest green button from dribbble */
+    background: #2e3b33;
     color: white;
     padding: 10px 25px;
     border-radius: 12px;
@@ -313,16 +425,14 @@ tr:hover td { background: #f9f9f9; }
     font-size: 14px;
 }
 
-/* ── Main content area with columns ── */
 .login-content-box {
     display: flex;
     padding: 60px 50px;
-    align-items: flex-start; /* Form stays at top, image centers vertically locally */
+    align-items: flex-start;
 }
 
-/* ── Left Form Side ── */
 .login-form-side {
-    flex: 1.2; /* Form is slightly wider */
+    flex: 1.2;
     padding-right: 70px;
 }
 
@@ -386,9 +496,8 @@ tr:hover td { background: #f9f9f9; }
     margin-bottom: 30px;
 }
 
-/* ── Right Image Side (Using your actual saved image) ── */
 .login-image-side {
-    flex: 1; /* Image column is slightly narrower */
+    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -396,12 +505,11 @@ tr:hover td { background: #f9f9f9; }
 }
 
 .login-image-side img {
-    max-width: 100%; /* Resize but keep proportions */
+    max-width: 100%;
     height: auto;
     object-fit: contain;
 }
 
-/* ── Social Login Section ── */
 .social-login-section {
     margin-top: 40px;
     border-top: 1px solid #e0e0e0;
@@ -429,27 +537,138 @@ tr:hover td { background: #f9f9f9; }
 .social-icons i:hover {
     color: #333;
 }
-/* মেইন কন্টেন্ট এরিয়াকে আরও পরিষ্কার করা */
-.main-container {
-    flex: 1;
-    background: #f7f3e8; /* লগইন কার্ডের ক্রিম ব্যাকগ্রাউন্ড */
-    margin: 15px 15px 15px 0; /* সাইডবার থেকে একটু দূরে সরিয়ে দেওয়া */
-    border-radius: 35px;
-    padding: 30px;
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.02); /* হালকা গভীরতা */
+
+/* Toast Notifications */
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
 }
 
-/* ড্যাশবোর্ড কার্ডের আইকন এবং ফন্ট সাইজ ঠিক করা */
-.card-stat {
-    background: #ffffff;
-    border: none;
-    border-radius: 25px;
-    padding: 35px 20px;
-    transition: 0.3s;
+.toast-notification {
+    background: white;
+    padding: 12px 20px;
+    border-radius: 12px;
+    margin-top: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideIn 0.3s ease;
+    border-left: 4px solid;
 }
 
-.card-stat h4 {
-    color: #b58055; /* ছবির সেই ব্রাউন কালার */
-    font-size: 45px;
-    margin-bottom: 10px;
+.toast-success {
+    border-left-color: #2ecc71;
+}
+
+.toast-error {
+    border-left-color: #e74c3c;
+}
+
+.toast-notification i {
+    font-size: 1.2rem;
+}
+
+.toast-success i {
+    color: #2ecc71;
+}
+
+.toast-error i {
+    color: #e74c3c;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.fade-out {
+    animation: fadeOut 0.3s ease forwards;
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 85px;
+    }
+
+    .menu-title,
+    .profile-info-text {
+        display: none;
+    }
+
+    .sidebar a {
+        justify-content: center;
+        padding: 12px;
+    }
+
+    .profile-link-card {
+        justify-content: center;
+        padding: 8px;
+    }
+
+    .avatar-icon {
+        margin: 0 auto;
+    }
+
+    .profile-chevron {
+        display: none;
+    }
+
+    .logout-link a span {
+        display: none;
+    }
+
+    .logout-link a i {
+        font-size: 1.2rem;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .main,
+    .main-container {
+        padding: 20px;
+        margin: 10px;
+    }
+
+    /* Profile Sidebar Section */
+.profile-sidebar-section {
+    margin-top: auto;
+}
+
+.profile-link-card:hover {
+    background: rgba(255, 255, 255, 0.18) !important;
+    transform: translateX(3px);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .profile-info-text {
+        display: none;
+    }
+    .profile-link-card {
+        justify-content: center;
+        padding: 8px !important;
+    }
+    .profile-link-card i.fa-chevron-right {
+        display: none;
+    }
+}
 }

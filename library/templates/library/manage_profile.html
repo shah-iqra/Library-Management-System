@@ -1,0 +1,210 @@
+{% extends 'library/base.html' %}
+{% block content %}
+
+<div class="container mt-4" style="max-width: 800px;">
+
+    <!-- Page Header -->
+    <div class="mb-4">
+        <h2 style="color: #5c4a1e; font-weight: 700;">👤 Manage Profile</h2>
+        <p style="color: #888;">Update your personal information and contact details.</p>
+    </div>
+
+    <!-- Success / Error Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Profile Form -->
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- ── Personal Information ── -->
+        <div class="card mb-4" style="border-radius: 12px; border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+            <div class="card-header" style="background: #5c4a1e; color: white; border-radius: 12px 12px 0 0; padding: 15px 20px;">
+                <h5 class="mb-0">📋 Personal Information</h5>
+            </div>
+            <div class="card-body p-4">
+
+                <!-- Profile Picture -->
+                <div class="text-center mb-4">
+                    {% if request.user.profile_picture %}
+                        <img src="{{ request.user.profile_picture.url }}"
+                             alt="Profile Picture"
+                             style="width:100px; height:100px; border-radius:50%; object-fit:cover; border: 3px solid #5c4a1e;">
+                    {% else %}
+                        <div style="width:100px; height:100px; border-radius:50%; background:#e8dcc8; display:inline-flex; align-items:center; justify-content:center; font-size:40px; border: 3px solid #5c4a1e;">
+                            👤
+                        </div>
+                    {% endif %}
+                    <div class="mt-2">
+                        <label style="color: #5c4a1e; font-weight: 600;">Change Profile Picture</label>
+                        {{ user_form.profile_picture }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- First Name -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">First Name</label>
+                        {{ user_form.first_name }}
+                        {% if user_form.first_name.errors %}
+                            <div class="text-danger small">{{ user_form.first_name.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Last Name -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Last Name</label>
+                        {{ user_form.last_name }}
+                        {% if user_form.last_name.errors %}
+                            <div class="text-danger small">{{ user_form.last_name.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Email -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Email Address</label>
+                        {{ user_form.email }}
+                        {% if user_form.email.errors %}
+                            <div class="text-danger small">{{ user_form.email.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Phone Number</label>
+                        {{ user_form.phone }}
+                        {% if user_form.phone.errors %}
+                            <div class="text-danger small">{{ user_form.phone.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Date of Birth -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Date of Birth</label>
+                        {{ user_form.date_of_birth }}
+                        {% if user_form.date_of_birth.errors %}
+                            <div class="text-danger small">{{ user_form.date_of_birth.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Username (Read Only) -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Username</label>
+                        <input type="text"
+                               class="form-control"
+                               value="{{ request.user.username }}"
+                               disabled
+                               style="background: #f5f5f5;">
+                        <small class="text-muted">Username cannot be changed.</small>
+                    </div>
+
+                    <!-- Bio -->
+                    <div class="col-12 mb-3">
+                        <label class="form-label fw-semibold">Bio</label>
+                        {{ user_form.bio }}
+                        {% if user_form.bio.errors %}
+                            <div class="text-danger small">{{ user_form.bio.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Address & Membership ── -->
+        <div class="card mb-4" style="border-radius: 12px; border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+            <div class="card-header" style="background: #5c4a1e; color: white; border-radius: 12px 12px 0 0; padding: 15px 20px;">
+                <h5 class="mb-0">🏠 Address & Membership</h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="row">
+
+                    <!-- Address -->
+                    <div class="col-12 mb-3">
+                        <label class="form-label fw-semibold">Address</label>
+                        {{ member_form.address }}
+                        {% if member_form.address.errors %}
+                            <div class="text-danger small">{{ member_form.address.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Membership Type -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Membership Type</label>
+                        {{ member_form.membership_type }}
+                        {% if member_form.membership_type.errors %}
+                            <div class="text-danger small">{{ member_form.membership_type.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Emergency Contact -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Emergency Contact</label>
+                        {{ member_form.emergency_contact }}
+                        {% if member_form.emergency_contact.errors %}
+                            <div class="text-danger small">{{ member_form.emergency_contact.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Account Info (Read Only) ── -->
+        <div class="card mb-4" style="border-radius: 12px; border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+            <div class="card-header" style="background: #5c4a1e; color: white; border-radius: 12px 12px 0 0; padding: 15px 20px;">
+                <h5 class="mb-0">🔒 Account Information</h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Role</label>
+                        <input type="text"
+                               class="form-control"
+                               value="{{ request.user.get_role_display }}"
+                               disabled
+                               style="background: #f5f5f5;">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Member Since</label>
+                        <input type="text"
+                               class="form-control"
+                               value="{{ request.user.date_joined|date:'d M Y' }}"
+                               disabled
+                               style="background: #f5f5f5;">
+                    </div>
+                </div>
+
+                <!-- Change Password Link -->
+                <div class="mt-2">
+                    <a href="{% url 'change_password' %}"
+                       style="color: #5c4a1e; font-weight: 600; text-decoration: none;">
+                        🔑 Change Password
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Buttons ── -->
+        <div class="d-flex gap-3 mb-5">
+            <button type="submit"
+                    class="btn"
+                    style="background: #5c4a1e; color: white; padding: 10px 30px; border-radius: 8px; font-weight: 600;">
+                💾 Save Changes
+            </button>
+            <a href="{% url 'home' %}"
+               class="btn"
+               style="background: #e8dcc8; color: #5c4a1e; padding: 10px 30px; border-radius: 8px; font-weight: 600;">
+                ✖ Cancel
+            </a>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}
