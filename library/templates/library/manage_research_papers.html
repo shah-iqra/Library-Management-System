@@ -1,0 +1,224 @@
+{% extends 'library/base.html' %}
+
+{% block content %}
+<style>
+.manage-page{
+    background:#ede9df;
+    min-height:100vh;
+    padding:30px;
+}
+
+.manage-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+    flex-wrap:wrap;
+    gap:15px;
+}
+
+.manage-title h1{
+    font-size:40px;
+    font-weight:800;
+    color:#111;
+    margin:0;
+}
+
+.manage-title p{
+    margin:8px 0 0;
+    color:#555;
+    font-size:15px;
+}
+
+.btn-gold{
+    background:#d4a72c;
+    color:white;
+    padding:12px 20px;
+    border-radius:12px;
+    text-decoration:none;
+    font-weight:700;
+    display:inline-block;
+}
+
+.btn-gold:hover{
+    color:white;
+}
+
+.btn-gray{
+    background:#64748b;
+    color:white;
+    padding:12px 20px;
+    border-radius:12px;
+    text-decoration:none;
+    font-weight:700;
+    display:inline-block;
+}
+
+.btn-gray:hover{
+    color:white;
+}
+
+.manage-box{
+    background:#f7f3ea;
+    border-radius:22px;
+    padding:25px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+.manage-table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    border-radius:16px;
+    overflow:hidden;
+}
+
+.manage-table th{
+    background:#f0ece2;
+    color:#111;
+    text-align:left;
+    padding:16px;
+    font-size:14px;
+    font-weight:700;
+}
+
+.manage-table td{
+    padding:16px;
+    border-top:1px solid #ececec;
+    color:#111;
+    vertical-align:top;
+}
+
+.paper-title{
+    font-weight:700;
+    color:#111;
+}
+
+.status-badge{
+    display:inline-block;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:700;
+}
+
+.status-pending{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.status-approved{
+    background:#d1fae5;
+    color:#065f46;
+}
+
+.status-rejected{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.empty-row{
+    text-align:center;
+    color:#666;
+}
+
+.top-actions{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.paper-count{
+    background:#d4a72c;
+    color:white;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:700;
+}
+
+.section-bar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:18px;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+@media(max-width:768px){
+    .manage-title h1{
+        font-size:30px;
+    }
+}
+</style>
+
+<div class="manage-page">
+    <div class="manage-header">
+        <div class="manage-title">
+            <h1>Manage Research Papers</h1>
+            <p>Upload, review, and organize all research papers from one place.</p>
+        </div>
+
+        <div class="top-actions">
+            <a href="{% url 'upload_research_paper' %}" class="btn-gold">Upload New Research Paper</a>
+            <a href="{% url 'approval_access_control' %}" class="btn-gray">Approval & Access Control</a>
+        </div>
+    </div>
+
+    <div class="manage-box">
+        <div class="section-bar">
+            <h2 style="margin:0; color:#111;">All Uploaded Papers</h2>
+            <span class="paper-count">{{ papers|length }} Papers</span>
+        </div>
+
+        <div class="table-wrap">
+            <table class="manage-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Journal</th>
+                        <th>Year</th>
+                        <th>Status</th>
+                        <th>Uploaded By</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for paper in papers %}
+                    <tr>
+                        <td>
+                            <div class="paper-title">{{ paper.title }}</div>
+                        </td>
+                        <td>{{ paper.author }}</td>
+                        <td>{{ paper.journal }}</td>
+                        <td>{{ paper.year }}</td>
+                        <td>
+                            {% if paper.status == 'pending' %}
+                                <span class="status-badge status-pending">Pending</span>
+                            {% elif paper.status == 'approved' %}
+                                <span class="status-badge status-approved">Approved</span>
+                            {% elif paper.status == 'rejected' %}
+                                <span class="status-badge status-rejected">Rejected</span>
+                            {% else %}
+                                <span class="status-badge status-pending">{{ paper.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ paper.uploaded_by.username }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="empty-row">No research papers found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

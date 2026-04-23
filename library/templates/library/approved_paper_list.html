@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Approved Research Papers</title>
+</head>
+<body>
+    <h1>Approved Research Papers</h1>
+
+    <table border="1" cellpadding="10">
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Journal</th>
+            <th>Year</th>
+            <th>Details</th>
+        </tr>
+
+        {% for paper in papers %}
+        <tr>
+            <td>{{ paper.title }}</td>
+            <td>{{ paper.author }}</td>
+            <td>{{ paper.journal }}</td>
+            <td>{{ paper.year }}</td>
+            <td><a href="{% url 'paper_detail' paper.id %}">View</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

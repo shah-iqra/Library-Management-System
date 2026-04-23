@@ -1,0 +1,17 @@
+{% extends 'library/base.html' %}
+
+{% block content %}
+<h2>{{ paper.title }}</h2>
+
+<p><strong>Author:</strong> {{ paper.author }}</p>
+<p><strong>Journal:</strong> {{ paper.journal }}</p>
+<p><strong>Year:</strong> {{ paper.year }}</p>
+<p><strong>Abstract:</strong> {{ paper.abstract }}</p>
+
+<p>
+    <a href="{% url 'read_paper' paper.id %}" target="_blank">Read Paper</a> |
+    <a href="{% url 'download_paper' paper.id %}">Download Paper</a>
+</p>
+
+<p><a href="{% url 'approved_paper_list' %}">Back to Paper List</a></p>
+{% endblock %}

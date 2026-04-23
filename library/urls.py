@@ -37,4 +37,17 @@ urlpatterns = [
     path('fines-dues/', views.fines_dues, name='fines_dues'),
     path('system-monitoring/', views.system_monitoring, name='system_monitoring'),
     path('reports-analytics/', views.reports_analytics, name='reports_analytics'),
+
+    # ── Research Papers (Librarian) ───────────────────
+    path('librarian/research-papers/', views.manage_research_papers, name='manage_research_papers'),
+    path('librarian/research-papers/upload/', views.upload_research_paper, name='upload_research_paper'),
+    path('librarian/research-papers/approval/', views.approval_access_control, name='approval_access_control'),
+    path('librarian/research-papers/approve/<int:paper_id>/', views.approve_paper, name='approve_paper'),
+    path('librarian/research-papers/reject/<int:paper_id>/', views.reject_paper, name='reject_paper'),
+
+    # ── Research Papers (User) ────────────────────────
+    path('papers/', views.approved_paper_list, name='approved_paper_list'),
+    path('papers/<int:paper_id>/', views.paper_detail, name='paper_detail'),
+    path('papers/<int:paper_id>/read/', views.read_paper, name='read_paper'),
+    path('papers/<int:paper_id>/download/', views.download_paper, name='download_paper'),
 ]

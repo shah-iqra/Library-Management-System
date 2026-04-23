@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import User, Book, Member, Borrow
+from .models import User, Book, Member, Borrow, ResearchPaper
 
 
 # ১. Book Form
@@ -89,7 +89,6 @@ class UserRegistrationForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Password fields এ class যোগ করা
         self.fields['password1'].widget.attrs.update({'class': 'form-control'})
         self.fields['password2'].widget.attrs.update({'class': 'form-control'})
 
@@ -208,7 +207,6 @@ class BorrowForm(forms.ModelForm):
             }),
         }
 
-    # ✅ শুধু available books দেখাবে
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['book'].queryset = Book.objects.filter(available_copies__gt=0)
@@ -233,7 +231,6 @@ class ReturnBookForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Return করার সময় শুধু এই options দেখাবে
         self.fields['status'].choices = [
             ('returned', 'Returned'),
             ('lost', 'Lost'),
@@ -264,7 +261,6 @@ class PasswordChangeForm(forms.Form):
         label='Confirm New Password'
     )
 
-    # ✅ Password match validation
     def clean(self):
         cleaned_data = super().clean()
         new_password1 = cleaned_data.get('new_password1')
@@ -274,3 +270,10 @@ class PasswordChangeForm(forms.Form):
             if new_password1 != new_password2:
                 raise forms.ValidationError('New passwords do not match!')
         return cleaned_data
+
+
+# ৯. ResearchPaper Form
+class ResearchPaperForm(forms.ModelForm):
+    class Meta:
+        model = ResearchPaper
+        fields = ['title', 'author', 'journal', 'year', 'abstract', 'paper_file']

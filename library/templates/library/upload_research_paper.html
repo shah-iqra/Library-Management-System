@@ -1,0 +1,188 @@
+{% extends 'library/base.html' %}
+
+{% block content %}
+<style>
+.upload-page{
+    background:#ede9df;
+    min-height:100vh;
+    padding:30px;
+}
+
+.upload-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+    flex-wrap:wrap;
+    gap:15px;
+}
+
+.upload-title h1{
+    font-size:40px;
+    font-weight:800;
+    color:#111;
+    margin:0;
+}
+
+.upload-title p{
+    margin:8px 0 0;
+    color:#555;
+    font-size:15px;
+}
+
+.btn-gold{
+    background:#d4a72c;
+    color:white;
+    padding:12px 20px;
+    border-radius:12px;
+    text-decoration:none;
+    font-weight:700;
+    display:inline-block;
+    border:none;
+    cursor:pointer;
+}
+
+.btn-gold:hover{
+    color:white;
+}
+
+.btn-gray{
+    background:#64748b;
+    color:white;
+    padding:12px 20px;
+    border-radius:12px;
+    text-decoration:none;
+    font-weight:700;
+    display:inline-block;
+}
+
+.btn-gray:hover{
+    color:white;
+}
+
+.upload-box{
+    background:#f7f3ea;
+    border-radius:22px;
+    padding:30px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    max-width:900px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+}
+
+.form-group.full{
+    grid-column:1 / -1;
+}
+
+.form-group label{
+    font-weight:700;
+    color:#111;
+    margin-bottom:8px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select{
+    padding:12px 14px;
+    border:1px solid #ddd;
+    border-radius:12px;
+    background:white;
+    color:#111;
+    font-size:14px;
+}
+
+.form-group textarea{
+    min-height:140px;
+    resize:vertical;
+}
+
+.form-note{
+    color:#666;
+    font-size:13px;
+    margin-top:6px;
+}
+
+.actions{
+    margin-top:25px;
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+@media(max-width:768px){
+    .upload-title h1{
+        font-size:30px;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+
+<div class="upload-page">
+    <div class="upload-header">
+        <div class="upload-title">
+            <h1>Upload Research Paper</h1>
+            <p>Add a new research paper to the library database.</p>
+        </div>
+
+        <div>
+            <a href="{% url 'manage_research_papers' %}" class="btn-gray">Back to Manage Papers</a>
+        </div>
+    </div>
+
+    <div class="upload-box">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="{{ form.title.id_for_label }}">Title</label>
+                    {{ form.title }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.author.id_for_label }}">Author</label>
+                    {{ form.author }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.journal.id_for_label }}">Journal</label>
+                    {{ form.journal }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.year.id_for_label }}">Year</label>
+                    {{ form.year }}
+                </div>
+
+                <div class="form-group full">
+                    <label for="{{ form.abstract.id_for_label }}">Abstract</label>
+                    {{ form.abstract }}
+                </div>
+
+                <div class="form-group full">
+                    <label for="{{ form.paper_file.id_for_label }}">Upload File</label>
+                    {{ form.paper_file }}
+                    <div class="form-note">Upload the research paper file in PDF format.</div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn-gold">Upload Paper</button>
+                <a href="{% url 'approval_access_control' %}" class="btn-gray">Go to Approval & Access</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
