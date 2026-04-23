@@ -3,8 +3,9 @@ from django.contrib.auth import authenticate, login, logout, get_user_model, upd
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.utils import timezone
+from django.http import FileResponse, HttpResponseForbidden
 
-from .models import Book, Borrow, Member
+from .models import Book, Borrow, Member, ResearchPaper
 from .forms import (
     BookForm,
     UserRegistrationForm,
@@ -13,6 +14,7 @@ from .forms import (
     BorrowForm,
     ReturnBookForm,
     PasswordChangeForm,
+    ResearchPaperForm,
 )
 
 User = get_user_model()
@@ -87,7 +89,6 @@ def register_view(request):
                 phone=request.POST.get('phone', ''),
                 role=User.REGULAR_USER,
             )
-            # ✅ Register করার সাথে সাথে Member profile তৈরি
             Member.objects.get_or_create(user=user)
             return redirect('login')
 
@@ -99,7 +100,6 @@ def register_view(request):
 # ===============================================
 @login_required
 def manage_profile(request):
-    # ✅ Member profile না থাকলে তৈরি করো
     member, created = Member.objects.get_or_create(user=request.user)
 
     if request.method == 'POST':
@@ -130,19 +130,16 @@ def manage_profile(request):
     })
 
 
-# ✅ Password Change
 @login_required
 def change_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.POST)
         if form.is_valid():
-            # পুরনো password check
             if not request.user.check_password(form.cleaned_data['old_password']):
                 messages.error(request, '❌ Current password is incorrect!')
             else:
                 request.user.set_password(form.cleaned_data['new_password1'])
                 request.user.save()
-                # ✅ Session ঠিক রাখো logout না হওয়ার জন্য
                 update_session_auth_hash(request, request.user)
                 messages.success(request, '✅ Password changed successfully!')
                 return redirect('manage_profile')
@@ -247,7 +244,6 @@ def member_add(request):
                 phone=request.POST.get('phone', ''),
                 role=request.POST.get('role', User.REGULAR_USER),
             )
-            # ✅ Member profile তৈরি
             Member.objects.get_or_create(user=user)
             messages.success(request, '✅ Member added successfully!')
             return redirect('member_list')
@@ -365,7 +361,15 @@ def digital_resources(request):
 
 @login_required
 def research_papers(request):
-    return render(request, 'library/research_papers.html')
+    papers = ResearchPaper.objects.filter(status='approved').order_by('-uploaded_at')
+    query = request.GET.get('q', '')
+    if query:
+        papers = papers.filter(title__icontains=query) | papers.filter(author__icontains=query) | papers.filter(journal__icontains=query)
+    return render(request, 'library/research_papers.html', {
+        'papers': papers,
+        'query': query,
+        'is_librarian_or_admin': is_librarian_or_admin(request.user),
+    })
 
 
 @login_required
@@ -417,3 +421,87 @@ def reports_analytics(request):
         'books': Book.objects.all(),
         'recent_borrows': Borrow.objects.order_by('-borrow_date').select_related('book', 'member')[:10],
     })
+
+
+# ===============================================
+# RESEARCH PAPERS
+# ===============================================
+@login_required
+@user_passes_test(is_librarian_or_admin, login_url='/')
+def manage_research_papers(request):
+    papers = ResearchPaper.objects.all().order_by('-uploaded_at')
+    return render(request, 'library/manage_research_papers.html', {'papers': papers})
+
+
+@login_required
+@user_passes_test(is_librarian_or_admin, login_url='/')
+def upload_research_paper(request):
+    if request.method == 'POST':
+        form = ResearchPaperForm(request.POST, request.FILES)
+        if form.is_valid():
+            paper = form.save(commit=False)
+            paper.uploaded_by = request.user
+            paper.status = 'pending'
+            paper.save()
+            return redirect('manage_research_papers')
+    else:
+        form = ResearchPaperForm()
+    return render(request, 'library/upload_research_paper.html', {'form': form})
+
+
+@login_required
+@user_passes_test(is_librarian_or_admin, login_url='/')
+def approval_access_control(request):
+    pending_papers = ResearchPaper.objects.filter(status='pending').order_by('-uploaded_at')
+    approved_papers = ResearchPaper.objects.filter(status='approved').order_by('-uploaded_at')
+    rejected_papers = ResearchPaper.objects.filter(status='rejected').order_by('-uploaded_at')
+    context = {
+        'pending_papers': pending_papers,
+        'approved_papers': approved_papers,
+        'rejected_papers': rejected_papers,
+    }
+    return render(request, 'library/approval_access_control.html', context)
+
+
+@login_required
+@user_passes_test(is_librarian_or_admin, login_url='/')
+def approve_paper(request, paper_id):
+    paper = get_object_or_404(ResearchPaper, id=paper_id)
+    paper.status = 'approved'
+    paper.save()
+    return redirect('approval_access_control')
+
+
+@login_required
+@user_passes_test(is_librarian_or_admin, login_url='/')
+def reject_paper(request, paper_id):
+    paper = get_object_or_404(ResearchPaper, id=paper_id)
+    paper.status = 'rejected'
+    paper.save()
+    return redirect('approval_access_control')
+
+
+def approved_paper_list(request):
+    papers = ResearchPaper.objects.filter(status='approved').order_by('-uploaded_at')
+    return render(request, 'library/approved_paper_list.html', {'papers': papers})
+
+
+def paper_detail(request, paper_id):
+    paper = get_object_or_404(ResearchPaper, id=paper_id, status='approved')
+    return render(request, 'library/paper_detail.html', {'paper': paper})
+
+
+@login_required
+def read_paper(request, paper_id):
+    paper = get_object_or_404(ResearchPaper, id=paper_id)
+    if paper.status != 'approved':
+        return HttpResponseForbidden("This paper is not approved yet.")
+    return FileResponse(paper.paper_file.open('rb'), content_type='application/pdf')
+
+
+@login_required
+def download_paper(request, paper_id):
+    paper = get_object_or_404(ResearchPaper, id=paper_id)
+    if paper.status != 'approved':
+        return HttpResponseForbidden("This paper is not approved yet.")
+    return FileResponse(paper.paper_file.open('rb'), as_attachment=True)

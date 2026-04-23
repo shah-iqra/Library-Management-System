@@ -1,7 +1,282 @@
 {% extends 'library/base.html' %}
+
 {% block content %}
-<div style="padding: 20px;">
-    <h2>🔬 Research Papers</h2>
-    <p>Coming soon...</p>
+<style>
+.research-page{
+    background:#ede9df;
+    min-height:100vh;
+    padding:30px;
+}
+
+.research-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.research-title h1{
+    font-size:42px;
+    font-weight:800;
+    color:#111;
+    margin:0;
+}
+
+.research-title p{
+    color:#555;
+    margin-top:8px;
+}
+
+.upload-btn{
+    background:#d4a72c;
+    color:white;
+    padding:14px 22px;
+    border-radius:12px;
+    text-decoration:none;
+    font-weight:700;
+}
+
+.upload-btn:hover{
+    color:white;
+}
+
+.main-box{
+    background:#f7f3ea;
+    border-radius:22px;
+    padding:25px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.search-box{
+    background:white;
+    padding:20px;
+    border-radius:18px;
+    margin-bottom:25px;
+}
+
+.search-grid{
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr 1fr;
+    gap:15px;
+}
+
+.search-grid input,
+.search-grid select{
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #ddd;
+    background:white;
+    color:black;
+}
+
+.section-title{
+    font-size:34px;
+    font-weight:700;
+    color:#111;
+    margin-bottom:20px;
+}
+
+.paper-count{
+    float:right;
+    background:#d4a72c;
+    color:white;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:13px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    border-radius:16px;
+    overflow:hidden;
+}
+
+th{
+    background:#f0ece2;
+    color:#111;
+    text-align:left;
+    padding:16px;
+    font-size:14px;
+}
+
+td{
+    padding:16px;
+    border-top:1px solid #eee;
+    color:#111;
+}
+
+.paper-title{
+    font-weight:700;
+}
+
+.paper-author{
+    font-size:13px;
+    color:#555;
+}
+
+.badge{
+    padding:5px 10px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:700;
+}
+
+.badge-open{
+    background:#d1fae5;
+    color:#065f46;
+}
+
+.badge-pending{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.action-btn{
+    padding:8px 12px;
+    border-radius:10px;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:700;
+    margin-right:6px;
+}
+
+.view-btn{
+    background:#1d4ed8;
+    color:white;
+}
+
+.download-btn{
+    background:#334155;
+    color:white;
+}
+
+.bottom-btns{
+    margin-top:25px;
+}
+
+.bottom-btns a{
+    margin-right:10px;
+}
+
+@media(max-width:900px){
+.search-grid{
+grid-template-columns:1fr;
+}
+table{
+display:block;
+overflow-x:auto;
+}
+}
+</style>
+
+<div class="research-page">
+
+<div class="research-header">
+<div class="research-title">
+<h1>Research Paper Database</h1>
+<p>Access peer-reviewed journals and academic publications</p>
+</div>
+
+{% if is_librarian_or_admin %}
+<a href="{% url 'upload_research_paper' %}" class="upload-btn">+ Upload Paper</a>
+{% endif %}
+</div>
+
+<div class="main-box">
+
+<div class="search-box">
+<form method="GET">
+<div class="search-grid">
+<input type="text" placeholder="Title, author, journal, keyword..." name="q">
+
+<select>
+<option>All Fields</option>
+<option>Engineering</option>
+<option>Medical</option>
+<option>Computer Science</option>
+</select>
+
+<select>
+<option>All Years</option>
+<option>2026</option>
+<option>2025</option>
+<option>2024</option>
+</select>
+
+<select>
+<option>All</option>
+<option>Approved</option>
+<option>Pending</option>
+</select>
+
+</div>
+</form>
+</div>
+
+<div class="section-title">
+Research Papers
+<span class="paper-count">{{ papers|length }} Papers</span>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>Title & Authors</th>
+<th>Journal</th>
+<th>Year</th>
+<th>Field</th>
+<th>Access</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody>
+{% for paper in papers %}
+<tr>
+<td>
+<div class="paper-title">{{ paper.title }}</div>
+<div class="paper-author">{{ paper.author }}</div>
+</td>
+
+<td>{{ paper.journal }}</td>
+<td>{{ paper.year }}</td>
+
+<td>{{ paper.category|default:"General" }}</td>
+
+<td>
+{% if paper.status == 'approved' %}
+<span class="badge badge-open">Approved</span>
+{% else %}
+<span class="badge badge-pending">{{ paper.status }}</span>
+{% endif %}
+</td>
+
+<td>
+<a href="{% url 'paper_detail' paper.id %}" class="action-btn view-btn">View</a>
+
+{% if paper.status == 'approved' %}
+<a href="{% url 'download_paper' paper.id %}" class="action-btn download-btn">Download</a>
+{% endif %}
+</td>
+</tr>
+
+{% empty %}
+<tr>
+<td colspan="6" style="text-align:center;">No research papers found.</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+{% if is_librarian_or_admin %}
+<div class="bottom-btns">
+<a href="{% url 'manage_research_papers' %}" class="upload-btn">Manage Papers</a>
+<a href="{% url 'approval_access_control' %}" class="upload-btn" style="background:#64748b;">Approval & Access</a>
+</div>
+{% endif %}
+
+</div>
 </div>
 {% endblock %}
