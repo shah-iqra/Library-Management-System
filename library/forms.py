@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import User, Book, Member, Borrow, ResearchPaper
+from .models import User, Book, Member, Borrow, ResearchPaper, Category
 
 
 # ১. Book Form
@@ -11,6 +11,7 @@ class BookForm(forms.ModelForm):
             'title',
             'author',
             'isbn',
+            'category',
             'description',
             'total_copies',
             'cover_image'
@@ -27,6 +28,9 @@ class BookForm(forms.ModelForm):
             'isbn': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Enter 13-digit ISBN'
+            }),
+            'category': forms.Select(attrs={
+                'class': 'form-control'
             }),
             'description': forms.Textarea(attrs={
                 'class': 'form-control',
@@ -277,3 +281,29 @@ class ResearchPaperForm(forms.ModelForm):
     class Meta:
         model = ResearchPaper
         fields = ['title', 'author', 'journal', 'year', 'abstract', 'paper_file']
+        widgets = {
+            'title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter paper title'
+            }),
+            'author': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter author name'
+            }),
+            'journal': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter journal name'
+            }),
+            'year': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter year'
+            }),
+            'abstract': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 4,
+                'placeholder': 'Enter abstract'
+            }),
+            'paper_file': forms.FileInput(attrs={
+                'class': 'form-control'
+            }),
+        }

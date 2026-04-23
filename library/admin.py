@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Book, Member, Borrow, User
+from .models import Book, Member, Borrow, User, Category
+
 
 # Custom User Admin
 @admin.register(User)
@@ -11,11 +12,21 @@ class CustomUserAdmin(UserAdmin):
         ('Extra Info', {'fields': ('role', 'phone')}),
     )
 
+
+# Category Admin
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['name']
+    search_fields = ['name']
+
+
 # Book Admin
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ['title', 'author', 'isbn', 'total_copies', 'available_copies']
+    list_display = ['title', 'author', 'category', 'isbn', 'total_copies', 'available_copies']
     search_fields = ['title', 'author', 'isbn']
+    list_filter = ['category']
+
 
 # Member Admin
 @admin.register(Member)
@@ -34,6 +45,7 @@ class MemberAdmin(admin.ModelAdmin):
     def get_phone(self, obj):
         return obj.user.phone
     get_phone.short_description = 'Phone'
+
 
 # Borrow Admin
 @admin.register(Borrow)

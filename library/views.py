@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.utils import timezone
 from django.http import FileResponse, HttpResponseForbidden
 
-from .models import Book, Borrow, Member, ResearchPaper
+from .models import Book, Borrow, Member, ResearchPaper, Category
 from .forms import (
     BookForm,
     UserRegistrationForm,
@@ -150,12 +150,82 @@ def change_password(request):
 
 
 # ===============================================
+# CATEGORY MANAGEMENT
+# ===============================================
+@login_required
+@user_passes_test(is_librarian_or_admin, login_url='/')
+def category_list(request):
+    categories = Category.objects.all().order_by('name')
+    return render(request, 'library/category_list.html', {
+        'categories': categories
+    })
+
+
+@login_required
+@user_passes_test(is_librarian_or_admin, login_url='/')
+def category_add(request):
+    if request.method == 'POST':
+        name = request.POST.get('name', '').strip()
+        if name:
+            if Category.objects.filter(name__iexact=name).exists():
+                messages.error(request, '❌ Category already exists!')
+            else:
+                Category.objects.create(name=name)
+                messages.success(request, '✅ Category added successfully!')
+                return redirect('category_list')
+        else:
+            messages.error(request, '❌ Category name is required.')
+
+    return render(request, 'library/category_form.html', {
+        'action': 'Add'
+    })
+
+
+@login_required
+@user_passes_test(is_librarian_or_admin, login_url='/')
+def category_edit(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+
+    if request.method == 'POST':
+        name = request.POST.get('name', '').strip()
+        if name:
+            existing = Category.objects.filter(name__iexact=name).exclude(pk=category.pk)
+            if existing.exists():
+                messages.error(request, '❌ Another category with this name already exists!')
+            else:
+                category.name = name
+                category.save()
+                messages.success(request, '✅ Category updated successfully!')
+                return redirect('category_list')
+        else:
+            messages.error(request, '❌ Category name is required.')
+
+    return render(request, 'library/category_form.html', {
+        'action': 'Edit',
+        'category': category
+    })
+
+
+@login_required
+@user_passes_test(is_librarian_or_admin, login_url='/')
+def category_delete(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+    category.delete()
+    messages.success(request, '✅ Category deleted successfully!')
+    return redirect('category_list')
+
+
+# ===============================================
 # BOOKS
 # ===============================================
 @login_required
 def book_list(request):
-    books = Book.objects.all()
-    query = request.GET.get('q', '')
+    books = Book.objects.select_related('category').all().order_by('title')
+    categories = Category.objects.all().order_by('name')
+
+    query = request.GET.get('q', '').strip()
+    category_id = request.GET.get('category', '').strip()
+
     if query:
         books = books.filter(
             title__icontains=query
@@ -164,9 +234,15 @@ def book_list(request):
         ) | books.filter(
             isbn__icontains=query
         )
+
+    if category_id:
+        books = books.filter(category_id=category_id)
+
     return render(request, 'library/book_list.html', {
         'books': books,
-        'query': query
+        'categories': categories,
+        'query': query,
+        'selected_category': category_id,
     })
 
 
@@ -196,9 +272,21 @@ def book_edit(request, pk):
     book = get_object_or_404(Book, pk=pk)
 
     if request.method == "POST":
+        old_total = book.total_copies
+        old_available = book.available_copies
+
         form = BookForm(request.POST, request.FILES, instance=book)
         if form.is_valid():
-            form.save()
+            updated_book = form.save(commit=False)
+
+            if updated_book.total_copies >= old_total:
+                diff = updated_book.total_copies - old_total
+                updated_book.available_copies = old_available + diff
+            else:
+                borrowed_count = old_total - old_available
+                updated_book.available_copies = max(updated_book.total_copies - borrowed_count, 0)
+
+            updated_book.save()
             messages.success(request, '✅ Book updated successfully!')
             return redirect('book_list')
     else:
