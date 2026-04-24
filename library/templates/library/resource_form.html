@@ -1,0 +1,46 @@
+{% extends 'library/base.html' %}
+{% block title %}{{ action }} Resource{% endblock %}
+
+{% block content %}
+<div class="form-box">
+    <h2>📄 {{ action }} Digital Resource</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Title</label>
+            {{ form.title }}
+        </div>
+
+        <div class="form-group">
+            <label>Resource Type</label>
+            {{ form.resource_type }}
+        </div>
+
+        <div class="form-group">
+            <label>Course Code / Subject</label>
+            {{ form.course_code }}
+        </div>
+
+        <div class="form-group">
+            <label>Description</label>
+            {{ form.description }}
+        </div>
+
+        <div class="form-group">
+            <label>Upload File</label>
+            {{ form.file }}
+
+            {% if action == 'Edit' and form.instance.file %}
+            <div style="margin-top:10px;">
+                <p>Current file: <a href="{{ form.instance.file.url }}" target="_blank">Open file</a></p>
+            </div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">{{ action }} Resource</button>
+        <a href="{% url 'digital_resources' %}" class="btn" style="background:#aaa; color:white; margin-left:10px;">Cancel</a>
+    </form>
+</div>
+{% endblock %}

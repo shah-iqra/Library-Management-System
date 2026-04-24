@@ -3,7 +3,6 @@ from django.contrib.auth.models import AbstractUser
 from datetime import date
 
 
-# ১. Custom User Model (Role Based)
 class User(AbstractUser):
     ADMIN = 'admin'
     LIBRARIAN = 'librarian'
@@ -15,18 +14,9 @@ class User(AbstractUser):
         (REGULAR_USER, 'Regular User'),
     ]
 
-    role = models.CharField(
-        max_length=20,
-        choices=ROLE_CHOICES,
-        default=REGULAR_USER
-    )
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=REGULAR_USER)
     phone = models.CharField(max_length=15, null=True, blank=True)
-
-    profile_picture = models.ImageField(
-        upload_to='profiles/',
-        null=True,
-        blank=True
-    )
+    profile_picture = models.ImageField(upload_to='profiles/', null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
 
@@ -39,7 +29,6 @@ class User(AbstractUser):
         return self.username
 
 
-# ২. Category Model
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
@@ -51,32 +40,20 @@ class Category(models.Model):
         return self.name
 
 
-# ৩. Book Model
 class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=100)
     isbn = models.CharField(max_length=13, unique=True)
-    category = models.ForeignKey(
-        Category,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='books'
-    )
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name='books')
     description = models.TextField(null=True, blank=True)
     total_copies = models.PositiveIntegerField(default=1)
     available_copies = models.PositiveIntegerField(default=1)
-    cover_image = models.ImageField(
-        upload_to='book_covers/',
-        null=True,
-        blank=True
-    )
+    cover_image = models.ImageField(upload_to='book_covers/', null=True, blank=True)
 
     def __str__(self):
         return self.title
 
 
-# ৪. Member Model
 class Member(models.Model):
     MEMBERSHIP_CHOICES = [
         ('basic', 'Basic'),
@@ -84,19 +61,10 @@ class Member(models.Model):
         ('student', 'Student'),
     ]
 
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE,
-        related_name='profile'
-    )
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     address = models.TextField(null=True, blank=True)
     joined_date = models.DateField(auto_now_add=True)
-
-    membership_type = models.CharField(
-        max_length=20,
-        choices=MEMBERSHIP_CHOICES,
-        default='basic'
-    )
+    membership_type = models.CharField(max_length=20, choices=MEMBERSHIP_CHOICES, default='basic')
     membership_expiry = models.DateField(null=True, blank=True)
     emergency_contact = models.CharField(max_length=15, null=True, blank=True)
     is_active = models.BooleanField(default=True)
@@ -113,7 +81,6 @@ class Member(models.Model):
         return self.user.borrowed_books.filter(is_returned=False).count()
 
 
-# ৫. Borrow Model
 class Borrow(models.Model):
     STATUS_CHOICES = [
         ('borrowed', 'Borrowed'),
@@ -122,32 +89,14 @@ class Borrow(models.Model):
         ('lost', 'Lost'),
     ]
 
-    book = models.ForeignKey(
-        Book,
-        on_delete=models.CASCADE,
-        related_name='borrows'
-    )
-    member = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='borrowed_books'
-    )
-
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='borrows')
+    member = models.ForeignKey(User, on_delete=models.CASCADE, related_name='borrowed_books')
     borrow_date = models.DateField(auto_now_add=True)
     due_date = models.DateField(null=True, blank=True)
     return_date = models.DateField(null=True, blank=True)
     is_returned = models.BooleanField(default=False)
-
-    status = models.CharField(
-        max_length=20,
-        choices=STATUS_CHOICES,
-        default='borrowed'
-    )
-    fine_amount = models.DecimalField(
-        max_digits=6,
-        decimal_places=2,
-        default=0.00
-    )
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='borrowed')
+    fine_amount = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
     notes = models.TextField(null=True, blank=True)
 
     def __str__(self):
@@ -173,7 +122,6 @@ class Borrow(models.Model):
         super().save(*args, **kwargs)
 
 
-# ৬. ResearchPaper Model
 class ResearchPaper(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),
@@ -188,6 +136,25 @@ class ResearchPaper(models.Model):
     abstract = models.TextField(blank=True, null=True)
     paper_file = models.FileField(upload_to='research_papers/')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+
+class DigitalResource(models.Model):
+    TYPE_CHOICES = [
+        ('notes', 'Notes'),
+        ('course', 'Course Material'),
+        ('question', 'Question Bank'),
+    ]
+
+    title = models.CharField(max_length=200)
+    resource_type = models.CharField(max_length=20, choices=TYPE_CHOICES)
+    course_code = models.CharField(max_length=50)
+    description = models.TextField(blank=True, null=True)
+    file = models.FileField(upload_to='digital_resources/')
     uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
