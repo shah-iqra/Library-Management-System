@@ -5,9 +5,10 @@ from django.contrib import messages
 from django.utils import timezone
 from django.http import FileResponse, HttpResponseForbidden
 
-from .models import Book, Borrow, Member, ResearchPaper, Category, DigitalResource
+from .models import Book, BookReview, Borrow, Member, ResearchPaper, Category, DigitalResource
 from .forms import (
     BookForm,
+    BookReviewForm,
     UserProfileForm,
     MemberProfileForm,
     BorrowForm,
@@ -19,9 +20,6 @@ from .forms import (
 User = get_user_model()
 
 
-# ===============================================
-# ROLE CHECK
-# ===============================================
 def is_admin(user):
     return user.is_authenticated and (user.role == User.ADMIN or user.is_superuser)
 
@@ -36,9 +34,6 @@ def is_librarian_or_admin(user):
     )
 
 
-# ===============================================
-# HOME / DASHBOARD
-# ===============================================
 @login_required
 def home(request):
     return render(request, 'library/home.html', {
@@ -48,9 +43,6 @@ def home(request):
     })
 
 
-# ===============================================
-# AUTH
-# ===============================================
 def login_view(request):
     error = ''
     if request.method == 'POST':
@@ -94,9 +86,6 @@ def register_view(request):
     return render(request, 'library/register.html', {'error': error})
 
 
-# ===============================================
-# PROFILE
-# ===============================================
 @login_required
 def manage_profile(request):
     member, created = Member.objects.get_or_create(user=request.user)
@@ -140,9 +129,6 @@ def change_password(request):
     return render(request, 'library/change_password.html', {'form': form})
 
 
-# ===============================================
-# CATEGORY MANAGEMENT
-# ===============================================
 @login_required
 @user_passes_test(is_librarian_or_admin, login_url='/')
 def category_list(request):
@@ -202,9 +188,6 @@ def category_delete(request, pk):
     return redirect('category_list')
 
 
-# ===============================================
-# BOOKS
-# ===============================================
 @login_required
 def book_list(request):
     books = Book.objects.select_related('category').all().order_by('title')
@@ -224,6 +207,34 @@ def book_list(request):
         'categories': categories,
         'query': query,
         'selected_category': category_id,
+    })
+
+
+@login_required
+def book_detail(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    reviews = book.reviews.select_related('user').all()
+    user_review = BookReview.objects.filter(book=book, user=request.user).first()
+
+    if request.method == "POST":
+        form = BookReviewForm(request.POST, instance=user_review)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.book = book
+            review.user = request.user
+            review.save()
+            messages.success(request, '✅ Review submitted successfully!')
+            return redirect('book_detail', pk=book.pk)
+    else:
+        form = BookReviewForm(instance=user_review)
+
+    return render(request, 'library/book_detail.html', {
+        'book': book,
+        'reviews': reviews,
+        'form': form,
+        'user_review': user_review,
+        'average_rating': book.average_rating(),
+        'total_reviews': book.total_reviews(),
     })
 
 
@@ -281,9 +292,6 @@ def book_delete(request, pk):
     return redirect('book_list')
 
 
-# ===============================================
-# DIGITAL RESOURCES
-# ===============================================
 @login_required
 def digital_resources(request):
     resources = DigitalResource.objects.select_related('uploaded_by').all().order_by('-uploaded_at')
@@ -365,9 +373,6 @@ def digital_resource_download(request, pk):
     return FileResponse(resource.file.open('rb'), as_attachment=True)
 
 
-# ===============================================
-# MEMBERS
-# ===============================================
 @login_required
 @user_passes_test(is_librarian_or_admin, login_url='/')
 def member_list(request):
@@ -438,9 +443,6 @@ def member_delete(request, pk):
     return redirect('member_list')
 
 
-# ===============================================
-# BORROW & RETURN
-# ===============================================
 @login_required
 def borrow_list(request):
     if is_librarian_or_admin(request.user):
@@ -496,9 +498,6 @@ def return_book(request, pk):
     return redirect('borrow_list')
 
 
-# ===============================================
-# EXTRA PAGES
-# ===============================================
 @login_required
 def research_papers(request):
     papers = ResearchPaper.objects.filter(status='approved').order_by('-uploaded_at')
@@ -560,9 +559,6 @@ def reports_analytics(request):
     })
 
 
-# ===============================================
-# RESEARCH PAPERS
-# ===============================================
 @login_required
 @user_passes_test(is_librarian_or_admin, login_url='/')
 def manage_research_papers(request):
