@@ -1,9 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Book, Member, Borrow, User, Category
+from .models import Book, Member, Borrow, User, Category, ResearchPaper, DigitalResource
 
 
-# Custom User Admin
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
     list_display = ['username', 'email', 'phone', 'role']
@@ -13,14 +12,12 @@ class CustomUserAdmin(UserAdmin):
     )
 
 
-# Category Admin
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name']
     search_fields = ['name']
 
 
-# Book Admin
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
     list_display = ['title', 'author', 'category', 'isbn', 'total_copies', 'available_copies']
@@ -28,7 +25,20 @@ class BookAdmin(admin.ModelAdmin):
     list_filter = ['category']
 
 
-# Member Admin
+@admin.register(DigitalResource)
+class DigitalResourceAdmin(admin.ModelAdmin):
+    list_display = ['title', 'resource_type', 'course_code', 'uploaded_by', 'uploaded_at']
+    search_fields = ['title', 'course_code']
+    list_filter = ['resource_type', 'uploaded_at']
+
+
+@admin.register(ResearchPaper)
+class ResearchPaperAdmin(admin.ModelAdmin):
+    list_display = ['title', 'author', 'journal', 'year', 'status', 'uploaded_by']
+    search_fields = ['title', 'author', 'journal']
+    list_filter = ['status', 'year']
+
+
 @admin.register(Member)
 class MemberAdmin(admin.ModelAdmin):
     list_display = ['get_username', 'get_email', 'get_phone', 'joined_date']
@@ -47,7 +57,6 @@ class MemberAdmin(admin.ModelAdmin):
     get_phone.short_description = 'Phone'
 
 
-# Borrow Admin
 @admin.register(Borrow)
 class BorrowAdmin(admin.ModelAdmin):
     list_display = ['book', 'member', 'borrow_date', 'return_date', 'is_returned']

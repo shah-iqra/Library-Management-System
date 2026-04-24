@@ -5,16 +5,15 @@ from django.contrib import messages
 from django.utils import timezone
 from django.http import FileResponse, HttpResponseForbidden
 
-from .models import Book, Borrow, Member, ResearchPaper, Category
+from .models import Book, Borrow, Member, ResearchPaper, Category, DigitalResource
 from .forms import (
     BookForm,
-    UserRegistrationForm,
     UserProfileForm,
     MemberProfileForm,
     BorrowForm,
-    ReturnBookForm,
     PasswordChangeForm,
     ResearchPaperForm,
+    DigitalResourceForm,
 )
 
 User = get_user_model()
@@ -50,7 +49,7 @@ def home(request):
 
 
 # ===============================================
-# AUTH — LOGIN / LOGOUT / REGISTER
+# AUTH
 # ===============================================
 def login_view(request):
     error = ''
@@ -96,30 +95,22 @@ def register_view(request):
 
 
 # ===============================================
-# USER PROFILE — manage name, email, contact
+# PROFILE
 # ===============================================
 @login_required
 def manage_profile(request):
     member, created = Member.objects.get_or_create(user=request.user)
 
     if request.method == 'POST':
-        user_form = UserProfileForm(
-            request.POST,
-            request.FILES,
-            instance=request.user
-        )
-        member_form = MemberProfileForm(
-            request.POST,
-            instance=member
-        )
+        user_form = UserProfileForm(request.POST, request.FILES, instance=request.user)
+        member_form = MemberProfileForm(request.POST, instance=member)
 
         if user_form.is_valid() and member_form.is_valid():
             user_form.save()
             member_form.save()
             messages.success(request, '✅ Profile updated successfully!')
             return redirect('manage_profile')
-        else:
-            messages.error(request, '❌ Please fix the errors below.')
+        messages.error(request, '❌ Please fix the errors below.')
     else:
         user_form = UserProfileForm(instance=request.user)
         member_form = MemberProfileForm(instance=member)
@@ -156,9 +147,7 @@ def change_password(request):
 @user_passes_test(is_librarian_or_admin, login_url='/')
 def category_list(request):
     categories = Category.objects.all().order_by('name')
-    return render(request, 'library/category_list.html', {
-        'categories': categories
-    })
+    return render(request, 'library/category_list.html', {'categories': categories})
 
 
 @login_required
@@ -176,9 +165,7 @@ def category_add(request):
         else:
             messages.error(request, '❌ Category name is required.')
 
-    return render(request, 'library/category_form.html', {
-        'action': 'Add'
-    })
+    return render(request, 'library/category_form.html', {'action': 'Add'})
 
 
 @login_required
@@ -227,13 +214,7 @@ def book_list(request):
     category_id = request.GET.get('category', '').strip()
 
     if query:
-        books = books.filter(
-            title__icontains=query
-        ) | books.filter(
-            author__icontains=query
-        ) | books.filter(
-            isbn__icontains=query
-        )
+        books = books.filter(title__icontains=query) | books.filter(author__icontains=query) | books.filter(isbn__icontains=query)
 
     if category_id:
         books = books.filter(category_id=category_id)
@@ -260,10 +241,7 @@ def book_add(request):
     else:
         form = BookForm()
 
-    return render(request, 'library/book_form.html', {
-        'form': form,
-        'action': 'Add'
-    })
+    return render(request, 'library/book_form.html', {'form': form, 'action': 'Add'})
 
 
 @login_required
@@ -292,10 +270,7 @@ def book_edit(request, pk):
     else:
         form = BookForm(instance=book)
 
-    return render(request, 'library/book_form.html', {
-        'form': form,
-        'action': 'Edit'
-    })
+    return render(request, 'library/book_form.html', {'form': form, 'action': 'Edit'})
 
 
 @login_required
@@ -304,6 +279,90 @@ def book_delete(request, pk):
     get_object_or_404(Book, pk=pk).delete()
     messages.success(request, '✅ Book deleted successfully!')
     return redirect('book_list')
+
+
+# ===============================================
+# DIGITAL RESOURCES
+# ===============================================
+@login_required
+def digital_resources(request):
+    resources = DigitalResource.objects.select_related('uploaded_by').all().order_by('-uploaded_at')
+
+    query = request.GET.get('q', '').strip()
+    selected_type = request.GET.get('type', '').strip()
+
+    if query:
+        resources = resources.filter(title__icontains=query) | resources.filter(course_code__icontains=query)
+
+    if selected_type:
+        resources = resources.filter(resource_type=selected_type)
+
+    return render(request, 'library/digital_resources.html', {
+        'resources': resources,
+        'query': query,
+        'selected_type': selected_type,
+    })
+
+
+@login_required
+@user_passes_test(is_librarian_or_admin, login_url='/')
+def digital_resource_add(request):
+    if request.method == 'POST':
+        form = DigitalResourceForm(request.POST, request.FILES)
+        if form.is_valid():
+            resource = form.save(commit=False)
+            resource.uploaded_by = request.user
+            resource.save()
+            messages.success(request, '✅ Digital resource added successfully!')
+            return redirect('digital_resources')
+    else:
+        form = DigitalResourceForm()
+
+    return render(request, 'library/resource_form.html', {
+        'form': form,
+        'action': 'Add'
+    })
+
+
+@login_required
+@user_passes_test(is_librarian_or_admin, login_url='/')
+def digital_resource_edit(request, pk):
+    resource = get_object_or_404(DigitalResource, pk=pk)
+
+    if request.method == 'POST':
+        form = DigitalResourceForm(request.POST, request.FILES, instance=resource)
+        if form.is_valid():
+            form.save()
+            messages.success(request, '✅ Digital resource updated successfully!')
+            return redirect('digital_resources')
+    else:
+        form = DigitalResourceForm(instance=resource)
+
+    return render(request, 'library/resource_form.html', {
+        'form': form,
+        'action': 'Edit'
+    })
+
+
+@login_required
+@user_passes_test(is_librarian_or_admin, login_url='/')
+def digital_resource_delete(request, pk):
+    resource = get_object_or_404(DigitalResource, pk=pk)
+    resource.delete()
+    messages.success(request, '✅ Digital resource deleted successfully!')
+    return redirect('digital_resources')
+
+
+@login_required
+def digital_resource_read(request, pk):
+    resource = get_object_or_404(DigitalResource, pk=pk)
+    return FileResponse(resource.file.open('rb'))
+
+
+@login_required
+def digital_resource_download(request, pk):
+    resource = get_object_or_404(DigitalResource, pk=pk)
+    return FileResponse(resource.file.open('rb'), as_attachment=True)
 
 
 # ===============================================
@@ -387,9 +446,7 @@ def borrow_list(request):
     if is_librarian_or_admin(request.user):
         borrows = Borrow.objects.filter(is_returned=False).select_related('book', 'member')
     else:
-        borrows = Borrow.objects.filter(
-            member=request.user
-        ).select_related('book', 'member')
+        borrows = Borrow.objects.filter(member=request.user).select_related('book', 'member')
 
     return render(request, 'library/borrow_list.html', {'borrows': borrows})
 
@@ -443,11 +500,6 @@ def return_book(request, pk):
 # EXTRA PAGES
 # ===============================================
 @login_required
-def digital_resources(request):
-    return render(request, 'library/digital_resources.html')
-
-
-@login_required
 def research_papers(request):
     papers = ResearchPaper.objects.filter(status='approved').order_by('-uploaded_at')
     query = request.GET.get('q', '')
@@ -468,10 +520,7 @@ def premium_content(request):
 @login_required
 def online_payment(request):
     return render(request, 'library/online_payment.html', {
-        'borrows': Borrow.objects.filter(
-            member=request.user,
-            is_returned=False
-        ).select_related('book')
+        'borrows': Borrow.objects.filter(member=request.user, is_returned=False).select_related('book')
     })
 
 
@@ -543,12 +592,12 @@ def approval_access_control(request):
     pending_papers = ResearchPaper.objects.filter(status='pending').order_by('-uploaded_at')
     approved_papers = ResearchPaper.objects.filter(status='approved').order_by('-uploaded_at')
     rejected_papers = ResearchPaper.objects.filter(status='rejected').order_by('-uploaded_at')
-    context = {
+
+    return render(request, 'library/approval_access_control.html', {
         'pending_papers': pending_papers,
         'approved_papers': approved_papers,
         'rejected_papers': rejected_papers,
-    }
-    return render(request, 'library/approval_access_control.html', context)
+    })
 
 
 @login_required
