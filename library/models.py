@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.utils import timezone
 from datetime import date
 
 
@@ -40,11 +39,30 @@ class User(AbstractUser):
         return self.username
 
 
-# ২. Book Model
+# ২. Category Model
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name_plural = 'Categories'
+
+    def __str__(self):
+        return self.name
+
+
+# ৩. Book Model
 class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=100)
     isbn = models.CharField(max_length=13, unique=True)
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='books'
+    )
     description = models.TextField(null=True, blank=True)
     total_copies = models.PositiveIntegerField(default=1)
     available_copies = models.PositiveIntegerField(default=1)
@@ -58,7 +76,7 @@ class Book(models.Model):
         return self.title
 
 
-# ৩. Member Model
+# ৪. Member Model
 class Member(models.Model):
     MEMBERSHIP_CHOICES = [
         ('basic', 'Basic'),
@@ -95,7 +113,7 @@ class Member(models.Model):
         return self.user.borrowed_books.filter(is_returned=False).count()
 
 
-# ৪. Borrow Model
+# ৫. Borrow Model
 class Borrow(models.Model):
     STATUS_CHOICES = [
         ('borrowed', 'Borrowed'),
@@ -155,13 +173,14 @@ class Borrow(models.Model):
         super().save(*args, **kwargs)
 
 
-# ৫. ResearchPaper Model
+# ৬. ResearchPaper Model
 class ResearchPaper(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),
         ('approved', 'Approved'),
         ('rejected', 'Rejected'),
     ]
+
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=200)
     journal = models.CharField(max_length=200)
