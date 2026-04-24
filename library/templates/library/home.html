@@ -2,20 +2,105 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<h2 style="margin-bottom:25px; color:#1a1a2e;">📊 Dashboard</h2>
 
-<div class="cards">
-    <div class="card">
-        <div class="number">{{ total_books }}</div>
-        <div class="label">📖 Total Books</div>
+<div class="dashboard-page">
+
+    <div class="dashboard-header">
+        <div>
+            <h2>📊 Dashboard</h2>
+            <p>Good day, {{ request.user.first_name|default:request.user.username }} 👋</p>
+        </div>
+        <div class="header-icon">📚</div>
     </div>
-    <div class="card">
-        <div class="number">{{ total_members }}</div>
-        <div class="label">👥 Total Members</div>
+
+    <div class="dashboard-stats">
+        <div class="dash-card">
+            <div class="dash-icon">📚</div>
+            <h3>{{ total_books }}</h3>
+            <p>Total Books</p>
+        </div>
+
+        <div class="dash-card">
+            <div class="dash-icon">👥</div>
+            <h3>{{ total_members }}</h3>
+            <p>Total Members</p>
+        </div>
+
+        <div class="dash-card">
+            <div class="dash-icon">🔄</div>
+            <h3>{{ total_borrows }}</h3>
+            <p>Active Borrowings</p>
+        </div>
+
+        <div class="dash-card">
+            <div class="dash-icon">⚠️</div>
+            <h3>0</h3>
+            <p>Overdue Books</p>
+        </div>
     </div>
-    <div class="card">
-        <div class="number">{{ total_borrows }}</div>
-        <div class="label">🔄 Active Borrowings</div>
+
+    <div class="dashboard-grid">
+
+        <div class="dashboard-panel">
+            <h3>Borrowing Activity</h3>
+
+            <div class="bar-chart">
+                <div class="bar" style="height: 45%;"></div>
+                <div class="bar" style="height: 70%;"></div>
+                <div class="bar" style="height: 55%;"></div>
+                <div class="bar active" style="height: 85%;"></div>
+                <div class="bar" style="height: 65%;"></div>
+                <div class="bar active" style="height: 78%;"></div>
+                <div class="bar" style="height: 50%;"></div>
+            </div>
+
+            <div class="chart-days">
+                <span>Mon</span>
+                <span>Tue</span>
+                <span>Wed</span>
+                <span>Thu</span>
+                <span>Fri</span>
+                <span>Sat</span>
+                <span>Sun</span>
+            </div>
+        </div>
+
+        <div class="dashboard-panel">
+            <h3>Collection Summary</h3>
+
+            <div class="summary-list">
+                <div><span>Science & Tech</span><b>32%</b></div>
+                <div><span>Literature</span><b>24%</b></div>
+                <div><span>History</span><b>20%</b></div>
+                <div><span>Medical</span><b>14%</b></div>
+                <div><span>Others</span><b>10%</b></div>
+            </div>
+        </div>
+
+        <div class="dashboard-panel">
+            <h3>Recent Activity</h3>
+
+            <ul class="activity-list">
+                <li>New book added to library</li>
+                <li>Member profile updated</li>
+                <li>Book borrowed successfully</li>
+                <li>Payment record checked</li>
+            </ul>
+        </div>
+
+        <div class="dashboard-panel">
+            <h3>Quick Actions</h3>
+
+            <div class="quick-actions">
+                <a href="{% url 'book_list' %}">📚 Books</a>
+                <a href="{% url 'member_list' %}">👥 Members</a>
+                <a href="{% url 'borrow_list' %}">🔄 Borrow</a>
+                <a href="{% url 'reports_analytics' %}">📊 Reports</a>
+            </div>
+        </div>
+
     </div>
+
 </div>
+
 {% endblock %}
