@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import User, Book, Member, Borrow, ResearchPaper, DigitalResource
+from .models import User, Book, BookReview, Member, Borrow, ResearchPaper, DigitalResource
 
 
 class BookForm(forms.ModelForm):
@@ -15,6 +15,20 @@ class BookForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Enter book description'}),
             'total_copies': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
             'cover_image': forms.FileInput(attrs={'class': 'form-control'}),
+        }
+
+
+class BookReviewForm(forms.ModelForm):
+    class Meta:
+        model = BookReview
+        fields = ['rating', 'comment']
+        widgets = {
+            'rating': forms.Select(attrs={'class': 'form-control'}),
+            'comment': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 4,
+                'placeholder': 'Write your review about this book...'
+            }),
         }
 
 

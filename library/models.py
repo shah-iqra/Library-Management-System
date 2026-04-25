@@ -53,6 +53,38 @@ class Book(models.Model):
     def __str__(self):
         return self.title
 
+    def average_rating(self):
+        reviews = self.reviews.all()
+        if reviews.exists():
+            return round(sum(review.rating for review in reviews) / reviews.count(), 1)
+        return 0
+
+    def total_reviews(self):
+        return self.reviews.count()
+
+
+class BookReview(models.Model):
+    RATING_CHOICES = [
+        (1, '1 Star'),
+        (2, '2 Stars'),
+        (3, '3 Stars'),
+        (4, '4 Stars'),
+        (5, '5 Stars'),
+    ]
+
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='book_reviews')
+    rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES)
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        unique_together = ('book', 'user')
+
+    def __str__(self):
+        return f"{self.book.title} - {self.user.username} ({self.rating})"
+
 
 class Member(models.Model):
     MEMBERSHIP_CHOICES = [

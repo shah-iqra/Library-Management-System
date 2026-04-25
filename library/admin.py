@@ -1,6 +1,15 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Book, Member, Borrow, User, Category, ResearchPaper, DigitalResource
+from .models import (
+    Book,
+    BookReview,
+    Member,
+    Borrow,
+    User,
+    Category,
+    ResearchPaper,
+    DigitalResource,
+)
 
 
 @admin.register(User)
@@ -23,6 +32,13 @@ class BookAdmin(admin.ModelAdmin):
     list_display = ['title', 'author', 'category', 'isbn', 'total_copies', 'available_copies']
     search_fields = ['title', 'author', 'isbn']
     list_filter = ['category']
+
+
+@admin.register(BookReview)
+class BookReviewAdmin(admin.ModelAdmin):
+    list_display = ['book', 'user', 'rating', 'created_at']
+    search_fields = ['book__title', 'user__username', 'comment']
+    list_filter = ['rating', 'created_at']
 
 
 @admin.register(DigitalResource)
