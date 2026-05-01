@@ -39,7 +39,12 @@ urlpatterns = [
     path('return/<int:pk>/', views.return_book, name='return_book'),
 
     path('research-papers/', views.research_papers, name='research_papers'),
+    
+    # --- Premium Content Section ---
     path('premium-content/', views.premium_content, name='premium_content'),
+    # নিচে এই লাইনটি নতুন যোগ করা হয়েছে এরর দূর করার জন্য
+    path('premium-content/upload/', views.admin_upload_premium, name='admin_upload_premium'), 
+    
     path('online-payment/', views.online_payment, name='online_payment'),
     path('fines-dues/', views.fines_dues, name='fines_dues'),
     path('system-monitoring/', views.system_monitoring, name='system_monitoring'),

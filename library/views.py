@@ -4,6 +4,9 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.utils import timezone
 from django.http import FileResponse, HttpResponseForbidden
+from .models import PremiumContent, PremiumPurchase
+from .forms import PremiumContentForm, PremiumPurchaseForm
+import uuid
 
 from .models import Book, BookReview, Borrow, Member, ResearchPaper, Category, DigitalResource
 from .forms import (
@@ -638,3 +641,89 @@ def download_paper(request, paper_id):
     if paper.status != 'approved':
         return HttpResponseForbidden("This paper is not approved yet.")
     return FileResponse(paper.paper_file.open('rb'), as_attachment=True)
+
+
+
+# ✅ User: সব premium content দেখবে
+@login_required
+def premium_content_list(request):
+    contents = PremiumContent.objects.filter(is_active=True)
+    purchased_ids = PremiumPurchase.objects.filter(
+        user=request.user
+    ).values_list('content_id', flat=True)
+    return render(request, 'library/premium_content.html', {
+        'contents': contents,
+        'purchased_ids': purchased_ids,
+    })
+
+
+# ✅ User: একটা content কিনবে
+@login_required
+def purchase_premium(request, pk):
+    content = get_object_or_404(PremiumContent, pk=pk, is_active=True)
+    
+    # Already purchased check
+    if PremiumPurchase.objects.filter(user=request.user, content=content).exists():
+        messages.info(request, "You already own this content!")
+        return redirect('view_premium', pk=pk)
+    
+    if request.method == 'POST':
+        form = PremiumPurchaseForm(request.POST)
+        if form.is_valid():
+            PremiumPurchase.objects.create(
+                user=request.user,
+                content=content,
+                amount_paid=content.price,
+                transaction_id=form.cleaned_data['transaction_id']
+            )
+            messages.success(request, "Purchase successful! You now have access.")
+            return redirect('view_premium', pk=pk)
+    else:
+        form = PremiumPurchaseForm()
+    
+    return render(request, 'library/purchase_premium.html', {
+        'content': content,
+        'form': form
+    })
+
+
+# ✅ User: purchased content দেখবে/download করবে
+@login_required
+def view_premium_content(request, pk):
+    content = get_object_or_404(PremiumContent, pk=pk)
+    has_access = PremiumPurchase.objects.filter(
+        user=request.user, content=content
+    ).exists()
+    
+    if not has_access:
+        messages.error(request, "Please purchase this content first.")
+        return redirect('purchase_premium', pk=pk)
+    
+    return render(request, 'library/view_premium_content.html', {'content': content})
+
+
+# ✅ Admin: নতুন content upload করবে
+@login_required
+def admin_upload_premium(request):
+    if not request.user.is_staff:
+        return redirect('home')
+    
+    if request.method == 'POST':
+        form = PremiumContentForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Premium content uploaded successfully!")
+            return redirect('premium_content_list')
+    else:
+        form = PremiumContentForm()
+    
+    return render(request, 'library/admin_upload_premium.html', {'form': form})
+
+
+# ✅ Admin: সব purchases দেখবে
+@login_required
+def admin_premium_purchases(request):
+    if not request.user.is_staff:
+        return redirect('home')
+    purchases = PremiumPurchase.objects.all().select_related('user', 'content')
+    return render(request, 'library/admin_premium_purchases.html', {'purchases': purchases})
