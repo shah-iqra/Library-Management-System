@@ -1,7 +1,130 @@
 {% extends 'library/base.html' %}
+{% load static %}
+
+{% block title %}Premium Content - BookNest{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'library/css/premium_content.css' %}">
+{% endblock %}
+
 {% block content %}
-<div style="padding: 20px;">
-    <h2>👑 Premium Content</h2>
-    <p>Coming soon...</p>
+<div class="container-fluid px-0">
+
+  <!-- ── Hero Banner ── -->
+  <div class="premium-hero">
+    <h1 class="hero-title">
+      <span class="crown-icon">👑</span>
+      Premium Content
+    </h1>
+    <p class="hero-subtitle">Exclusive notes, courses & study materials curated for you</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <strong>{{ contents.count }}</strong>
+        Total Items
+      </div>
+      <div class="hero-stat">
+        <strong>{{ purchased_ids|length }}</strong>
+        You Own
+      </div>
+      <div class="hero-stat">
+        <strong>৳</strong>
+        BDT Pricing
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Filter Bar ── -->
+  <div class="filter-bar">
+    <a href="?type=" class="filter-btn {% if not request.GET.type %}active{% endif %}">All</a>
+    <a href="?type=notes" class="filter-btn {% if request.GET.type == 'notes' %}active{% endif %}">📄 Notes</a>
+    <a href="?type=course" class="filter-btn {% if request.GET.type == 'course' %}active{% endif %}">🎓 Courses</a>
+
+    {% if request.user.is_staff %}
+      <a href="{% url 'admin_upload_premium' %}" class="admin-upload-btn">
+        ➕ Upload Content
+      </a>
+    {% endif %}
+  </div>
+
+  <!-- ── Messages ── -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show mb-3" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- ── Content Grid ── -->
+  {% if contents %}
+  <div class="content-grid">
+    {% for content in contents %}
+      {% if not request.GET.type or request.GET.type == content.content_type %}
+      <div class="content-card">
+
+        <!-- Owned Badge -->
+        {% if content.id in purchased_ids %}
+          <span class="owned-badge">✓ Owned</span>
+        {% endif %}
+
+        <!-- Thumbnail -->
+        {% if content.thumbnail %}
+          <img src="{{ content.thumbnail.url }}" alt="{{ content.title }}" class="card-thumb">
+        {% else %}
+          <div class="card-thumb-placeholder {% if content.content_type == 'notes' %}notes-thumb{% else %}course-thumb{% endif %}">
+            <span class="card-thumb-icon">
+              {% if content.content_type == 'notes' %}📄{% else %}🎓{% endif %}
+            </span>
+          </div>
+        {% endif %}
+
+        <!-- Card Body -->
+        <div class="card-body">
+          <span class="card-type-badge {% if content.content_type == 'notes' %}badge-notes{% else %}badge-course{% endif %}">
+            {{ content.get_content_type_display }}
+          </span>
+
+          <h5 class="card-title">{{ content.title }}</h5>
+          <p class="card-desc">{{ content.description }}</p>
+
+          <div class="card-footer">
+            <div class="price-tag">
+              <span class="currency">৳</span>{{ content.price }}
+            </div>
+
+            {% if content.id in purchased_ids %}
+              <a href="{% url 'view_premium' content.pk %}" class="btn-access">
+                ▶ Access
+              </a>
+            {% else %}
+              <a href="{% url 'purchase_premium' content.pk %}" class="btn-buy">
+                🛒 Buy Now
+              </a>
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  {% else %}
+
+  <!-- ── Empty State ── -->
+  <div class="empty-state">
+    <div class="empty-icon">👑</div>
+    <h4>No premium content available yet</h4>
+    <p>Check back soon — exclusive materials are being added.</p>
+    {% if request.user.is_staff %}
+      <a href="{% url 'admin_upload_premium' %}" class="btn-buy mt-2">
+        ➕ Upload First Content
+      </a>
+    {% endif %}
+  </div>
+
+  {% endif %}
+
 </div>
 {% endblock %}
