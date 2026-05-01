@@ -705,19 +705,16 @@ def view_premium_content(request, pk):
 # ✅ Admin: নতুন content upload করবে
 @login_required
 def admin_upload_premium(request):
-    if not request.user.is_staff:
-        return redirect('home')
-    
     if request.method == 'POST':
         form = PremiumContentForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            messages.success(request, "Premium content uploaded successfully!")
-            return redirect('premium_content_list')
+            messages.success(request, 'Content uploaded successfully!')
+            return redirect('premium_content')
     else:
         form = PremiumContentForm()
     
-    return render(request, 'library/admin_upload_premium.html', {'form': form})
+    return render(request, 'library/admin_upload_premium.html', {'form': form})  # সঠিক path
 
 
 # ✅ Admin: সব purchases দেখবে

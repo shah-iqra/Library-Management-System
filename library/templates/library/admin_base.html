@@ -1,0 +1,14 @@
+{% extends 'library/admin_base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="card" style="background: white; padding: 30px; border-radius: 15px;">
+        <h3>Upload Premium Content</h3>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
