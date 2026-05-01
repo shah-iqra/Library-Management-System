@@ -1,8 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from datetime import date
+from django.conf import settings 
 
-
+# --- Custom User Model ---
 class User(AbstractUser):
     ADMIN = 'admin'
     LIBRARIAN = 'librarian'
@@ -29,6 +30,7 @@ class User(AbstractUser):
         return self.username
 
 
+# --- Category & Book Models ---
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
@@ -86,6 +88,7 @@ class BookReview(models.Model):
         return f"{self.book.title} - {self.user.username} ({self.rating})"
 
 
+# --- Membership & Borrowing Models ---
 class Member(models.Model):
     MEMBERSHIP_CHOICES = [
         ('basic', 'Basic'),
@@ -109,9 +112,6 @@ class Member(models.Model):
             return date.today() <= self.membership_expiry
         return True
 
-    def active_borrows_count(self):
-        return self.user.borrowed_books.filter(is_returned=False).count()
-
 
 class Borrow(models.Model):
     STATUS_CHOICES = [
@@ -129,31 +129,27 @@ class Borrow(models.Model):
     is_returned = models.BooleanField(default=False)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='borrowed')
     fine_amount = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
-    notes = models.TextField(null=True, blank=True)
+    
+    # এটি অবশ্যই যোগ করতে হবে
+    notes = models.TextField(null=True, blank=True) 
 
     def __str__(self):
         return f"{self.book.title} borrowed by {self.member.username}"
 
-    def is_overdue(self):
-        if not self.is_returned and self.due_date:
-            return date.today() > self.due_date
-        return False
-
-    def calculate_fine(self):
-        if self.is_overdue():
-            overdue_days = (date.today() - self.due_date).days
-            return overdue_days * 5
-        return 0
-
     def save(self, *args, **kwargs):
-        if self.is_overdue():
+        # অটোমেটিক স্ট্যাটাস আপডেট লজিক
+        if not self.is_returned and self.due_date and date.today() > self.due_date:
             self.status = 'overdue'
-            self.fine_amount = self.calculate_fine()
+            overdue_days = (date.today() - self.due_date).days
+            self.fine_amount = overdue_days * 5
+        
         if self.is_returned and self.status != 'lost':
             self.status = 'returned'
+            
         super().save(*args, **kwargs)
 
 
+# --- Resources & Research Models ---
 class ResearchPaper(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),
@@ -192,3 +188,36 @@ class DigitalResource(models.Model):
 
     def __str__(self):
         return self.title
+
+
+# --- Premium Content Models ---
+class PremiumContent(models.Model):
+    CONTENT_TYPE = [
+        ('notes', 'Notes'),
+        ('course', 'Course'),
+    ]
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    content_type = models.CharField(max_length=10, choices=CONTENT_TYPE)
+    file = models.FileField(upload_to='premium_content/')
+    thumbnail = models.ImageField(upload_to='premium_thumbnails/', blank=True, null=True)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.title
+
+
+class PremiumPurchase(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    content = models.ForeignKey(PremiumContent, on_delete=models.CASCADE)
+    purchased_at = models.DateTimeField(auto_now_add=True)
+    amount_paid = models.DecimalField(max_digits=8, decimal_places=2)
+    transaction_id = models.CharField(max_length=100, unique=True)
+
+    class Meta:
+        unique_together = ('user', 'content')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.content.title}"

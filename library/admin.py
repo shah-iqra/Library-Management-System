@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from .models import PremiumContent, PremiumPurchase
 from .models import (
     Book,
     BookReview,
@@ -77,3 +78,18 @@ class MemberAdmin(admin.ModelAdmin):
 class BorrowAdmin(admin.ModelAdmin):
     list_display = ['book', 'member', 'borrow_date', 'return_date', 'is_returned']
     list_filter = ['is_returned']
+
+
+
+@admin.register(PremiumContent)
+class PremiumContentAdmin(admin.ModelAdmin):
+    list_display = ['title', 'content_type', 'price', 'is_active', 'created_at']
+    list_filter = ['content_type', 'is_active']
+    search_fields = ['title', 'description']
+    list_editable = ['price', 'is_active']
+
+@admin.register(PremiumPurchase)
+class PremiumPurchaseAdmin(admin.ModelAdmin):
+    list_display = ['user', 'content', 'amount_paid', 'purchased_at', 'transaction_id']
+    list_filter = ['purchased_at']
+    search_fields = ['user__username', 'content__title', 'transaction_id']
