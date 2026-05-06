@@ -1937,4 +1937,177 @@ tr:hover td {
   }
 }
 
+/* Container styling to center the card */
+.upload-container {
+    max-width: 650px;
+    margin: 40px auto;
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header style within the card */
+.upload-header {
+    margin-bottom: 30px;
+    border-bottom: 2px solid #f0f2f5;
+    padding-bottom: 15px;
+}
+
+.upload-header h2 {
+    color: #2c3e50;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+}
+
+.upload-header p {
+    color: #7f8c8d;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #34495e;
+    margin-bottom: 8px;
+    text-align: left;
+}
+
+/* Inputs, Select, and Textarea styling */
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #dcdde1;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #2c3e50;
+    background-color: #fcfcfc;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #3498db;
+    background-color: #fff;
+    outline: none;
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.15);
+}
+
+/* Two column layout for Select and Price */
+.form-row-two-col {
+    display: flex;
+    gap: 20px;
+}
+
+.form-row-two-col .form-group {
+    flex: 1;
+}
+
+/* Modern File Upload Input style */
+.file-drop-area {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    padding: 15px;
+    border: 2px dashed #cbd5e1;
+    border-radius: 8px;
+    background-color: #f8fafc;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.file-drop-area:hover {
+    border-color: #3498db;
+    background-color: #f1f5f9;
+}
+
+.fake-btn {
+    flex-shrink: 0;
+    background-color: #e2e8f0;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin-right: 10px;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #475569;
+}
+
+.file-msg {
+    font-size: 13px;
+    font-weight: 300;
+    color: #64748b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Form Action Buttons (Upload & Cancel) */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background-color: #1abc9c; /* sidebar এ ব্যবহৃত থিমের কাছাকাছি উজ্জ্বল কালার */
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: #16a085;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background-color: #f1f2f6;
+    color: #57606f;
+}
+
+.btn-secondary:hover {
+    background-color: #dfe4ea;
+    color: #2f3542;
+}
 
