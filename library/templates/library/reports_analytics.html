@@ -1,7 +1,117 @@
 {% extends 'library/base.html' %}
+{% load static %}
+
 {% block content %}
-<div style="padding: 20px;">
-    <h2>📈 Reports & Analytics</h2>
-    <p>Coming soon...</p>
+<link rel="stylesheet" href="{% static 'library/css/reports_style.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="analytics-container">
+    
+    <div class="analytics-header">
+        <div class="header-text">
+            <h2><i class="fa-solid fa-gauge-high"></i> Reporting & Analytics System</h2>
+            <p>System activities, resource download tracking, and usage metrics</p>
+        </div>
+        <div class="header-actions">
+            <a href="?download=borrow_report" class="btn btn-premium-dl"><i class="fa-solid fa-cloud-download-alt"></i> Generate Full Audit Report</a>
+        </div>
+    </div>
+
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="metric-icon metric-borrow"><i class="fa-solid fa-book-reader"></i></div>
+            <div class="metric-data">
+                <h3>{{ total_borrows }}</h3>
+                <p>Book Borrows</p>
+                <span class="trend trend-up"><i class="fa-solid fa-arrow-up"></i> Live</span>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-icon metric-download"><i class="fa-solid fa-file-pdf"></i></div>
+            <div class="metric-data">
+                <h3>{{ total_papers }}</h3>
+                <p>Research Papers</p>
+                <span class="trend trend-up"><i class="fa-solid fa-arrow-up"></i> Live</span>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-icon metric-active"><i class="fa-solid fa-user-check"></i></div>
+            <div class="metric-data">
+                <h3>{{ total_users }}</h3>
+                <p>Registered Users</p>
+                <span class="trend trend-neutral"><i class="fa-solid fa-equals"></i> Active</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="reports-grid">
+        
+        <div class="report-section-card">
+            <h3><i class="fa-solid fa-folder-open"></i> Administrative Downloadable Reports</h3>
+            <p class="section-desc">Generate instant CSV reports for library audits.</p>
+            
+            <div class="report-item">
+                <div class="report-info">
+                    <h4>Borrowing Activity Log</h4>
+                    <p>Log of books, borrowers, loan periods, and status.</p>
+                </div>
+                <a href="?download=borrow_report" class="btn-dl-small dl-excel"><i class="fa-solid fa-download"></i> CSV Report</a>
+            </div>
+            
+            <div class="report-item">
+                <div class="report-info">
+                    <h4>Research Paper Access Report</h4>
+                    <p>Database statistics of downloaded research papers.</p>
+                </div>
+                <a href="?download=paper_report" class="btn-dl-small dl-excel"><i class="fa-solid fa-download"></i> CSV Report</a>
+            </div>
+
+            <div class="report-item">
+                <div class="report-info">
+                    <h4>System Usage & Traffic Statistics</h4>
+                    <p>Sessions, registrations, and system resource metrics.</p>
+                </div>
+                <a href="?download=system_usage" class="btn-dl-small dl-excel"><i class="fa-solid fa-download"></i> CSV Report</a>
+            </div>
+        </div>
+
+        <div class="tracker-section-card">
+            <h3><i class="fa-solid fa-clock-rotate-left"></i> Real-time Activity Tracker</h3>
+            <p class="section-desc">Monitoring of recent user actions and book circulation.</p>
+            
+            <table class="activity-table">
+                <thead>
+                    <tr>
+                        <th>USER</th>
+                        <th>STATUS</th>
+                        <th>RESOURCE</th>
+                        <th>DUE DATE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for activity in recent_activities %}
+                    <tr>
+                        <td><strong>{{ activity.member.username }}</strong></td>
+                        <td>
+                            {% if activity.status == 'returned' %}
+                                <span class="activity-badge badge-dl">Returned</span>
+                            {% else %}
+                                <span class="activity-badge badge-borrow">Pending</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ activity.book.title }}</td>
+                        <td>{{ activity.due_date }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: #95a5a6;">No recent activity found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 {% endblock %}

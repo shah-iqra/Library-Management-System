@@ -8,6 +8,12 @@ from .models import PremiumContent, PremiumPurchase
 from .forms import PremiumContentForm, PremiumPurchaseForm
 import uuid
 
+import csv
+from django.http import HttpResponse
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import Borrow, ResearchPaper, User  # আপনার আসল মডেলের নামগুলো মিলিয়ে নেবেন
+
 from .models import Book, BookReview, Borrow, Member, ResearchPaper, Category, DigitalResource
 from .forms import (
     BookForm,
@@ -554,12 +560,53 @@ def system_monitoring(request):
 
 
 @login_required
-@user_passes_test(is_librarian_or_admin, login_url='/')
 def reports_analytics(request):
-    return render(request, 'library/reports_analytics.html', {
-        'books': Book.objects.all(),
-        'recent_borrows': Borrow.objects.order_by('-borrow_date').select_related('book', 'member')[:10],
-    })
+    # ১. ডাউনলোড অপশন হ্যান্ডেল করা (অ্যাকশন বাটনগুলোর জন্য)
+    download_type = request.GET.get('download')
+    
+    if download_type == 'borrow_report':
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="borrow_activity_report.csv"'
+        writer = csv.writer(response)
+        writer.writerow(['User', 'Book', 'Due Date', 'Status'])
+        # ডাটাবেস থেকে সব Borrow ডেটা নিয়ে CSV তৈরি
+        for b in Borrow.objects.all():
+            writer.writerow([b.member.username, b.book.title, b.due_date, b.status])
+        return response
+
+    elif download_type == 'paper_report':
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="research_papers_report.csv"'
+        writer = csv.writer(response)
+        writer.writerow(['Title', 'Author', 'Journal', 'Year'])
+        for paper in ResearchPaper.objects.all():
+            writer.writerow([paper.title, paper.author, paper.journal, paper.year])
+        return response
+
+    elif download_type == 'system_usage':
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="system_usage_report.csv"'
+        writer = csv.writer(response)
+        writer.writerow(['Username', 'Email', 'Role', 'Date Joined'])
+        for u in User.objects.all():
+            writer.writerow([u.username, u.email, u.role, u.date_joined])
+        return response
+
+    # ২. ড্যাশবোর্ডের জন্য ডাইনামিক স্ট্যাটিস্টিকস জেনারেট করা
+    total_borrows = Borrow.objects.count()
+    total_papers = ResearchPaper.objects.count()
+    total_users = User.objects.count()  # একটিভ ইউজার ট্র্যাকিংয়ের জন্য
+
+    # ৩. রিয়েল-টাইম অ্যাক্টিভিটি ট্র্যাকারের জন্য সর্বশেষ ৪টি Borrow ডেটা আনা
+    recent_activities = Borrow.objects.all().order_by('-id')[:4]
+
+    context = {
+        'total_borrows': total_borrows,
+        'total_papers': total_papers,
+        'total_users': total_users,
+        'recent_activities': recent_activities,
+    }
+    return render(request, 'library/reports_analytics.html', context)
 
 
 @login_required
