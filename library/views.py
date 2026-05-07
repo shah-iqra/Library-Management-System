@@ -14,6 +14,8 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import Borrow, ResearchPaper, User  # আপনার আসল মডেলের নামগুলো মিলিয়ে নেবেন
 
+
+
 from .models import Book, BookReview, Borrow, Member, ResearchPaper, Category, DigitalResource
 from .forms import (
     BookForm,
@@ -771,3 +773,17 @@ def admin_premium_purchases(request):
         return redirect('home')
     purchases = PremiumPurchase.objects.all().select_related('user', 'content')
     return render(request, 'library/admin_premium_purchases.html', {'purchases': purchases})
+
+
+def export_members_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="member_list.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['ID', 'Username', 'Email', 'Phone', 'Date Joined'])
+
+    members = User.objects.all() # আপনার মেম্বার মডেল অনুযায়ী
+    for member in members:
+        writer.writerow([member.id, member.username, member.email, getattr(member, 'phone', 'N/A'), member.date_joined])
+
+    return response
