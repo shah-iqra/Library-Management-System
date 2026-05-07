@@ -51,6 +51,7 @@ urlpatterns = [
     path('research-papers/', views.research_papers, name='research_papers'),
 
 
+
     path('premium-content/', views.premium_content, name='premium_content'),
     path('premium-content/upload/', views.admin_upload_premium, name='admin_upload_premium'),
 
