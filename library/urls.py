@@ -18,6 +18,7 @@ urlpatterns = [
     path('books/add/', views.book_add, name='book_add'),
     path('books/edit/<int:pk>/', views.book_edit, name='book_edit'),
     path('books/delete/<int:pk>/', views.book_delete, name='book_delete'),
+    path('books/issue/<int:book_id>/', views.issue_book, name='issue_book'),
 
     # --- Categories ---
     path('categories/', views.category_list, name='category_list'),
@@ -48,6 +49,18 @@ urlpatterns = [
 
     # --- Research Papers (Librarian/Admin) ---
     path('research-papers/', views.research_papers, name='research_papers'),
+
+
+
+    path('premium-content/', views.premium_content, name='premium_content'),
+    path('premium-content/upload/', views.admin_upload_premium, name='admin_upload_premium'),
+
+    path('online-payment/', views.online_payment, name='online_payment'),
+    path('fines-dues/', views.fines_dues, name='fines_dues'),
+    path('system-monitoring/', views.system_monitoring, name='system_monitoring'),
+    path('reports-analytics/', views.reports_analytics, name='reports_analytics'),
+
+
     path('librarian/research-papers/', views.manage_research_papers, name='manage_research_papers'),
     path('librarian/research-papers/upload/', views.upload_research_paper, name='upload_research_paper'),
     path('librarian/research-papers/approval/', views.approval_access_control, name='approval_access_control'),

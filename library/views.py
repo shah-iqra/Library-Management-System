@@ -3,20 +3,24 @@ from django.contrib.auth import authenticate, login, logout, get_user_model, upd
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.utils import timezone
-from django.http import FileResponse, HttpResponseForbidden
-from .models import PremiumContent, PremiumPurchase
-from .forms import PremiumContentForm, PremiumPurchaseForm
+from django.http import FileResponse, HttpResponseForbidden, HttpResponse
+from datetime import timedelta
+import csv
 import uuid
 
-import csv
-from django.http import HttpResponse
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from .models import Borrow, ResearchPaper, User  # আপনার আসল মডেলের নামগুলো মিলিয়ে নেবেন
+from .models import (
+    Book,
+    BookReview,
+    Borrow,
+    Member,
+    ResearchPaper,
+    Category,
+    DigitalResource,
+    PremiumContent,
+    PremiumPurchase,
+)
 
 
-
-from .models import Book, BookReview, Borrow, Member, ResearchPaper, Category, DigitalResource
 from .forms import (
     BookForm,
     BookReviewForm,
@@ -26,6 +30,8 @@ from .forms import (
     PasswordChangeForm,
     ResearchPaperForm,
     DigitalResourceForm,
+    PremiumContentForm,
+    PremiumPurchaseForm,
 )
 
 User = get_user_model()
@@ -239,6 +245,12 @@ def book_detail(request, pk):
     else:
         form = BookReviewForm(instance=user_review)
 
+    active_borrow = Borrow.objects.filter(
+        book=book,
+        member=request.user,
+        is_returned=False
+    ).first()
+
     return render(request, 'library/book_detail.html', {
         'book': book,
         'reviews': reviews,
@@ -246,6 +258,7 @@ def book_detail(request, pk):
         'user_review': user_review,
         'average_rating': book.average_rating(),
         'total_reviews': book.total_reviews(),
+        'active_borrow': active_borrow,
     })
 
 
@@ -301,6 +314,129 @@ def book_delete(request, pk):
     get_object_or_404(Book, pk=pk).delete()
     messages.success(request, '✅ Book deleted successfully!')
     return redirect('book_list')
+
+
+# ==================================================
+# BOOK BORROWING & RETURN SYSTEM
+# ==================================================
+
+@login_required
+def issue_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+
+    if book.available_copies <= 0:
+        messages.error(request, '❌ No copies available!')
+        return redirect('book_detail', pk=book.id)
+
+    already_borrowed = Borrow.objects.filter(
+        book=book,
+        member=request.user,
+        is_returned=False
+    ).exists()
+
+    if already_borrowed:
+        messages.error(request, '❌ You already borrowed this book.')
+        return redirect('book_detail', pk=book.id)
+
+    due_date = timezone.now().date() + timedelta(days=14)
+
+    Borrow.objects.create(
+        book=book,
+        member=request.user,
+        due_date=due_date,
+        is_returned=False,
+        status='borrowed'
+    )
+
+    book.available_copies -= 1
+    book.save()
+
+    messages.success(request, f'✅ "{book.title}" borrowed successfully! Due date: {due_date}')
+    return redirect('borrow_list')
+
+
+@login_required
+def borrow_list(request):
+    if is_librarian_or_admin(request.user):
+        borrows = Borrow.objects.select_related('book', 'member').all().order_by('-borrow_date')
+    else:
+        borrows = Borrow.objects.filter(member=request.user).select_related('book', 'member').order_by('-borrow_date')
+
+    return render(request, 'library/borrow_list.html', {
+        'borrows': borrows,
+        'today': timezone.now().date()
+    })
+
+
+@login_required
+@user_passes_test(is_librarian_or_admin, login_url='/')
+def borrow_book(request):
+    if request.method == "POST":
+        book = get_object_or_404(Book, pk=request.POST.get('book'))
+        member = get_object_or_404(User, pk=request.POST.get('member'))
+
+        if book.available_copies <= 0:
+            messages.error(request, '❌ No copies available!')
+            return redirect('borrow_book')
+
+        already_borrowed = Borrow.objects.filter(
+            book=book,
+            member=member,
+            is_returned=False
+        ).exists()
+
+        if already_borrowed:
+            messages.error(request, '❌ This member already borrowed this book.')
+            return redirect('borrow_book')
+
+        selected_due_date = request.POST.get('due_date')
+
+        if selected_due_date:
+            due_date = timezone.datetime.strptime(selected_due_date, "%Y-%m-%d").date()
+        else:
+            due_date = timezone.now().date() + timedelta(days=14)
+
+        Borrow.objects.create(
+            book=book,
+            member=member,
+            due_date=due_date,
+            is_returned=False,
+            status='borrowed',
+            notes=request.POST.get('notes', '')
+        )
+
+        book.available_copies -= 1
+        book.save()
+
+        messages.success(request, f'✅ "{book.title}" borrowed by {member.username}!')
+        return redirect('borrow_list')
+
+    return render(request, 'library/borrow_form.html', {
+        'books': Book.objects.filter(available_copies__gt=0),
+        'members': User.objects.filter(role=User.REGULAR_USER)
+    })
+
+@login_required
+def return_book(request, pk):
+    borrow = get_object_or_404(Borrow, pk=pk)
+
+    if not (is_librarian_or_admin(request.user) or borrow.member == request.user):
+        return HttpResponseForbidden("You are not allowed to return this book.")
+
+    if borrow.is_returned:
+        messages.error(request, '❌ This book is already returned.')
+        return redirect('borrow_list')
+
+    borrow.is_returned = True
+    borrow.return_date = timezone.now().date()
+    borrow.status = 'returned'
+    borrow.save()
+
+    borrow.book.available_copies += 1
+    borrow.book.save()
+
+    messages.success(request, f'✅ "{borrow.book.title}" returned successfully!')
+    return redirect('borrow_list')
 
 
 @login_required
@@ -455,61 +591,6 @@ def member_delete(request, pk):
 
 
 @login_required
-def borrow_list(request):
-    if is_librarian_or_admin(request.user):
-        borrows = Borrow.objects.filter(is_returned=False).select_related('book', 'member')
-    else:
-        borrows = Borrow.objects.filter(member=request.user).select_related('book', 'member')
-
-    return render(request, 'library/borrow_list.html', {'borrows': borrows})
-
-
-@login_required
-@user_passes_test(is_librarian_or_admin, login_url='/')
-def borrow_book(request):
-    if request.method == "POST":
-        book = get_object_or_404(Book, pk=request.POST.get('book'))
-        member = get_object_or_404(User, pk=request.POST.get('member'))
-
-        if book.available_copies > 0:
-            Borrow.objects.create(
-                book=book,
-                member=member,
-                due_date=request.POST.get('due_date') or None
-            )
-            book.available_copies -= 1
-            book.save()
-            messages.success(request, f'✅ "{book.title}" borrowed by {member.username}!')
-        else:
-            messages.error(request, '❌ No copies available!')
-
-        return redirect('borrow_list')
-
-    return render(request, 'library/borrow_form.html', {
-        'books': Book.objects.filter(available_copies__gt=0),
-        'members': User.objects.filter(role=User.REGULAR_USER)
-    })
-
-
-@login_required
-@user_passes_test(is_librarian_or_admin, login_url='/')
-def return_book(request, pk):
-    borrow = get_object_or_404(Borrow, pk=pk)
-
-    if not borrow.is_returned:
-        borrow.is_returned = True
-        borrow.return_date = timezone.now().date()
-        borrow.status = 'returned'
-        borrow.save()
-
-        borrow.book.available_copies += 1
-        borrow.book.save()
-        messages.success(request, f'✅ "{borrow.book.title}" returned successfully!')
-
-    return redirect('borrow_list')
-
-
-@login_required
 def research_papers(request):
     papers = ResearchPaper.objects.filter(status='approved').order_by('-uploaded_at')
     query = request.GET.get('q', '')
@@ -563,15 +644,14 @@ def system_monitoring(request):
 
 @login_required
 def reports_analytics(request):
-    # ১. ডাউনলোড অপশন হ্যান্ডেল করা (অ্যাকশন বাটনগুলোর জন্য)
     download_type = request.GET.get('download')
-    
+
     if download_type == 'borrow_report':
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="borrow_activity_report.csv"'
         writer = csv.writer(response)
         writer.writerow(['User', 'Book', 'Due Date', 'Status'])
-        # ডাটাবেস থেকে সব Borrow ডেটা নিয়ে CSV তৈরি
+
         for b in Borrow.objects.all():
             writer.writerow([b.member.username, b.book.title, b.due_date, b.status])
         return response
@@ -581,6 +661,7 @@ def reports_analytics(request):
         response['Content-Disposition'] = 'attachment; filename="research_papers_report.csv"'
         writer = csv.writer(response)
         writer.writerow(['Title', 'Author', 'Journal', 'Year'])
+
         for paper in ResearchPaper.objects.all():
             writer.writerow([paper.title, paper.author, paper.journal, paper.year])
         return response
@@ -590,25 +671,22 @@ def reports_analytics(request):
         response['Content-Disposition'] = 'attachment; filename="system_usage_report.csv"'
         writer = csv.writer(response)
         writer.writerow(['Username', 'Email', 'Role', 'Date Joined'])
+
         for u in User.objects.all():
             writer.writerow([u.username, u.email, u.role, u.date_joined])
         return response
 
-    # ২. ড্যাশবোর্ডের জন্য ডাইনামিক স্ট্যাটিস্টিকস জেনারেট করা
     total_borrows = Borrow.objects.count()
     total_papers = ResearchPaper.objects.count()
-    total_users = User.objects.count()  # একটিভ ইউজার ট্র্যাকিংয়ের জন্য
-
-    # ৩. রিয়েল-টাইম অ্যাক্টিভিটি ট্র্যাকারের জন্য সর্বশেষ ৪টি Borrow ডেটা আনা
+    total_users = User.objects.count()
     recent_activities = Borrow.objects.all().order_by('-id')[:4]
 
-    context = {
+    return render(request, 'library/reports_analytics.html', {
         'total_borrows': total_borrows,
         'total_papers': total_papers,
         'total_users': total_users,
         'recent_activities': recent_activities,
-    }
-    return render(request, 'library/reports_analytics.html', context)
+    })
 
 
 @login_required
@@ -631,6 +709,7 @@ def upload_research_paper(request):
             return redirect('manage_research_papers')
     else:
         form = ResearchPaperForm()
+
     return render(request, 'library/upload_research_paper.html', {'form': form})
 
 
@@ -692,30 +771,27 @@ def download_paper(request, paper_id):
     return FileResponse(paper.paper_file.open('rb'), as_attachment=True)
 
 
-
-# ✅ User: সব premium content দেখবে
 @login_required
 def premium_content_list(request):
     contents = PremiumContent.objects.filter(is_active=True)
     purchased_ids = PremiumPurchase.objects.filter(
         user=request.user
     ).values_list('content_id', flat=True)
+
     return render(request, 'library/premium_content.html', {
         'contents': contents,
         'purchased_ids': purchased_ids,
     })
 
 
-# ✅ User: একটা content কিনবে
 @login_required
 def purchase_premium(request, pk):
     content = get_object_or_404(PremiumContent, pk=pk, is_active=True)
-    
-    # Already purchased check
+
     if PremiumPurchase.objects.filter(user=request.user, content=content).exists():
         messages.info(request, "You already own this content!")
         return redirect('view_premium', pk=pk)
-    
+
     if request.method == 'POST':
         form = PremiumPurchaseForm(request.POST)
         if form.is_valid():
@@ -729,29 +805,28 @@ def purchase_premium(request, pk):
             return redirect('view_premium', pk=pk)
     else:
         form = PremiumPurchaseForm()
-    
+
     return render(request, 'library/purchase_premium.html', {
         'content': content,
         'form': form
     })
 
 
-# ✅ User: purchased content দেখবে/download করবে
 @login_required
 def view_premium_content(request, pk):
     content = get_object_or_404(PremiumContent, pk=pk)
     has_access = PremiumPurchase.objects.filter(
-        user=request.user, content=content
+        user=request.user,
+        content=content
     ).exists()
-    
+
     if not has_access:
         messages.error(request, "Please purchase this content first.")
         return redirect('purchase_premium', pk=pk)
-    
+
     return render(request, 'library/view_premium_content.html', {'content': content})
 
 
-# ✅ Admin: নতুন content upload করবে
 @login_required
 def admin_upload_premium(request):
     if request.method == 'POST':
@@ -762,15 +837,15 @@ def admin_upload_premium(request):
             return redirect('premium_content')
     else:
         form = PremiumContentForm()
-    
-    return render(request, 'library/admin_upload_premium.html', {'form': form})  # সঠিক path
+
+    return render(request, 'library/admin_upload_premium.html', {'form': form})
 
 
-# ✅ Admin: সব purchases দেখবে
 @login_required
 def admin_premium_purchases(request):
     if not request.user.is_staff:
         return redirect('home')
+
     purchases = PremiumPurchase.objects.all().select_related('user', 'content')
     return render(request, 'library/admin_premium_purchases.html', {'purchases': purchases})
 
