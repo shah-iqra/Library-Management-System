@@ -1,41 +1,103 @@
 {% extends 'library/base.html' %}
-{% block title %}Members{% endblock %}
+{% load static %}
 
 {% block content %}
-<div class="top-bar">
-    <h2>👥 Members</h2>
-    <a href="{% url 'member_add' %}" class="btn btn-primary">+ Add Member</a>
+<link rel="stylesheet" href="{% static 'library/css/member_list_style.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="member-container">
+    <div class="member-header">
+        <div class="header-left">
+            <h2><i class="fa-solid fa-users-gear"></i> Member Management</h2>
+            <p>View, edit, and manage all registered library members.</p>
+        </div>
+        <div class="header-right">
+            <a href="{% url 'member_add' %}" class="btn-add-member">
+                <i class="fa-solid fa-plus"></i> Add New Member
+            </a>
+        </div>
+    </div>
+
+    <div class="table-card">
+        <div class="table-actions">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="memberSearch" placeholder="Search members by name, email or phone...">
+            </div>
+
+            <div class="filter-options" style="position: relative;">
+                <button class="btn-filter" id="filterBtn">
+                    <i class="fa-solid fa-filter"></i> Filter
+                </button>
+
+                <div id="filterMenu" style="display: none; position: absolute; top: 45px; right: 110px; background: white; border: 1px solid #cbd5e1; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 100; min-width: 160px; padding: 8px 0;">
+                    <div style="padding: 10px 15px; cursor: pointer; font-size: 13px;" class="filter-item" onclick="filterTable('all')">All Members</div>
+                    <div style="padding: 10px 15px; cursor: pointer; font-size: 13px;" class="filter-item" onclick="filterTable('Active')">Active Members</div>
+                    <div style="padding: 10px 15px; cursor: pointer; font-size: 13px;" class="filter-item" onclick="filterTable('admin')">Admins Only</div>
+                    <div style="padding: 10px 15px; cursor: pointer; font-size: 13px;" class="filter-item" onclick="filterTable('librarian')">Librarians</div>
+                    <div style="padding: 10px 15px; cursor: pointer; font-size: 13px;" class="filter-item" onclick="filterTable('user')">Users Only</div>
+                </div>
+
+                <a href="{% url 'export_members_csv' %}" class="btn-export" style="text-decoration: none;">
+                    <i class="fa-solid fa-file-export"></i> Export CSV
+                </a>
+            </div>
+        </div>
+
+        <table class="member-table">
+            <thead>
+                <tr>
+                    <th># ID</th>
+                    <th>Member Details</th>
+                    <th>Contact Info</th>
+                    <th>Joining Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in members %}
+                <tr>
+                    <td><span class="member-id">#{{ forloop.counter }}</span></td>
+                    <td>
+                        <div class="member-info">
+                            <div class="member-avatar">
+                                {{ member.username|first|upper }}
+                            </div>
+                            <div class="member-name-desc">
+                                <strong>{{ member.username }}</strong>
+                                <span class="role-text">{{ member.role|capfirst|default:"Member" }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="contact-col">
+                            <p><i class="fa-regular fa-envelope"></i> {{ member.email }}</p>
+                            <p><i class="fa-solid fa-phone-flip"></i> {{ member.phone|default:"N/A" }}</p>
+                        </div>
+                    </td>
+                    <td>{{ member.date_joined|date:"d M, Y" }}</td>
+                    <td><span class="status-badge active">Active</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="#" class="btn-icon edit" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <a href="#" class="btn-icon delete btn-delete" title="Delete"><i class="fa-solid fa-trash-can"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 40px; color: #94a3b8;">
+                        <i class="fa-solid fa-inbox" style="font-size: 24px; display: block; margin-bottom: 10px;"></i>
+                        No members found in the database.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<div class="table-box">
-    <table>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Joined</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for member in members %}
-            <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ member.name }}</td>
-                <td>{{ member.email }}</td>
-                <td>{{ member.phone }}</td>
-                <td>{{ member.joined_date }}</td>
-                <td>
-                    <a href="{% url 'member_edit' member.pk %}" class="btn btn-edit">Edit</a>
-                    <a href="{% url 'member_delete' member.pk %}" class="btn btn-delete">Delete</a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr><td colspan="6" style="text-align:center;">There are no members</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+<script src="{% static 'library/js/main.js' %}"></script>
+
 {% endblock %}
