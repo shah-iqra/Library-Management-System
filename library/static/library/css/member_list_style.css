@@ -1,0 +1,166 @@
+.member-container {
+    padding: 30px;
+    background-color: #f8fafc;
+}
+
+/* Header Styling */
+.member-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.header-left h2 {
+    font-size: 24px;
+    color: #1e293b;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-left p {
+    color: #64748b;
+    margin: 5px 0 0 0;
+    font-size: 14px;
+}
+
+.btn-add-member {
+    background-color: #1abc9c;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(26, 188, 156, 0.2);
+}
+
+.btn-add-member:hover { background-color: #16a085; transform: translateY(-2px); }
+
+/* Table Card Styling */
+.table-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    padding: 20px;
+}
+
+.table-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.search-box {
+    position: relative;
+    width: 300px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 10px 10px 10px 35px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    outline: none;
+}
+
+/* Table Design */
+.member-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.member-table th {
+    background-color: #f1f5f9;
+    padding: 15px;
+    text-align: left;
+    font-size: 13px;
+    text-transform: uppercase;
+    color: #475569;
+}
+
+.member-table td {
+    padding: 15px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+/* Avatar Styling */
+.member-info { display: flex; align-items: center; gap: 12px; }
+
+.member-avatar {
+    width: 40px;
+    height: 40px;
+    background: #3498db;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.member-name-desc strong { display: block; color: #1e293b; }
+.member-name-desc span { font-size: 12px; color: #94a3b8; }
+
+/* Status Badges */
+.status-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.status-badge.active { background: #dcfce7; color: #15803d; }
+
+/* Action Buttons */
+.action-buttons { display: flex; gap: 10px; }
+
+.btn-icon {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.btn-icon.edit { background: #f1f5f9; color: #334155; }
+.btn-icon.delete { background: #fee2e2; color: #ef4444; }
+
+.btn-icon:hover { transform: scale(1.1); }
+
+/* Member List Table Actions (Filter & Export Buttons) */
+.btn-filter, .btn-export {
+    padding: 8px 15px;
+    border: 1px solid #cbd5e1;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #475569;
+    transition: 0.2s;
+    text-decoration: none; /* লিঙ্ক হিসেবে থাকলে আন্ডারলাইন রিমুভ করবে */
+}
+
+.btn-filter:hover, .btn-export:hover {
+    background-color: #f1f5f9;
+    border-color: #94a3b8;
+    color: #1e293b;
+}
