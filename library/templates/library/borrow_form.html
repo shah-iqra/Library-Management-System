@@ -3,27 +3,71 @@
 
 {% block content %}
 <div class="form-box">
-    <h2>🔄 Borrow a Book</h2>
+
+    <h2>📚 Borrow a Book</h2>
+
     <form method="POST">
         {% csrf_token %}
+
         <div class="form-group">
-            <label>Book</label>
+            <label>Select Book</label>
+
             <select name="book" required>
+                <option value="">-- Choose Book --</option>
+
                 {% for book in books %}
-                <option value="{{ book.pk }}">{{ book.title }} ({{ book.available_copies }} available)</option>
+                <option value="{{ book.pk }}">
+                    {{ book.title }} ({{ book.available_copies }} available)
+                </option>
                 {% endfor %}
             </select>
         </div>
+
         <div class="form-group">
-            <label>Member</label>
+            <label>Select Member</label>
+
             <select name="member" required>
+                <option value="">-- Choose Member --</option>
+
                 {% for member in members %}
-                <option value="{{ member.pk }}">{{ member.name }}</option>
+                <option value="{{ member.pk }}">
+                    {% if member.get_full_name %}
+                        {{ member.get_full_name }}
+                    {% else %}
+                        {{ member.username }}
+                    {% endif %}
+                </option>
                 {% endfor %}
             </select>
         </div>
-        <button type="submit" class="btn btn-primary">Borrow</button>
-        <a href="{% url 'borrow_list' %}" class="btn" style="background:#aaa; color:white; margin-left:10px;">Cancel</a>
+
+        <div class="form-group">
+            <label>Due Date</label>
+
+            <input type="date" name="due_date" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label>Notes</label>
+
+            <textarea
+                name="notes"
+                rows="3"
+                placeholder="Optional notes..."
+                class="form-control"
+            ></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Borrow Book
+        </button>
+
+        <a href="{% url 'borrow_list' %}"
+           class="btn"
+           style="background:#aaa; color:white; margin-left:10px;">
+            Cancel
+        </a>
+
     </form>
 </div>
 {% endblock %}

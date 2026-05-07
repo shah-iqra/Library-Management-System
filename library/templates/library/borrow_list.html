@@ -3,8 +3,11 @@
 
 {% block content %}
 <div class="top-bar">
-    <h2>🔄 Active Borrowings</h2>
-    <a href="{% url 'borrow_book' %}" class="btn btn-primary">+ Borrow Book</a>
+    <h2>🔄 Borrowings & Returns</h2>
+
+    {% if user.role == 'admin' or user.role == 'librarian' %}
+        <a href="{% url 'borrow_book' %}" class="btn btn-primary">+ Borrow Book</a>
+    {% endif %}
 </div>
 
 <div class="table-box">
@@ -15,22 +18,78 @@
                 <th>Book</th>
                 <th>Member</th>
                 <th>Borrow Date</th>
+                <th>Due Date</th>
+                <th>Status</th>
+                <th>Fine</th>
+                <th>Return Date</th>
                 <th>Action</th>
             </tr>
         </thead>
+
         <tbody>
             {% for borrow in borrows %}
             <tr>
                 <td>{{ forloop.counter }}</td>
+
                 <td>{{ borrow.book.title }}</td>
-                <td>{{ borrow.member.name }}</td>
-                <td>{{ borrow.borrow_date }}</td>
+
                 <td>
-                    <a href="{% url 'return_book' borrow.pk %}" class="btn btn-return">Return</a>
+                    {% if borrow.member.get_full_name %}
+                        {{ borrow.member.get_full_name }}
+                    {% else %}
+                        {{ borrow.member.username }}
+                    {% endif %}
+                </td>
+
+                <td>{{ borrow.borrow_date }}</td>
+                <td>{{ borrow.due_date }}</td>
+
+                <td>
+                    {% if borrow.is_returned %}
+                        <span style="color:green; font-weight:bold;">Returned</span>
+                    {% elif borrow.due_date and today > borrow.due_date %}
+                        <span style="color:red; font-weight:bold;">Overdue</span>
+                    {% else %}
+                        <span style="color:#b58055; font-weight:bold;">Borrowed</span>
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if borrow.is_returned %}
+                        0 Tk
+                    {% elif borrow.due_date and today > borrow.due_date %}
+                        {{ borrow.fine_amount }} Tk
+                    {% else %}
+                        0 Tk
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if borrow.return_date %}
+                        {{ borrow.return_date }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if not borrow.is_returned %}
+                        <a href="{% url 'return_book' borrow.pk %}" class="btn btn-return"
+                           onclick="return confirm('Return this book?')">
+                            Return
+                        </a>
+                    {% else %}
+                        <span style="color:#777;">Completed</span>
+                    {% endif %}
                 </td>
             </tr>
+
             {% empty %}
-            <tr><td colspan="5" style="text-align:center;">No active borrowing</td></tr>
+            <tr>
+                <td colspan="9" style="text-align:center; padding:20px;">
+                    No borrowing records found.
+                </td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
