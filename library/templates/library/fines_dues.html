@@ -1,7 +1,81 @@
 {% extends 'library/base.html' %}
+
 {% block content %}
-<div style="padding: 20px;">
+
+<div class="top-bar">
     <h2>⏰ Fines & Dues</h2>
-    <p>Coming soon...</p>
 </div>
+
+<div class="table-box">
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Member</th>
+                <th>Book</th>
+                <th>Due Date</th>
+                <th>Overdue Days</th>
+                <th>Fine Amount</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for borrow in borrows %}
+
+                {% if borrow.due_date and today > borrow.due_date %}
+
+                <tr>
+
+                    <td>{{ forloop.counter }}</td>
+
+                    <td>
+                        {% if borrow.member.get_full_name %}
+                            {{ borrow.member.get_full_name }}
+                        {% else %}
+                            {{ borrow.member.username }}
+                        {% endif %}
+                    </td>
+
+                    <td>{{ borrow.book.title }}</td>
+
+                    <td>{{ borrow.due_date }}</td>
+
+                    <td>
+                        {{ today|timeuntil:borrow.due_date }}
+                    </td>
+
+                    <td style="color:red; font-weight:bold;">
+                        {{ borrow.fine_amount }} Tk
+                    </td>
+
+                    <td>
+                        <span style="color:red; font-weight:bold;">
+                            Overdue
+                        </span>
+                    </td>
+
+                </tr>
+
+                {% endif %}
+
+            {% empty %}
+
+            <tr>
+                <td colspan="7" style="text-align:center; padding:20px;">
+                    No overdue fines found.
+                </td>
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
 {% endblock %}

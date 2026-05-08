@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required, user_passes_test
+from datetime import date
 from django.contrib import messages
 from django.utils import timezone
 from django.http import FileResponse, HttpResponseForbidden, HttpResponse
@@ -357,14 +358,37 @@ def issue_book(request, book_id):
 
 @login_required
 def borrow_list(request):
-    if is_librarian_or_admin(request.user):
-        borrows = Borrow.objects.select_related('book', 'member').all().order_by('-borrow_date')
-    else:
-        borrows = Borrow.objects.filter(member=request.user).select_related('book', 'member').order_by('-borrow_date')
+
+    borrows = Borrow.objects.select_related(
+        'book',
+        'member'
+    ).order_by('-borrow_date')
+
+    # Regular user only sees own borrows
+    if request.user.role == User.REGULAR_USER:
+        borrows = borrows.filter(member=request.user)
+
+    today = timezone.now().date()
+
+    # Auto overdue + fine calculation
+    for borrow in borrows:
+
+        if not borrow.is_returned and borrow.due_date:
+
+            overdue_days = (today - borrow.due_date).days
+
+            if overdue_days > 0:
+                borrow.status = 'overdue'
+                borrow.fine_amount = overdue_days * 5
+                borrow.save()
+
+            else:
+                borrow.fine_amount = 0
+                borrow.save()
 
     return render(request, 'library/borrow_list.html', {
         'borrows': borrows,
-        'today': timezone.now().date()
+        'today': today,
     })
 
 
@@ -616,20 +640,28 @@ def online_payment(request):
 
 
 @login_required
+
 def fines_dues(request):
-    fines = []
-    for b in Borrow.objects.filter(member=request.user).select_related('book'):
-        if not b.is_returned:
-            overdue = max(0, (timezone.now().date() - b.borrow_date).days - 14)
-            if overdue > 0:
-                fines.append({
-                    'borrow': b,
-                    'days_overdue': overdue,
-                    'fine': overdue * 5
-                })
 
-    return render(request, 'library/fines_dues.html', {'fines': fines})
+    borrows = Borrow.objects.filter(is_returned=False)
 
+    for borrow in borrows:
+
+        if borrow.due_date and date.today() > borrow.due_date:
+
+            overdue_days = (date.today() - borrow.due_date).days
+
+            borrow.fine_amount = overdue_days * 5
+
+        else:
+            borrow.fine_amount = 0
+
+    context = {
+        'borrows': borrows,
+        'today': date.today(),
+    }
+
+    return render(request, 'library/fines_dues.html', context)
 
 @login_required
 @user_passes_test(is_librarian_or_admin, login_url='/')

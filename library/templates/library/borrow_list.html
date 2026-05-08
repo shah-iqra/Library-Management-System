@@ -2,15 +2,19 @@
 {% block title %}Borrowings{% endblock %}
 
 {% block content %}
+
 <div class="top-bar">
     <h2>🔄 Borrowings & Returns</h2>
 
     {% if user.role == 'admin' or user.role == 'librarian' %}
-        <a href="{% url 'borrow_book' %}" class="btn btn-primary">+ Borrow Book</a>
+        <a href="{% url 'borrow_book' %}" class="btn btn-primary">
+            + Borrow Book
+        </a>
     {% endif %}
 </div>
 
 <div class="table-box">
+
     <table>
         <thead>
             <tr>
@@ -19,6 +23,7 @@
                 <th>Member</th>
                 <th>Borrow Date</th>
                 <th>Due Date</th>
+                <th>Reminder</th>
                 <th>Status</th>
                 <th>Fine</th>
                 <th>Return Date</th>
@@ -27,11 +32,15 @@
         </thead>
 
         <tbody>
+
             {% for borrow in borrows %}
             <tr>
+
                 <td>{{ forloop.counter }}</td>
 
-                <td>{{ borrow.book.title }}</td>
+                <td>
+                    <strong>{{ borrow.book.title }}</strong>
+                </td>
 
                 <td>
                     {% if borrow.member.get_full_name %}
@@ -41,57 +50,156 @@
                     {% endif %}
                 </td>
 
-                <td>{{ borrow.borrow_date }}</td>
-                <td>{{ borrow.due_date }}</td>
-
                 <td>
-                    {% if borrow.is_returned %}
-                        <span style="color:green; font-weight:bold;">Returned</span>
-                    {% elif borrow.due_date and today > borrow.due_date %}
-                        <span style="color:red; font-weight:bold;">Overdue</span>
-                    {% else %}
-                        <span style="color:#b58055; font-weight:bold;">Borrowed</span>
-                    {% endif %}
+                    {{ borrow.borrow_date }}
                 </td>
 
                 <td>
-                    {% if borrow.is_returned %}
-                        0 Tk
-                    {% elif borrow.due_date and today > borrow.due_date %}
-                        {{ borrow.fine_amount }} Tk
-                    {% else %}
-                        0 Tk
-                    {% endif %}
+                    {{ borrow.due_date }}
                 </td>
 
+                <!-- Reminder Column -->
+
                 <td>
+
+                    {% if not borrow.is_returned %}
+
+                        {% if today > borrow.due_date %}
+
+                            <span style="color:red; font-weight:bold;">
+                                ⚠ Overdue
+                            </span>
+
+                        {% elif today == borrow.due_date %}
+
+                            <span style="color:orange; font-weight:bold;">
+                                ⏰ Due Today
+                            </span>
+
+                        {% elif borrow.due_date|timeuntil:today == "1 day" %}
+
+                            <span style="color:#b58055; font-weight:bold;">
+                                📢 Due Tomorrow
+                            </span>
+
+                        {% else %}
+
+                            <span style="color:green;">
+                                ✓ On Time
+                            </span>
+
+                        {% endif %}
+
+                    {% else %}
+
+                        <span style="color:gray;">
+                            Completed
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+                <!-- Status -->
+
+                <td>
+
+                    {% if borrow.is_returned %}
+
+                        <span style="color:green; font-weight:bold;">
+                            Returned
+                        </span>
+
+                    {% elif today > borrow.due_date %}
+
+                        <span style="color:red; font-weight:bold;">
+                            Overdue
+                        </span>
+
+                    {% else %}
+
+                        <span style="color:#b58055; font-weight:bold;">
+                            Borrowed
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+                <!-- Fine -->
+
+                <td>
+
+                    {% if borrow.is_returned %}
+
+                        0 Tk
+
+                    {% elif today > borrow.due_date %}
+
+                        <span style="color:red; font-weight:bold;">
+                            {{ borrow.fine_amount }} Tk
+                        </span>
+
+                    {% else %}
+
+                        0 Tk
+
+                    {% endif %}
+
+                </td>
+
+                <!-- Return Date -->
+
+                <td>
+
                     {% if borrow.return_date %}
                         {{ borrow.return_date }}
                     {% else %}
                         -
                     {% endif %}
+
                 </td>
 
+                <!-- Action -->
+
                 <td>
+
                     {% if not borrow.is_returned %}
-                        <a href="{% url 'return_book' borrow.pk %}" class="btn btn-return"
+
+                        <a href="{% url 'return_book' borrow.pk %}"
+                           class="btn btn-return"
                            onclick="return confirm('Return this book?')">
+
                             Return
+
                         </a>
+
                     {% else %}
-                        <span style="color:#777;">Completed</span>
+
+                        <span style="color:gray;">
+                            Completed
+                        </span>
+
                     {% endif %}
+
                 </td>
+
             </tr>
 
             {% empty %}
+
             <tr>
-                <td colspan="9" style="text-align:center; padding:20px;">
+                <td colspan="10" style="text-align:center; padding:20px;">
                     No borrowing records found.
                 </td>
             </tr>
+
             {% endfor %}
+
         </tbody>
+
     </table>
+
 </div>
+
 {% endblock %}
