@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'library/css/style.css' %}">
+
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem("booknestTheme") || "light";
+            document.documentElement.setAttribute("data-theme", savedTheme);
+        })();
+    </script>
 </head>
+
 <body>
 
 <div class="layout">
@@ -54,9 +62,7 @@
                             My Profile
                         {% endif %}
                     </div>
-                    <div class="profile-role">
-                        View & Edit Profile
-                    </div>
+                    <div class="profile-role">View & Edit Profile</div>
                 </div>
                 <i class="fas fa-chevron-right"></i>
             </a>
@@ -72,10 +78,18 @@
     <main class="main-container">
         <header class="top-nav">
             <h2>Library Dashboard</h2>
-            <div class="user-profile">
-                <i class="fas fa-user-circle"></i>
-                <span>{{ user.username }}</span>
-                <span class="role-tag">{{ user.role|upper }}</span>
+
+            <div class="top-nav-right">
+                <button type="button" class="theme-toggle-btn" id="themeToggleBtn">
+                    <i class="fas fa-moon"></i>
+                    <span>Dark</span>
+                </button>
+
+                <div class="user-profile">
+                    <i class="fas fa-user-circle"></i>
+                    <span>{{ user.username }}</span>
+                    <span class="role-tag">{{ user.role|upper }}</span>
+                </div>
             </div>
         </header>
 
@@ -107,6 +121,32 @@
         {% endblock %}
     </main>
 </div>
+
+<script>
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+    const htmlTag = document.documentElement;
+
+    function updateThemeButton(theme) {
+        if (theme === "dark") {
+            themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i><span>Light</span>';
+        } else {
+            themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i><span>Dark</span>';
+        }
+    }
+
+    const currentTheme = localStorage.getItem("booknestTheme") || "light";
+    htmlTag.setAttribute("data-theme", currentTheme);
+    updateThemeButton(currentTheme);
+
+    themeToggleBtn.addEventListener("click", function () {
+        const current = htmlTag.getAttribute("data-theme");
+        const newTheme = current === "dark" ? "light" : "dark";
+
+        htmlTag.setAttribute("data-theme", newTheme);
+        localStorage.setItem("booknestTheme", newTheme);
+        updateThemeButton(newTheme);
+    });
+</script>
 
 </body>
 </html>
