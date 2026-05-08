@@ -686,11 +686,14 @@ tr:hover td {
 
 .books-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(260px, 300px));
     gap: 24px;
+    justify-content: flex-start;
 }
 
 .book-card {
+    width: 100%;
+    max-width: 300px;
     background: white;
     border-radius: 20px;
     padding: 16px;
@@ -2110,322 +2113,43 @@ tr:hover td {
     background-color: #dfe4ea;
     color: #2f3542;
 }
+
+
+
+
+
+
 /* =========================
-   DARK / LIGHT MODE TOGGLE
+   BOOK GRID SINGLE ITEM FIX
+   Keeps one or two books at normal card size
 ========================= */
-
-.top-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.top-nav-right {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-.theme-toggle-btn {
-    border: none;
-    outline: none;
-    cursor: pointer;
-    background: #2e3b33;
-    color: #ffffff;
-    padding: 10px 16px;
-    border-radius: 999px;
-    font-weight: 700;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: 0.3s ease;
-}
-
-.theme-toggle-btn:hover {
-    background: #1abc9c;
-    transform: translateY(-2px);
-}
-
-.user-profile {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 600;
-}
-
-.role-tag {
-    background: #2e3b33;
-    color: white;
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-size: 12px;
-}
-
-/* Dark Theme Main Colors */
-html[data-theme="dark"] body {
-    background: #0f172a;
-    color: #e5e7eb;
-}
-
-html[data-theme="dark"] .main-container,
-html[data-theme="dark"] .main,
-html[data-theme="dark"] .dashboard-page,
-html[data-theme="dark"] .profile-wrapper {
-    background: #111827;
-    color: #e5e7eb;
-}
-
-html[data-theme="dark"] .sidebar {
-    background: #020617;
-    color: #ffffff;
-}
-
-html[data-theme="dark"] .sidebar a {
-    color: rgba(255, 255, 255, 0.72);
-}
-
-html[data-theme="dark"] .sidebar a:hover,
-html[data-theme="dark"] .sidebar a.active {
-    background: rgba(255, 255, 255, 0.12);
-    color: #ffffff;
-}
-
-html[data-theme="dark"] .menu-title {
-    color: #94a3b8;
-}
-
-/* Dark Cards */
-html[data-theme="dark"] .card,
-html[data-theme="dark"] .stat-card,
-html[data-theme="dark"] .dash-card,
-html[data-theme="dark"] .dashboard-header,
-html[data-theme="dark"] .dashboard-panel,
-html[data-theme="dark"] .book-card,
-html[data-theme="dark"] .book-detail-card,
-html[data-theme="dark"] .review-form-card,
-html[data-theme="dark"] .reviews-list-card,
-html[data-theme="dark"] .single-review,
-html[data-theme="dark"] .digital-card,
-html[data-theme="dark"] .form-box,
-html[data-theme="dark"] .table-box,
-html[data-theme="dark"] .profile-card,
-html[data-theme="dark"] .upload-container,
-html[data-theme="dark"] .content-card {
-    background: #1f2937;
-    color: #e5e7eb;
-    border-color: #374151;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-}
-
-/* Dark Headings and Text */
-html[data-theme="dark"] h1,
-html[data-theme="dark"] h2,
-html[data-theme="dark"] h3,
-html[data-theme="dark"] h4,
-html[data-theme="dark"] .library-header h2,
-html[data-theme="dark"] .book-info h3,
-html[data-theme="dark"] .book-detail-info h1,
-html[data-theme="dark"] .review-form-card h2,
-html[data-theme="dark"] .reviews-list-card h2,
-html[data-theme="dark"] .top-bar h2,
-html[data-theme="dark"] .dashboard-header h2,
-html[data-theme="dark"] .dashboard-panel h3,
-html[data-theme="dark"] .profile-top h2,
-html[data-theme="dark"] .profile-card h3,
-html[data-theme="dark"] .digital-card h3,
-html[data-theme="dark"] .card-title {
-    color: #f9fafb;
-}
-
-html[data-theme="dark"] p,
-html[data-theme="dark"] .library-header p,
-html[data-theme="dark"] .book-info p,
-html[data-theme="dark"] .digital-card p,
-html[data-theme="dark"] .resource-desc,
-html[data-theme="dark"] .detail-author,
-html[data-theme="dark"] .single-review p,
-html[data-theme="dark"] .review-note,
-html[data-theme="dark"] .profile-top p,
-html[data-theme="dark"] .security-text,
-html[data-theme="dark"] .card-desc {
-    color: #cbd5e1;
-}
-
-/* Dark Forms */
-html[data-theme="dark"] input,
-html[data-theme="dark"] select,
-html[data-theme="dark"] textarea,
-html[data-theme="dark"] .search-input,
-html[data-theme="dark"] .form-group input,
-html[data-theme="dark"] .form-group select,
-html[data-theme="dark"] .form-group textarea,
-html[data-theme="dark"] .profile-field input,
-html[data-theme="dark"] .profile-field textarea,
-html[data-theme="dark"] .profile-field select,
-html[data-theme="dark"] .info-row input,
-html[data-theme="dark"] .info-row select {
-    background: #111827;
-    color: #f9fafb;
-    border-color: #4b5563;
-}
-
-html[data-theme="dark"] input::placeholder,
-html[data-theme="dark"] textarea::placeholder,
-html[data-theme="dark"] .search-input::placeholder {
-    color: #94a3b8;
-}
-
-html[data-theme="dark"] label,
-html[data-theme="dark"] .form-group label,
-html[data-theme="dark"] .profile-field label {
-    color: #e5e7eb;
-}
-
-/* Dark Tables */
-html[data-theme="dark"] table {
-    background: #1f2937;
-}
-
-html[data-theme="dark"] th {
-    background: #020617;
-    color: #ffffff;
-}
-
-html[data-theme="dark"] td {
-    color: #e5e7eb;
-    border-bottom-color: #374151;
-}
-
-html[data-theme="dark"] tr:hover td {
-    background: #111827;
-}
-
-/* Dark Small Boxes */
-html[data-theme="dark"] .category-tab,
-html[data-theme="dark"] .detail-rating,
-html[data-theme="dark"] .detail-meta-grid div,
-html[data-theme="dark"] .book-description-box,
-html[data-theme="dark"] .summary-list div,
-html[data-theme="dark"] .quick-actions a,
-html[data-theme="dark"] .info-row,
-html[data-theme="dark"] .profile-user-box,
-html[data-theme="dark"] .digital-icon,
-html[data-theme="dark"] .card-footer,
-html[data-theme="dark"] .file-drop-area {
-    background: #111827;
-    color: #e5e7eb;
-    border-color: #374151;
-}
-
-html[data-theme="dark"] .category-tab:hover,
-html[data-theme="dark"] .category-tab.active {
-    background: #1abc9c;
-    color: #ffffff;
-}
-
-/* Dark Buttons */
-html[data-theme="dark"] .btn-primary,
-html[data-theme="dark"] .theme-toggle-btn {
-    background: #1abc9c;
-    color: #ffffff;
-}
-
-html[data-theme="dark"] .btn-primary:hover,
-html[data-theme="dark"] .theme-toggle-btn:hover {
-    background: #16a085;
-}
-
-html[data-theme="dark"] .role-tag {
-    background: #1abc9c;
-    color: #ffffff;
-}
-
-/* Dark Profile Sidebar */
-html[data-theme="dark"] .profile-link-card {
-    background: rgba(255, 255, 255, 0.08);
-}
-
-html[data-theme="dark"] .profile-name {
-    color: #ffffff;
-}
-
-html[data-theme="dark"] .profile-role {
-    color: #cbd5e1;
-}
-
-/* Dark Premium Section */
-html[data-theme="dark"] .premium-hero {
-    background: linear-gradient(135deg, #020617 0%, #111827 60%, #1f2937 100%);
-}
-
-html[data-theme="dark"] .filter-btn {
-    background: #111827;
-    border-color: #374151;
-    color: #e5e7eb;
-}
-
-html[data-theme="dark"] .filter-btn:hover,
-html[data-theme="dark"] .filter-btn.active {
-    background: #1abc9c;
-    color: #ffffff;
-    border-color: #1abc9c;
-}
-
-html[data-theme="dark"] .price-tag {
-    color: #ffffff;
-}
-
-/* Dark Misc */
-html[data-theme="dark"] .empty-books,
-html[data-theme="dark"] .empty-review,
-html[data-theme="dark"] .empty-state {
-    background: #1f2937;
-    color: #cbd5e1;
-}
-
-html[data-theme="dark"] .back-link,
-html[data-theme="dark"] .view-details-text {
-    color: #1abc9c !important;
-}
-
-/* Smooth Theme Transition */
-body,
-.main-container,
-.sidebar,
-.card,
-.dash-card,
-.dashboard-panel,
-.book-card,
-.digital-card,
-.form-box,
-.table-box,
-.profile-card,
-.content-card,
-input,
-select,
-textarea {
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-}
-
-/* Mobile */
 @media (max-width: 768px) {
-    .top-nav {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-    }
-
-    .top-nav-right {
-        width: 100%;
-        justify-content: space-between;
-    }
-
-    .theme-toggle-btn span {
-        display: none;
+    .book-card {
+        max-width: 100%;
     }
 }
 
+/* Review delete button spacing */
+.review-delete-form {
+    margin-top: 12px;
+}
 
+.review-delete-btn {
+    padding: 8px 14px;
+    font-size: 13px;
+}
+.delete-review-btn{
+    display:inline-block;
+    margin-top:8px;
+    padding:6px 14px;
+    background:#ff4d4d;
+    color:white;
+    border-radius:8px;
+    text-decoration:none;
+    font-size:14px;
+    transition:0.3s;
+}
 
-
+.delete-review-btn:hover{
+    background:#e60000;
+}

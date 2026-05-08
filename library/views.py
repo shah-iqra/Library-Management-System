@@ -862,3 +862,19 @@ def export_members_csv(request):
         writer.writerow([member.id, member.username, member.email, getattr(member, 'phone', 'N/A'), member.date_joined])
 
     return response
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+
+@login_required
+def delete_review(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+
+    # Only review owner or admin can delete
+    if request.user == review.user or request.user.role == 'admin':
+        review.delete()
+        messages.success(request, "Review deleted successfully!")
+    else:
+        messages.error(request, "You are not allowed to delete this review.")
+
+    return redirect('book_detail', pk=review.book.id)

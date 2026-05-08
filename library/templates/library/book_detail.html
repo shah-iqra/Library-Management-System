@@ -169,6 +169,14 @@
 
                 <p>{{ review.comment }}</p>
 
+                {% if user == review.user or user.role == 'admin' %}
+                <a href="{% url 'delete_review' review.id %}" 
+                   class="delete-review-btn"
+                   onclick="return confirm('Delete this review?')">
+                   Delete Review
+                </a>
+                {% endif %}
+
             </div>
 
             {% empty %}
