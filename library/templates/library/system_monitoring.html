@@ -2,35 +2,101 @@
 
 {% block content %}
 
-<div class="dashboard-container">
+<div class="monitoring-page">
 
-    <h2>🖥 System Monitoring</h2>
+    <div class="monitoring-header">
+        <div>
+            <h2>🖥 System Monitoring</h2>
+            <p>Track user activities, login records, uploaded papers and system usage.</p>
+        </div>
 
-    <div class="stats-card">
-        <h3>Total Activities: {{ total_logs }}</h3>
+        <div class="status-badge">
+            System Active
+        </div>
     </div>
 
-    <table class="monitor-table">
+    <div class="monitoring-cards">
 
-        <tr>
-            <th>User</th>
-            <th>Action</th>
-            <th>IP Address</th>
-            <th>Time</th>
-        </tr>
+        <div class="monitor-card">
+            <h4>Total Logs</h4>
+            <h2>{{ total_logs }}</h2>
+            <p>Recorded activities</p>
+        </div>
 
-        {% for log in logs %}
+        <div class="monitor-card">
+            <h4>Total Books</h4>
+            <h2>{{ total_books }}</h2>
+            <p>Books in library</p>
+        </div>
 
-        <tr>
-            <td>{{ log.user.username }}</td>
-            <td>{{ log.action }}</td>
-            <td>{{ log.ip_address }}</td>
-            <td>{{ log.timestamp }}</td>
-        </tr>
+        <div class="monitor-card">
+            <h4>Total Members</h4>
+            <h2>{{ total_members }}</h2>
+            <p>Registered users</p>
+        </div>
 
-        {% endfor %}
+        <div class="monitor-card">
+            <h4>Active Borrows</h4>
+            <h2>{{ active_borrows }}</h2>
+            <p>Currently borrowed</p>
+        </div>
 
-    </table>
+    </div>
+
+    <div class="monitoring-table-card">
+
+        <div class="table-header">
+            <h3>Recent System Activity</h3>
+            <span>Latest 20 records</span>
+        </div>
+
+        <table class="professional-monitor-table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>IP Address</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>
+                        <div class="user-cell">
+                            <span class="user-avatar">
+                                {{ log.user.username|slice:":1"|upper }}
+                            </span>
+                            <span>{{ log.user.username }}</span>
+                        </div>
+                    </td>
+
+                    <td>
+                        <span class="action-badge">
+                            {{ log.action }}
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="ip-badge">
+                            {{ log.ip_address }}
+                        </span>
+                    </td>
+
+                    <td>{{ log.timestamp }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="empty-row">
+                        No system activity found.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
 
 </div>
 
