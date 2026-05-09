@@ -1248,6 +1248,7 @@ tr:hover td {
         grid-template-columns: 1fr;
     }
 }
+
 /* =========================
    DIGITAL RESOURCES PAGE
 ========================= */
@@ -1320,6 +1321,7 @@ tr:hover td {
     font-size: 13px !important;
     margin-top: 12px !important;
 }
+
 /* =========================
    BOOK DETAIL + REVIEW PAGE
 ========================= */
@@ -1581,7 +1583,7 @@ tr:hover td {
     }
 }
 
-/*-------- Premium Content --------*/
+/* -------- Premium Content -------- */
 :root {
   --gold: #c9a84c;
   --gold-light: #f0d080;
@@ -1594,7 +1596,6 @@ tr:hover td {
   --danger: #8b1a1a;
 }
 
-/* ── Hero Banner ── */
 .premium-hero {
   background: linear-gradient(135deg, #1a2e2a 0%, #2d4a3e 60%, #3a5c4e 100%);
   border-radius: 16px;
@@ -1668,7 +1669,6 @@ tr:hover td {
   font-weight: 700;
 }
 
-/* ── Filter Bar ── */
 .filter-bar {
   display: flex;
   gap: 0.6rem;
@@ -1698,14 +1698,12 @@ tr:hover td {
   text-decoration: none;
 }
 
-/* ── Content Grid ── */
 .content-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.4rem;
 }
 
-/* ── Content Card ── */
 .content-card {
   background: var(--card-bg);
   border: 1px solid var(--border);
@@ -1722,7 +1720,6 @@ tr:hover td {
   box-shadow: 0 8px 28px rgba(26, 46, 42, 0.12);
 }
 
-/* ── Thumbnail ── */
 .card-thumb {
   width: 100%;
   height: 160px;
@@ -1750,7 +1747,6 @@ tr:hover td {
   line-height: 1;
 }
 
-/* ── Card Body ── */
 .card-body {
   padding: 1.1rem 1.2rem;
   display: flex;
@@ -1758,7 +1754,6 @@ tr:hover td {
   flex: 1;
 }
 
-/* ── Badges ── */
 .card-type-badge {
   display: inline-block;
   font-size: 0.72rem;
@@ -1794,7 +1789,6 @@ tr:hover td {
   letter-spacing: 0.04em;
 }
 
-/* ── Card Text ── */
 .card-title {
   font-size: 1rem;
   font-weight: 700;
@@ -1814,7 +1808,6 @@ tr:hover td {
   overflow: hidden;
 }
 
-/* ── Card Footer ── */
 .card-footer {
   display: flex;
   align-items: center;
@@ -1837,7 +1830,6 @@ tr:hover td {
   vertical-align: super;
 }
 
-/* ── Buttons ── */
 .btn-buy {
   background: var(--gold);
   color: #fff;
@@ -1905,7 +1897,6 @@ tr:hover td {
   text-decoration: none;
 }
 
-/* ── Empty State ── */
 .empty-state {
   text-align: center;
   padding: 4rem 2rem;
@@ -1925,7 +1916,6 @@ tr:hover td {
   margin-bottom: 0.4rem;
 }
 
-/* ── Responsive ── */
 @media (max-width: 600px) {
   .content-grid {
     grid-template-columns: 1fr;
@@ -1940,7 +1930,6 @@ tr:hover td {
   }
 }
 
-/* Container styling to center the card */
 .upload-container {
     max-width: 650px;
     margin: 40px auto;
@@ -1951,7 +1940,6 @@ tr:hover td {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Header style within the card */
 .upload-header {
     margin-bottom: 30px;
     border-bottom: 2px solid #f0f2f5;
@@ -1971,7 +1959,6 @@ tr:hover td {
     margin: 0;
 }
 
-/* Form Groups */
 .form-group {
     margin-bottom: 22px;
     display: flex;
@@ -1987,7 +1974,6 @@ tr:hover td {
     text-align: left;
 }
 
-/* Inputs, Select, and Textarea styling */
 .form-group input[type="text"],
 .form-group input[type="number"],
 .form-group select,
@@ -2012,7 +1998,6 @@ tr:hover td {
     box-shadow: 0 0 8px rgba(52, 152, 219, 0.15);
 }
 
-/* Two column layout for Select and Price */
 .form-row-two-col {
     display: flex;
     gap: 20px;
@@ -2022,7 +2007,6 @@ tr:hover td {
     flex: 1;
 }
 
-/* Modern File Upload Input style */
 .file-drop-area {
     position: relative;
     display: flex;
@@ -2074,7 +2058,6 @@ tr:hover td {
     cursor: pointer;
 }
 
-/* Form Action Buttons (Upload & Cancel) */
 .form-actions {
     display: flex;
     justify-content: flex-end;
@@ -2095,7 +2078,7 @@ tr:hover td {
 }
 
 .btn-primary {
-    background-color: #1abc9c; /* sidebar এ ব্যবহৃত থিমের কাছাকাছি উজ্জ্বল কালার */
+    background-color: #1abc9c;
     color: #ffffff;
 }
 
@@ -2114,14 +2097,8 @@ tr:hover td {
     color: #2f3542;
 }
 
-
-
-
-
-
 /* =========================
    BOOK GRID SINGLE ITEM FIX
-   Keeps one or two books at normal card size
 ========================= */
 @media (max-width: 768px) {
     .book-card {
@@ -2138,18 +2115,162 @@ tr:hover td {
     padding: 8px 14px;
     font-size: 13px;
 }
-.delete-review-btn{
-    display:inline-block;
-    margin-top:8px;
-    padding:6px 14px;
-    background:#ff4d4d;
-    color:white;
-    border-radius:8px;
-    text-decoration:none;
-    font-size:14px;
-    transition:0.3s;
+
+.delete-review-btn {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 6px 14px;
+    background: #ff4d4d;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s;
 }
 
-.delete-review-btn:hover{
-    background:#e60000;
+.delete-review-btn:hover {
+    background: #e60000;
+}
+
+/* =========================
+   PAYMENT SYSTEM
+========================= */
+.payment-page {
+    padding: 30px;
+    background: #f5efe2;
+    min-height: 100vh;
+}
+
+.payment-header h2 {
+    font-size: 32px;
+    color: #1a1a1a;
+    margin-bottom: 5px;
+}
+
+.payment-header p {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.payment-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+.payment-card {
+    background: #fffaf0;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.payment-card h3 {
+    margin-bottom: 20px;
+    color: #111;
+}
+
+.summary-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f2e7d2;
+    padding: 18px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.summary-box span {
+    display: block;
+    font-size: 13px;
+    color: #666;
+    margin-top: 5px;
+}
+
+.summary-price {
+    font-size: 22px;
+    font-weight: bold;
+    color: #b8860b;
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #ddd;
+    padding-top: 15px;
+    font-size: 20px;
+}
+
+.payment-card label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.payment-card input,
+.payment-card select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: white;
+}
+
+.payment-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: #d4a63c;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.payment-btn:hover {
+    background: #b98b20;
+}
+
+.payment-history-link {
+    display: block;
+    margin-top: 15px;
+    text-align: center;
+    font-weight: bold;
+    color: #6b4b00;
+}
+
+.payment-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.payment-table th {
+    background: #f2e7d2;
+    color: black;
+    font-weight: bold;;
+}
+
+.payment-table th,
+.payment-table td {
+    padding: 14px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+.payment-table td {
+    color: black;
+}
+
+.pdf-btn {
+    display: inline-block;
+    padding: 10px 18px;
+    background: #d4a63c;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-bottom: 20px;
 }

@@ -1,33 +1,52 @@
 {% extends 'library/base.html' %}
 
 {% block content %}
-<h2>Payment History</h2>
 
-<a href="{% url 'download_payment_history_pdf' %}">
-    <button>Download Payment History PDF</button>
-</a>
+<div class="payment-page">
 
-<table border="1" cellpadding="10">
-    <tr>
-        <th>Date</th>
-        <th>Amount</th>
-        <th>Method</th>
-        <th>Transaction ID</th>
-        <th>Status</th>
-    </tr>
+    <div class="payment-header">
+        <h2>Payment History</h2>
+        <p>All previous payment records</p>
+    </div>
 
-    {% for payment in payments %}
-    <tr>
-        <td>{{ payment.payment_date }}</td>
-        <td>{{ payment.amount }}</td>
-        <td>{{ payment.method }}</td>
-        <td>{{ payment.transaction_id }}</td>
-        <td>{{ payment.status }}</td>
-    </tr>
-    {% empty %}
-    <tr>
-        <td colspan="5">No payment history found.</td>
-    </tr>
-    {% endfor %}
-</table>
+    <div class="payment-card">
+
+        <a href="{% url 'download_payment_history_pdf' %}" class="pdf-btn">
+            Download PDF
+        </a>
+
+        <table class="payment-table">
+
+            <tr>
+                <th>Date</th>
+                <th>Method</th>
+                <th>Amount</th>
+                <th>Transaction ID</th>
+                <th>Status</th>
+            </tr>
+
+            {% for payment in payments %}
+
+            <tr>
+                <td>{{ payment.payment_date }}</td>
+                <td>{{ payment.method }}</td>
+                <td>৳{{ payment.amount }}</td>
+                <td>{{ payment.transaction_id }}</td>
+                <td>{{ payment.status }}</td>
+            </tr>
+
+            {% empty %}
+
+            <tr>
+                <td colspan="5">No payment history found.</td>
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </div>
+
+</div>
+
 {% endblock %}
