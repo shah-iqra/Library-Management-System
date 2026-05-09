@@ -241,3 +241,14 @@ class Payment(models.Model):
 
     def __str__(self):
         return self.user.username + " - " + self.transaction_id
+
+
+# --- System Log Model ---
+class SystemLog(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    action = models.CharField(max_length=255)
+    ip_address = models.CharField(max_length=100)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.action}"
