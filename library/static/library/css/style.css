@@ -2275,24 +2275,167 @@ tr:hover td {
     margin-bottom: 20px;
 }
 
-.monitor-table {
+.monitoring-page {
+    padding: 25px;
+}
+
+.monitoring-header {
+    background: #fffaf0;
+    border: 1px solid #ead7b7;
+    border-radius: 18px;
+    padding: 25px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.monitoring-header h2 {
+    margin: 0;
+    font-size: 30px;
+    color: #1a1a1a;
+}
+
+.monitoring-header p {
+    margin-top: 8px;
+    color: #666;
+}
+
+.status-badge {
+    background: #dff7df;
+    color: #167a16;
+    padding: 10px 18px;
+    border-radius: 30px;
+    font-weight: 700;
+}
+
+.monitoring-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.monitor-card {
+    background: #fffaf0;
+    border: 1px solid #ead7b7;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+}
+
+.monitor-card h4 {
+    margin: 0;
+    color: #555;
+}
+
+.monitor-card h2 {
+    font-size: 32px;
+    margin: 12px 0;
+    color: #b47a4b;
+}
+
+.monitor-card p {
+    color: #777;
+    margin: 0;
+}
+
+.monitoring-table-card {
+    background: #fffaf0;
+    border: 1px solid #ead7b7;
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.table-header h3 {
+    margin: 0;
+    color: #1a1a1a;
+}
+
+.table-header span {
+    color: #777;
+    font-size: 14px;
+}
+
+.professional-monitor-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    overflow: hidden;
+    border-radius: 14px;
 }
 
-.monitor-table th,
-.monitor-table td {
-    padding: 14px;
-    border-bottom: 1px solid #ddd;
-    text-align: left;
-}
-
-.monitor-table th {
-    background: #222;
+.professional-monitor-table thead {
+    background: #1f1f1f;
     color: white;
 }
 
-.monitor-table tr:hover {
-    background: #f5f5f5;
+.professional-monitor-table th,
+.professional-monitor-table td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #e2d6c4;
+}
+
+.professional-monitor-table tbody tr:hover {
+    background: #f7eddc;
+}
+
+.user-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-avatar {
+    width: 34px;
+    height: 34px;
+    background: #b47a4b;
+    color: white;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+}
+
+.action-badge {
+    background: #eef3ff;
+    color: #1d4ed8;
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.ip-badge {
+    background: #f2eadf;
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-family: monospace;
+}
+
+.empty-row {
+    text-align: center;
+    color: #777;
+    padding: 25px;
+}
+
+@media (max-width: 900px) {
+    .monitoring-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .monitoring-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
 }
