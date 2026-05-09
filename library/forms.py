@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import User, Book, BookReview, Member, Borrow, ResearchPaper, DigitalResource, PremiumContent
+from .models import User, Book, BookReview, Member, Borrow, ResearchPaper, DigitalResource, PremiumContent, Payment
 
 # --- Book Related Forms ---
 
@@ -176,3 +176,16 @@ class PasswordChangeForm(forms.Form):
         if cleaned_data.get('new_password1') != cleaned_data.get('new_password2'):
             raise forms.ValidationError('New passwords do not match!')
         return cleaned_data
+
+
+# --- Payment Form ---
+
+class PaymentForm(forms.ModelForm):
+    class Meta:
+        model = Payment
+        fields = ['amount', 'method', 'transaction_id']
+        widgets = {
+            'amount': forms.NumberInput(attrs={'class': 'form-control', 'min': '0', 'step': '0.01'}),
+            'method': forms.Select(attrs={'class': 'form-control'}),
+            'transaction_id': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Transaction ID'}),
+        }

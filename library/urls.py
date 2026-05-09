@@ -40,7 +40,6 @@ urlpatterns = [
     path('members/add/', views.member_add, name='member_add'),
     path('members/edit/<int:pk>/', views.member_edit, name='member_edit'),
     path('members/delete/<int:pk>/', views.member_delete, name='member_delete'),
-    # এক্সপোর্ট পাথটি এখানে রাখলে কোড ম্যানেজ করা সহজ
     path('members/export/', views.export_members_csv, name='export_members_csv'),
 
     # --- Borrowing System ---
@@ -50,18 +49,6 @@ urlpatterns = [
 
     # --- Research Papers (Librarian/Admin) ---
     path('research-papers/', views.research_papers, name='research_papers'),
-
-
-
-    path('premium-content/', views.premium_content, name='premium_content'),
-    path('premium-content/upload/', views.admin_upload_premium, name='admin_upload_premium'),
-
-    path('online-payment/', views.online_payment, name='online_payment'),
-    path('fines-dues/', views.fines_dues, name='fines_dues'),
-    path('system-monitoring/', views.system_monitoring, name='system_monitoring'),
-    path('reports-analytics/', views.reports_analytics, name='reports_analytics'),
-
-
     path('librarian/research-papers/', views.manage_research_papers, name='manage_research_papers'),
     path('librarian/research-papers/upload/', views.upload_research_paper, name='upload_research_paper'),
     path('librarian/research-papers/approval/', views.approval_access_control, name='approval_access_control'),
@@ -73,13 +60,20 @@ urlpatterns = [
     path('papers/<int:paper_id>/', views.paper_detail, name='paper_detail'),
     path('papers/<int:paper_id>/read/', views.read_paper, name='read_paper'),
     path('papers/<int:paper_id>/download/', views.download_paper, name='download_paper'),
-    
+
     # --- Premium Content ---
-    path('premium-content/', views.premium_content, name='premium_content'),
-    path('premium-content/upload/', views.admin_upload_premium, name='admin_upload_premium'), 
-    
-    # --- Services & Analytics ---
+    path('premium-content/', views.premium_content_list, name='premium_content'),
+    path('premium-content/upload/', views.admin_upload_premium, name='admin_upload_premium'),
+    path('premium-content/purchase/<int:pk>/', views.purchase_premium, name='purchase_premium'),
+    path('premium-content/view/<int:pk>/', views.view_premium_content, name='view_premium'),
+    path('premium-content/purchases/', views.admin_premium_purchases, name='admin_premium_purchases'),
+
+    # --- Payment System ---
     path('online-payment/', views.online_payment, name='online_payment'),
+    path('payment-history/', views.payment_history, name='payment_history'),
+    path('payment-history/pdf/', views.download_payment_history_pdf, name='download_payment_history_pdf'),
+
+    # --- Services & Analytics ---
     path('fines-dues/', views.fines_dues, name='fines_dues'),
     path('system-monitoring/', views.system_monitoring, name='system_monitoring'),
     path('reports-analytics/', views.reports_analytics, name='reports_analytics'),

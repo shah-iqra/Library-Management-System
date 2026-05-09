@@ -1,7 +1,22 @@
 {% extends 'library/base.html' %}
+
 {% block content %}
-<div style="padding: 20px;">
-    <h2>💳 Online Payment</h2>
-    <p>Coming soon...</p>
-</div>
+<h2>Online Payment</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <label>Amount</label>
+    {{ form.amount }}
+
+    <label>Payment Method</label>
+    {{ form.method }}
+
+    <label>Transaction ID</label>
+    {{ form.transaction_id }}
+
+    <button type="submit">Submit Payment</button>
+</form>
+
+<a href="{% url 'payment_history' %}">View Payment History</a>
 {% endblock %}

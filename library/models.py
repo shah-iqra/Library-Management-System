@@ -129,15 +129,12 @@ class Borrow(models.Model):
     is_returned = models.BooleanField(default=False)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='borrowed')
     fine_amount = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
-    
-    # এটি অবশ্যই যোগ করতে হবে
-    notes = models.TextField(null=True, blank=True) 
+    notes = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.book.title} borrowed by {self.member.username}"
 
     def save(self, *args, **kwargs):
-        # অটোমেটিক স্ট্যাটাস আপডেট লজিক
         if not self.is_returned and self.due_date and date.today() > self.due_date:
             self.status = 'overdue'
             overdue_days = (date.today() - self.due_date).days
@@ -221,3 +218,26 @@ class PremiumPurchase(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.content.title}"
+
+
+# --- Payment Model ---
+class Payment(models.Model):
+    PAYMENT_METHODS = [
+        ('bKash', 'bKash'),
+        ('Nagad', 'Nagad'),
+        ('Rocket', 'Rocket'),
+    ]
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Success', 'Success'),
+        ('Failed', 'Failed'),
+    ]
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    method = models.CharField(max_length=20, choices=PAYMENT_METHODS)
+    transaction_id = models.CharField(max_length=100, unique=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+    payment_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.username + " - " + self.transaction_id
