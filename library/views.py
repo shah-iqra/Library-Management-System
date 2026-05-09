@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required, user_passes_test
-from datetime import date
+from datetime import date, datetime, timedelta
 from django.contrib import messages
 from django.utils import timezone
 from django.http import FileResponse, HttpResponseForbidden, HttpResponse
-from datetime import timedelta
 import csv
 import uuid
 
@@ -19,8 +18,8 @@ from .models import (
     DigitalResource,
     PremiumContent,
     PremiumPurchase,
+    Payment,
 )
-
 
 from .forms import (
     BookForm,
@@ -33,7 +32,13 @@ from .forms import (
     DigitalResourceForm,
     PremiumContentForm,
     PremiumPurchaseForm,
+    PaymentForm,
 )
+
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, HRFlowable
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.pagesizes import letter
 
 User = get_user_model()
 
@@ -358,30 +363,23 @@ def issue_book(request, book_id):
 
 @login_required
 def borrow_list(request):
-
     borrows = Borrow.objects.select_related(
         'book',
         'member'
     ).order_by('-borrow_date')
 
-    # Regular user only sees own borrows
     if request.user.role == User.REGULAR_USER:
         borrows = borrows.filter(member=request.user)
 
     today = timezone.now().date()
 
-    # Auto overdue + fine calculation
     for borrow in borrows:
-
         if not borrow.is_returned and borrow.due_date:
-
             overdue_days = (today - borrow.due_date).days
-
             if overdue_days > 0:
                 borrow.status = 'overdue'
                 borrow.fine_amount = overdue_days * 5
                 borrow.save()
-
             else:
                 borrow.fine_amount = 0
                 borrow.save()
@@ -439,6 +437,7 @@ def borrow_book(request):
         'books': Book.objects.filter(available_copies__gt=0),
         'members': User.objects.filter(role=User.REGULAR_USER)
     })
+
 
 @login_required
 def return_book(request, pk):
@@ -632,27 +631,119 @@ def premium_content(request):
     return render(request, 'library/premium_content.html')
 
 
+# ==================================================
+# PAYMENT SYSTEM
+# ==================================================
+
 @login_required
 def online_payment(request):
-    return render(request, 'library/online_payment.html', {
-        'borrows': Borrow.objects.filter(member=request.user, is_returned=False).select_related('book')
-    })
+    if request.method == 'POST':
+        form = PaymentForm(request.POST)
+        if form.is_valid():
+            payment = form.save(commit=False)
+            payment.user = request.user
+            payment.status = 'Success'
+            payment.save()
+            messages.success(request, '✅ Payment successful!')
+            return redirect('payment_history')
+    else:
+        form = PaymentForm()
+    return render(request, 'library/online_payment.html', {'form': form})
 
 
 @login_required
+def payment_history(request):
+    payments = Payment.objects.filter(user=request.user).order_by('-payment_date')
+    return render(request, 'library/payment_history.html', {'payments': payments})
 
+
+@login_required
+def download_payment_history_pdf(request):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="payment_history.pdf"'
+    doc = SimpleDocTemplate(
+        response,
+        pagesize=letter,
+        rightMargin=30,
+        leftMargin=30,
+        topMargin=30,
+        bottomMargin=20
+    )
+    elements = []
+    styles = getSampleStyleSheet()
+    # TITLE
+    title = Paragraph(
+        "<font size=22><b>Library Payment History</b></font>",
+        styles['Title']
+    )
+    elements.append(title)
+    elements.append(Spacer(1, 20))
+    # USER INFO
+    user_info = Paragraph(
+        f"""
+        <b>User:</b> {request.user.username}<br/>
+        <b>Generated:</b> {datetime.now().strftime('%Y-%m-%d %I:%M %p')}
+        """,
+        styles['Normal']
+    )
+    elements.append(user_info)
+    elements.append(Spacer(1, 20))
+    # LINE
+    elements.append(HRFlowable(width="100%"))
+    elements.append(Spacer(1, 15))
+    payments = Payment.objects.filter(user=request.user).order_by('-payment_date')
+    # TABLE DATA
+    data = [
+        ['Date', 'Method', 'Amount', 'Transaction ID', 'Status']
+    ]
+    for payment in payments:
+        data.append([
+            payment.payment_date.strftime("%Y-%m-%d"),
+            payment.method,
+            f"TK{payment.amount}",
+            payment.transaction_id,
+            payment.status
+        ])
+    # TABLE
+    table = Table(data, colWidths=[100, 90, 80, 140, 80])
+    table.setStyle(TableStyle([
+        # HEADER
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#f1cc78")),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 12),
+        # BODY
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),
+        # ALIGNMENT
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        # GRID
+        ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+        # PADDING
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('TOPPADDING', (0, 1), (-1, -1), 10),
+        ('BOTTOMPADDING', (0, 1), (-1, -1), 10),
+    ]))
+    elements.append(table)
+    elements.append(Spacer(1, 30))
+    # FOOTER
+    footer = Paragraph(
+        "<font size=10 color='grey'>Generated by Library Management System</font>",
+        styles['Normal']
+    )
+    elements.append(footer)
+    doc.build(elements)
+    return response
+
+
+@login_required
 def fines_dues(request):
-
     borrows = Borrow.objects.filter(is_returned=False)
 
     for borrow in borrows:
-
         if borrow.due_date and date.today() > borrow.due_date:
-
             overdue_days = (date.today() - borrow.due_date).days
-
             borrow.fine_amount = overdue_days * 5
-
         else:
             borrow.fine_amount = 0
 
@@ -662,6 +753,7 @@ def fines_dues(request):
     }
 
     return render(request, 'library/fines_dues.html', context)
+
 
 @login_required
 @user_passes_test(is_librarian_or_admin, login_url='/')
@@ -683,7 +775,6 @@ def reports_analytics(request):
         response['Content-Disposition'] = 'attachment; filename="borrow_activity_report.csv"'
         writer = csv.writer(response)
         writer.writerow(['User', 'Book', 'Due Date', 'Status'])
-
         for b in Borrow.objects.all():
             writer.writerow([b.member.username, b.book.title, b.due_date, b.status])
         return response
@@ -693,7 +784,6 @@ def reports_analytics(request):
         response['Content-Disposition'] = 'attachment; filename="research_papers_report.csv"'
         writer = csv.writer(response)
         writer.writerow(['Title', 'Author', 'Journal', 'Year'])
-
         for paper in ResearchPaper.objects.all():
             writer.writerow([paper.title, paper.author, paper.journal, paper.year])
         return response
@@ -703,7 +793,6 @@ def reports_analytics(request):
         response['Content-Disposition'] = 'attachment; filename="system_usage_report.csv"'
         writer = csv.writer(response)
         writer.writerow(['Username', 'Email', 'Role', 'Date Joined'])
-
         for u in User.objects.all():
             writer.writerow([u.username, u.email, u.role, u.date_joined])
         return response
@@ -889,20 +978,17 @@ def export_members_csv(request):
     writer = csv.writer(response)
     writer.writerow(['ID', 'Username', 'Email', 'Phone', 'Date Joined'])
 
-    members = User.objects.all() # আপনার মেম্বার মডেল অনুযায়ী
+    members = User.objects.all()
     for member in members:
         writer.writerow([member.id, member.username, member.email, getattr(member, 'phone', 'N/A'), member.date_joined])
 
     return response
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect
-from django.contrib import messages
+
 
 @login_required
 def delete_review(request, review_id):
-    review = get_object_or_404(Review, id=review_id)
+    review = get_object_or_404(BookReview, id=review_id)
 
-    # Only review owner or admin can delete
     if request.user == review.user or request.user.role == 'admin':
         review.delete()
         messages.success(request, "Review deleted successfully!")

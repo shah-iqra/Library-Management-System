@@ -1,7 +1,69 @@
 {% extends 'library/base.html' %}
+
 {% block content %}
-<div style="padding: 20px;">
-    <h2>💳 Online Payment</h2>
-    <p>Coming soon...</p>
+
+<div class="payment-page">
+
+    <div class="payment-header">
+        <h2>Payment System</h2>
+        <p>Secure online payment for fines, premium content & memberships</p>
+    </div>
+
+    <div class="payment-grid">
+
+        <!-- LEFT -->
+        <div class="payment-card">
+
+            <h3>Order Summary</h3>
+
+            <div class="summary-box">
+                <div>
+                    <strong>Library Premium Access</strong>
+                    <span>Membership / Fine Payment</span>
+                </div>
+
+                <div class="summary-price">
+                    ৳499
+                </div>
+            </div>
+
+            <div class="summary-total">
+                <span>Total</span>
+                <strong>৳499</strong>
+            </div>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="payment-card">
+
+            <h3>Choose Payment Method</h3>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <label>Transaction Amount</label>
+                {{ form.amount }}
+
+                <label>Payment Method</label>
+                {{ form.method }}
+
+                <label>Transaction ID</label>
+                {{ form.transaction_id }}
+
+                <button type="submit" class="payment-btn">
+                    Submit Payment
+                </button>
+            </form>
+
+            <a href="{% url 'payment_history' %}" class="payment-history-link">
+                View Payment History
+            </a>
+
+        </div>
+
+    </div>
+
 </div>
+
 {% endblock %}
