@@ -54,19 +54,32 @@
     margin-bottom:25px;
 }
 
-.search-grid{
+.search-filter-bar{
     display:grid;
-    grid-template-columns:2fr 1fr 1fr 1fr;
+    grid-template-columns:2fr 1fr 1fr;
     gap:15px;
 }
 
-.search-grid input,
-.search-grid select{
+.search-filter-bar input{
     padding:12px;
     border-radius:10px;
     border:1px solid #ddd;
     background:white;
     color:black;
+}
+
+.search-filter-bar button{
+    padding:12px;
+    border-radius:10px;
+    border:none;
+    background:#d4a72c;
+    color:white;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.search-filter-bar button:hover{
+    background:#b8891f;
 }
 
 .section-title{
@@ -161,7 +174,7 @@ td{
 }
 
 @media(max-width:900px){
-.search-grid{
+.search-filter-bar{
 grid-template-columns:1fr;
 }
 table{
@@ -188,30 +201,25 @@ overflow-x:auto;
 
 <div class="search-box">
 <form method="GET">
-<div class="search-grid">
-<input type="text" placeholder="Title, author, journal, keyword..." name="q">
-
-<select>
-<option>All Fields</option>
-<option>Engineering</option>
-<option>Medical</option>
-<option>Computer Science</option>
-</select>
-
-<select>
-<option>All Years</option>
-<option>2026</option>
-<option>2025</option>
-<option>2024</option>
-</select>
-
-<select>
-<option>All</option>
-<option>Approved</option>
-<option>Pending</option>
-</select>
-
-</div>
+    <div class="search-filter-bar">
+        <input
+            type="text"
+            name="q"
+            placeholder="Title, author, journal, keyword..."
+            value="{{ request.GET.q }}"
+        >
+        <input
+            type="number"
+            name="year"
+            placeholder="Enter Year"
+            value="{{ request.GET.year }}"
+            min="1900"
+            max="2100"
+        >
+        <button type="submit">
+            Search
+        </button>
+    </div>
 </form>
 </div>
 

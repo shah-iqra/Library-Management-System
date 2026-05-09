@@ -629,8 +629,11 @@ def member_delete(request, pk):
 def research_papers(request):
     papers = ResearchPaper.objects.filter(status='approved').order_by('-uploaded_at')
     query = request.GET.get('q', '')
+    year = request.GET.get('year', '').strip()
     if query:
         papers = papers.filter(title__icontains=query) | papers.filter(author__icontains=query) | papers.filter(journal__icontains=query)
+    if year:
+        papers = papers.filter(year=year)
     return render(request, 'library/research_papers.html', {
         'papers': papers,
         'query': query,
