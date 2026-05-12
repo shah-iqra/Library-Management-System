@@ -563,20 +563,35 @@ def member_list(request):
     })
 
 
+# ==================================================
+# ✅ FIXED: member_add — username এখন email থেকে নেওয়া হয়
+# ==================================================
+
 @login_required
 @user_passes_test(is_librarian_or_admin, login_url='/')
 def member_add(request):
     error = ''
     if request.method == 'POST':
-        if User.objects.filter(username=request.POST.get('username')).exists():
-            error = 'Username already exists!'
+        name  = request.POST.get('name', '').strip()
+        email = request.POST.get('email', '').strip()
+        phone = request.POST.get('phone', '').strip()
+
+        # username হিসেবে email ব্যবহার করা হচ্ছে।
+        # email না থাকলে name থেকে username তৈরি হবে।
+        username = email if email else name.lower().replace(' ', '_')
+
+        if not username:
+            error = '❌ Name অথবা Email দিতে হবে!'
+        elif User.objects.filter(username=username).exists():
+            error = '❌ এই email দিয়ে ইতিমধ্যে একজন member আছে!'
         else:
             user = User.objects.create_user(
-                username=request.POST.get('username'),
-                email=request.POST.get('email'),
-                password=request.POST.get('password'),
-                phone=request.POST.get('phone', ''),
-                role=request.POST.get('role', User.REGULAR_USER),
+                username=username,
+                email=email,
+                password=uuid.uuid4().hex,   # random password সেট করা হচ্ছে
+                first_name=name,
+                phone=phone,
+                role=User.REGULAR_USER,
             )
             Member.objects.get_or_create(user=user)
             messages.success(request, '✅ Member added successfully!')
@@ -585,7 +600,7 @@ def member_add(request):
     return render(request, 'library/member_form.html', {
         'action': 'Add',
         'error': error,
-        'roles': User.ROLE_CHOICES
+        'roles': User.ROLE_CHOICES,
     })
 
 
