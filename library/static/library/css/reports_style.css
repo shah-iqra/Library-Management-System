@@ -240,3 +240,170 @@ h3 {
 
 .badge-borrow { background-color: #eaf2f8; color: #2980b9; }
 .badge-dl { background-color: #f5eef8; color: #8e44ad; }
+
+/* ==========================================
+   DARK MODE FIX FOR REPORTS & ANALYTICS
+   Paste at the VERY END of reports_style.css
+========================================== */
+
+html[data-theme="dark"] .analytics-container {
+    background: #111827 !important;
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .analytics-header {
+    border-bottom-color: #334155 !important;
+}
+
+html[data-theme="dark"] .header-text h2 {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .header-text p {
+    color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .btn-premium-dl {
+    background: #334155 !important;
+    color: #ffffff !important;
+    border: 1px solid #475569 !important;
+}
+
+html[data-theme="dark"] .btn-premium-dl:hover {
+    background: #475569 !important;
+    color: #ffffff !important;
+}
+
+/* KPI metric cards */
+html[data-theme="dark"] .metric-card {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+    border-color: #334155 !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25) !important;
+}
+
+html[data-theme="dark"] .metric-data h3 {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .metric-data p {
+    color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .metric-borrow {
+    background: rgba(52, 152, 219, 0.18) !important;
+    color: #60a5fa !important;
+}
+
+html[data-theme="dark"] .metric-download {
+    background: rgba(155, 89, 182, 0.18) !important;
+    color: #c084fc !important;
+}
+
+html[data-theme="dark"] .metric-active {
+    background: rgba(46, 204, 113, 0.18) !important;
+    color: #86efac !important;
+}
+
+html[data-theme="dark"] .trend-up {
+    background: rgba(34, 197, 94, 0.18) !important;
+    color: #86efac !important;
+}
+
+html[data-theme="dark"] .trend-neutral {
+    background: #334155 !important;
+    color: #e5e7eb !important;
+}
+
+/* Big report cards */
+html[data-theme="dark"] .report-section-card,
+html[data-theme="dark"] .tracker-section-card {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+    border-color: #334155 !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25) !important;
+}
+
+html[data-theme="dark"] .report-section-card h3,
+html[data-theme="dark"] .tracker-section-card h3,
+html[data-theme="dark"] .report-section-card h3 i,
+html[data-theme="dark"] .tracker-section-card h3 i {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .section-desc {
+    color: #cbd5e1 !important;
+}
+
+/* Report download rows */
+html[data-theme="dark"] .report-item {
+    background: #0f172a !important;
+    color: #e5e7eb !important;
+    border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .report-item:hover {
+    background: #111c31 !important;
+    border-color: #475569 !important;
+}
+
+html[data-theme="dark"] .report-info h4 {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .report-info p {
+    color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .btn-dl-small {
+    background: #334155 !important;
+    color: #ffffff !important;
+    border-color: #475569 !important;
+}
+
+html[data-theme="dark"] .btn-dl-small i {
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .btn-dl-small:hover {
+    background: #16a34a !important;
+    color: #ffffff !important;
+    border-color: #16a34a !important;
+}
+
+/* Activity table */
+html[data-theme="dark"] .activity-table {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .activity-table thead,
+html[data-theme="dark"] .activity-table th {
+    background: #020617 !important;
+    color: #ffffff !important;
+    border-bottom-color: #475569 !important;
+}
+
+html[data-theme="dark"] .activity-table td {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+    border-bottom-color: #334155 !important;
+}
+
+html[data-theme="dark"] .activity-table tbody tr:hover td {
+    background: #334155 !important;
+}
+
+html[data-theme="dark"] .activity-table td strong {
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .badge-borrow {
+    background: #dbeafe !important;
+    color: #1e40af !important;
+}
+
+html[data-theme="dark"] .badge-dl {
+    background: #f3e8ff !important;
+    color: #6b21a8 !important;
+}

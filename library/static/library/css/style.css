@@ -2439,3 +2439,781 @@ tr:hover td {
         gap: 15px;
     }
 }
+
+/* =====================================================
+   GLOBAL SAFE DARK MODE FIX
+   Paste this at the VERY END of style.css
+===================================================== */
+
+html[data-theme="dark"] {
+    color-scheme: dark;
+}
+
+html[data-theme="dark"] body {
+    background: #0f172a !important;
+    color: #e5e7eb !important;
+}
+
+/* Main layout */
+html[data-theme="dark"] .layout {
+    background: #0f172a !important;
+}
+
+html[data-theme="dark"] .main,
+html[data-theme="dark"] .main-container {
+    background: #111827 !important;
+    color: #e5e7eb !important;
+    box-shadow: none !important;
+}
+
+html[data-theme="dark"] .sidebar {
+    background: #020617 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .top-nav {
+    background: #111827 !important;
+    color: #ffffff !important;
+    border-bottom: 1px solid #334155 !important;
+}
+
+html[data-theme="dark"] .top-nav h2,
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4 {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] p,
+html[data-theme="dark"] span,
+html[data-theme="dark"] label,
+html[data-theme="dark"] small {
+    color: #cbd5e1;
+}
+
+/* Sidebar */
+html[data-theme="dark"] .sidebar a {
+    color: rgba(255, 255, 255, 0.75) !important;
+}
+
+html[data-theme="dark"] .sidebar a:hover,
+html[data-theme="dark"] .sidebar a.active {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+}
+
+html[data-theme="dark"] .sidebar .menu-title {
+    color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .profile-link-card {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+html[data-theme="dark"] .profile-link-card:hover {
+    background: rgba(255, 255, 255, 0.16) !important;
+}
+
+/* Cards / boxes */
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .card-stat,
+html[data-theme="dark"] .stat-card,
+html[data-theme="dark"] .table-box,
+html[data-theme="dark"] .form-box,
+html[data-theme="dark"] .book-card,
+html[data-theme="dark"] .digital-card,
+html[data-theme="dark"] .profile-card,
+html[data-theme="dark"] .dashboard-header,
+html[data-theme="dark"] .dash-card,
+html[data-theme="dark"] .dashboard-panel,
+html[data-theme="dark"] .book-detail-card,
+html[data-theme="dark"] .review-form-card,
+html[data-theme="dark"] .reviews-list-card,
+html[data-theme="dark"] .single-review,
+html[data-theme="dark"] .empty-review,
+html[data-theme="dark"] .book-description-box,
+html[data-theme="dark"] .content-card,
+html[data-theme="dark"] .upload-container,
+html[data-theme="dark"] .payment-card,
+html[data-theme="dark"] .monitoring-header,
+html[data-theme="dark"] .monitor-card,
+html[data-theme="dark"] .monitoring-table-card,
+html[data-theme="dark"] .empty-books {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+    border-color: #334155 !important;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Page wrappers */
+html[data-theme="dark"] .dashboard-page,
+html[data-theme="dark"] .profile-wrapper,
+html[data-theme="dark"] .payment-page {
+    background: #111827 !important;
+    color: #e5e7eb !important;
+}
+
+/* Text inside cards */
+html[data-theme="dark"] .book-info h3,
+html[data-theme="dark"] .book-detail-info h1,
+html[data-theme="dark"] .digital-card h3,
+html[data-theme="dark"] .card-title,
+html[data-theme="dark"] .profile-top h2,
+html[data-theme="dark"] .profile-user-box h4,
+html[data-theme="dark"] .payment-header h2,
+html[data-theme="dark"] .payment-card h3,
+html[data-theme="dark"] .monitoring-header h2,
+html[data-theme="dark"] .table-header h3 {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .book-info p,
+html[data-theme="dark"] .digital-card p,
+html[data-theme="dark"] .card-desc,
+html[data-theme="dark"] .detail-author,
+html[data-theme="dark"] .book-description-box p,
+html[data-theme="dark"] .single-review p,
+html[data-theme="dark"] .review-note,
+html[data-theme="dark"] .profile-top p,
+html[data-theme="dark"] .security-text,
+html[data-theme="dark"] .payment-header p,
+html[data-theme="dark"] .monitoring-header p,
+html[data-theme="dark"] .monitor-card p,
+html[data-theme="dark"] .table-header span {
+    color: #cbd5e1 !important;
+}
+
+/* Forms */
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] .form-control,
+html[data-theme="dark"] .search-input {
+    background: #0f172a !important;
+    color: #e5e7eb !important;
+    border-color: #475569 !important;
+}
+
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder,
+html[data-theme="dark"] .search-input::placeholder {
+    color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] input:focus,
+html[data-theme="dark"] select:focus,
+html[data-theme="dark"] textarea:focus,
+html[data-theme="dark"] .search-input:focus {
+    border-color: #d4a63c !important;
+    box-shadow: 0 0 0 3px rgba(212, 166, 60, 0.18) !important;
+}
+
+/* Tables */
+html[data-theme="dark"] table {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] th {
+    background: #020617 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] td {
+    color: #e5e7eb !important;
+    border-bottom-color: #334155 !important;
+}
+
+html[data-theme="dark"] tr:hover td,
+html[data-theme="dark"] .professional-monitor-table tbody tr:hover {
+    background: #334155 !important;
+}
+
+/* Category / filter tabs */
+html[data-theme="dark"] .category-tab,
+html[data-theme="dark"] .filter-btn,
+html[data-theme="dark"] .quick-actions a,
+html[data-theme="dark"] .summary-list div,
+html[data-theme="dark"] .info-row,
+html[data-theme="dark"] .detail-meta-grid div,
+html[data-theme="dark"] .detail-rating,
+html[data-theme="dark"] .summary-box,
+html[data-theme="dark"] .file-drop-area {
+    background: #0f172a !important;
+    color: #e5e7eb !important;
+    border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .category-tab:hover,
+html[data-theme="dark"] .category-tab.active,
+html[data-theme="dark"] .filter-btn:hover,
+html[data-theme="dark"] .filter-btn.active {
+    background: #d4a63c !important;
+    color: #111827 !important;
+    border-color: #d4a63c !important;
+}
+
+/* Book/detail special boxes */
+html[data-theme="dark"] .book-image-box,
+html[data-theme="dark"] .book-detail-cover,
+html[data-theme="dark"] .profile-user-box,
+html[data-theme="dark"] .digital-icon,
+html[data-theme="dark"] .card-thumb-placeholder {
+    background: #0f172a !important;
+    color: #e5e7eb !important;
+}
+
+/* Payment */
+html[data-theme="dark"] .payment-table th {
+    background: #020617 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .payment-table td {
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .summary-price,
+html[data-theme="dark"] .price-tag {
+    color: #facc15 !important;
+}
+
+html[data-theme="dark"] .payment-history-link {
+    color: #facc15 !important;
+}
+
+/* Upload/file input */
+html[data-theme="dark"] .fake-btn {
+    background: #334155 !important;
+    border-color: #475569 !important;
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .file-msg {
+    color: #cbd5e1 !important;
+}
+
+/* Premium variables in dark */
+html[data-theme="dark"] {
+    --card-bg: #1e293b;
+    --text-dark: #f8fafc;
+    --text-muted: #cbd5e1;
+    --border: #334155;
+}
+
+/* Messages */
+html[data-theme="dark"] .messages .message,
+html[data-theme="dark"] .message,
+html[data-theme="dark"] .alert {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+    border-color: #334155 !important;
+}
+
+/* Theme button */
+html[data-theme="dark"] .theme-toggle-btn {
+    background: #facc15 !important;
+    color: #111827 !important;
+    border-color: #facc15 !important;
+}
+
+/* Links */
+html[data-theme="dark"] a {
+    color: inherit;
+}
+
+html[data-theme="dark"] .back-link,
+html[data-theme="dark"] .view-details-text {
+    color: #facc15 !important;
+}
+
+/* =====================================================
+   TOP NAV + DARK MODE FINAL PATCH
+   Paste at the VERY END of style.css
+===================================================== */
+
+/* ---------- TOP NAV NORMAL FIX ---------- */
+.top-nav {
+    width: 100%;
+    min-height: 78px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 18px 0 24px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.top-nav h2 {
+    margin: 0;
+    color: #1a1a2e;
+    font-size: 28px;
+    font-weight: 800;
+}
+
+.top-nav-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.theme-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 14px;
+    border: 1px solid #d9caa9;
+    border-radius: 10px;
+    background: #fffaf0;
+    color: #1f2f2d;
+    font-weight: 700;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.theme-toggle-btn i {
+    font-size: 14px;
+}
+
+.user-profile {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fffaf0;
+    border: 1px solid #eadcc1;
+    padding: 9px 14px;
+    border-radius: 12px;
+    color: #1f2f2d;
+    font-weight: 700;
+}
+
+.role-tag {
+    background: #2e3b33;
+    color: #ffffff !important;
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+}
+
+/* ---------- DARK TOP NAV FIX ---------- */
+html[data-theme="dark"] .top-nav {
+    background: transparent !important;
+    border-bottom: 1px solid #334155 !important;
+}
+
+html[data-theme="dark"] .top-nav h2 {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .top-nav-right {
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .theme-toggle-btn {
+    background: #facc15 !important;
+    color: #111827 !important;
+    border-color: #facc15 !important;
+}
+
+html[data-theme="dark"] .theme-toggle-btn i,
+html[data-theme="dark"] .theme-toggle-btn span {
+    color: #111827 !important;
+}
+
+html[data-theme="dark"] .user-profile {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .user-profile span {
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .role-tag {
+    background: #334155 !important;
+    color: #ffffff !important;
+}
+
+/* ---------- MAIN CONTAINER WIDTH FIX ---------- */
+html[data-theme="dark"] .main-container {
+    background: #111827 !important;
+}
+
+html[data-theme="dark"] .main-container > * {
+    color: #e5e7eb;
+}
+
+/* ---------- RESEARCH PAPER PAGE FIX ---------- */
+html[data-theme="dark"] .research-page,
+html[data-theme="dark"] .research-container,
+html[data-theme="dark"] .paper-page,
+html[data-theme="dark"] .paper-container {
+    background: #111827 !important;
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .research-hero,
+html[data-theme="dark"] .paper-hero,
+html[data-theme="dark"] .search-section,
+html[data-theme="dark"] .filter-section {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+    border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .research-hero h1,
+html[data-theme="dark"] .paper-hero h1,
+html[data-theme="dark"] .research-page h1,
+html[data-theme="dark"] .research-page h2,
+html[data-theme="dark"] .paper-container h1,
+html[data-theme="dark"] .paper-container h2 {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .research-hero p,
+html[data-theme="dark"] .paper-hero p {
+    color: #cbd5e1 !important;
+}
+
+/* ---------- MEMBER LIST PAGE FIX ---------- */
+html[data-theme="dark"] .member-page,
+html[data-theme="dark"] .member-container,
+html[data-theme="dark"] .member-list-page,
+html[data-theme="dark"] .member-wrapper {
+    background: #111827 !important;
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .member-table,
+html[data-theme="dark"] .member-table-wrapper,
+html[data-theme="dark"] .table-container,
+html[data-theme="dark"] .member-card,
+html[data-theme="dark"] .member-panel {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+    border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .member-table th {
+    background: #020617 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .member-table td {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+    border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .member-table tbody tr:hover td {
+    background: #334155 !important;
+}
+
+html[data-theme="dark"] .search-box,
+html[data-theme="dark"] .filter-box,
+html[data-theme="dark"] .member-toolbar {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+    border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .search-box input {
+    background: #0f172a !important;
+    color: #e5e7eb !important;
+    border-color: #475569 !important;
+}
+
+/* ---------- REPORTS ANALYTICS PAGE FIX ---------- */
+html[data-theme="dark"] .reports-page,
+html[data-theme="dark"] .reports-container,
+html[data-theme="dark"] .analytics-page,
+html[data-theme="dark"] .analytics-container {
+    background: #111827 !important;
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .report-card,
+html[data-theme="dark"] .analytics-card,
+html[data-theme="dark"] .report-panel,
+html[data-theme="dark"] .analytics-panel,
+html[data-theme="dark"] .download-report-card,
+html[data-theme="dark"] .activity-tracker-card {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+    border-color: #334155 !important;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25) !important;
+}
+
+html[data-theme="dark"] .report-card *,
+html[data-theme="dark"] .analytics-card *,
+html[data-theme="dark"] .report-panel *,
+html[data-theme="dark"] .analytics-panel * {
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .report-card h1,
+html[data-theme="dark"] .report-card h2,
+html[data-theme="dark"] .report-card h3,
+html[data-theme="dark"] .analytics-card h1,
+html[data-theme="dark"] .analytics-card h2,
+html[data-theme="dark"] .analytics-card h3 {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .report-item,
+html[data-theme="dark"] .download-item,
+html[data-theme="dark"] .report-row {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+    color: #e5e7eb !important;
+}
+
+/* ---------- TABLE BUTTON FIX ---------- */
+html[data-theme="dark"] .btn-icon,
+html[data-theme="dark"] .btn-view,
+html[data-theme="dark"] .btn-download {
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .status-badge,
+html[data-theme="dark"] .active-badge,
+html[data-theme="dark"] .approved-badge {
+    color: #064e3b !important;
+}
+
+/* ---------- PREVENT WHITE CARD + WHITE TEXT BUG ---------- */
+html[data-theme="dark"] .white-card,
+html[data-theme="dark"] .content-box,
+html[data-theme="dark"] .section-card {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+    border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .white-card *,
+html[data-theme="dark"] .content-box *,
+html[data-theme="dark"] .section-card * {
+    color: #e5e7eb !important;
+}
+
+/* =====================================================
+   SYSTEM MONITORING + REPORTS ANALYTICS DARK MODE FIX
+   Paste at VERY END of style.css
+===================================================== */
+
+/* =========================
+   SYSTEM MONITORING FIX
+========================= */
+
+html[data-theme="dark"] .monitoring-page {
+    background: #111827 !important;
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .monitoring-header,
+html[data-theme="dark"] .monitor-card,
+html[data-theme="dark"] .monitoring-table-card {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25) !important;
+}
+
+html[data-theme="dark"] .monitoring-header h2,
+html[data-theme="dark"] .monitoring-table-card h3,
+html[data-theme="dark"] .monitor-card h2,
+html[data-theme="dark"] .monitor-card h4 {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .monitoring-header p,
+html[data-theme="dark"] .monitor-card p,
+html[data-theme="dark"] .table-header span {
+    color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .professional-monitor-table {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .professional-monitor-table thead {
+    background: #020617 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .professional-monitor-table th {
+    background: #020617 !important;
+    color: #ffffff !important;
+    border-bottom: 1px solid #475569 !important;
+}
+
+html[data-theme="dark"] .professional-monitor-table td {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+    border-bottom: 1px solid #334155 !important;
+}
+
+html[data-theme="dark"] .professional-monitor-table tbody tr:hover td {
+    background: #334155 !important;
+}
+
+html[data-theme="dark"] .action-badge {
+    background: #e0f2fe !important;
+    color: #075985 !important;
+}
+
+html[data-theme="dark"] .ip-badge {
+    background: #fef3c7 !important;
+    color: #78350f !important;
+}
+
+html[data-theme="dark"] .status-badge {
+    background: #dcfce7 !important;
+    color: #166534 !important;
+}
+
+html[data-theme="dark"] .user-avatar {
+    background: #b47a4b !important;
+    color: #ffffff !important;
+}
+
+
+/* =========================
+   REPORTS ANALYTICS FIX
+========================= */
+
+/* common report wrappers */
+html[data-theme="dark"] .reports-page,
+html[data-theme="dark"] .reports-analytics-page,
+html[data-theme="dark"] .analytics-page,
+html[data-theme="dark"] .reports-container,
+html[data-theme="dark"] .analytics-container,
+html[data-theme="dark"] .reporting-page {
+    background: #111827 !important;
+    color: #e5e7eb !important;
+}
+
+/* report headings */
+html[data-theme="dark"] .reports-page h1,
+html[data-theme="dark"] .reports-page h2,
+html[data-theme="dark"] .reports-page h3,
+html[data-theme="dark"] .reports-analytics-page h1,
+html[data-theme="dark"] .reports-analytics-page h2,
+html[data-theme="dark"] .reports-analytics-page h3,
+html[data-theme="dark"] .analytics-page h1,
+html[data-theme="dark"] .analytics-page h2,
+html[data-theme="dark"] .analytics-page h3,
+html[data-theme="dark"] .reporting-page h1,
+html[data-theme="dark"] .reporting-page h2,
+html[data-theme="dark"] .reporting-page h3 {
+    color: #f8fafc !important;
+}
+
+/* report cards / panels */
+html[data-theme="dark"] .report-card,
+html[data-theme="dark"] .reports-card,
+html[data-theme="dark"] .analytics-card,
+html[data-theme="dark"] .report-panel,
+html[data-theme="dark"] .reports-panel,
+html[data-theme="dark"] .analytics-panel,
+html[data-theme="dark"] .audit-card,
+html[data-theme="dark"] .metric-card,
+html[data-theme="dark"] .stats-card,
+html[data-theme="dark"] .download-card,
+html[data-theme="dark"] .activity-card,
+html[data-theme="dark"] .tracker-card {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* force inner text visible */
+html[data-theme="dark"] .report-card *,
+html[data-theme="dark"] .reports-card *,
+html[data-theme="dark"] .analytics-card *,
+html[data-theme="dark"] .report-panel *,
+html[data-theme="dark"] .reports-panel *,
+html[data-theme="dark"] .analytics-panel *,
+html[data-theme="dark"] .audit-card *,
+html[data-theme="dark"] .metric-card *,
+html[data-theme="dark"] .stats-card *,
+html[data-theme="dark"] .download-card *,
+html[data-theme="dark"] .activity-card *,
+html[data-theme="dark"] .tracker-card * {
+    color: #e5e7eb !important;
+}
+
+/* report item rows */
+html[data-theme="dark"] .report-item,
+html[data-theme="dark"] .reports-item,
+html[data-theme="dark"] .download-item,
+html[data-theme="dark"] .activity-item,
+html[data-theme="dark"] .report-row,
+html[data-theme="dark"] .audit-row {
+    background: #0f172a !important;
+    color: #e5e7eb !important;
+    border: 1px solid #334155 !important;
+}
+
+/* report tables */
+html[data-theme="dark"] .reports-page table,
+html[data-theme="dark"] .reports-analytics-page table,
+html[data-theme="dark"] .analytics-page table,
+html[data-theme="dark"] .reporting-page table {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .reports-page th,
+html[data-theme="dark"] .reports-analytics-page th,
+html[data-theme="dark"] .analytics-page th,
+html[data-theme="dark"] .reporting-page th {
+    background: #020617 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .reports-page td,
+html[data-theme="dark"] .reports-analytics-page td,
+html[data-theme="dark"] .analytics-page td,
+html[data-theme="dark"] .reporting-page td {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+    border-bottom: 1px solid #334155 !important;
+}
+
+/* report buttons */
+html[data-theme="dark"] .generate-report-btn,
+html[data-theme="dark"] .audit-report-btn,
+html[data-theme="dark"] .csv-btn,
+html[data-theme="dark"] .report-download-btn {
+    background: #334155 !important;
+    color: #ffffff !important;
+    border-color: #475569 !important;
+}
+
+html[data-theme="dark"] .generate-report-btn:hover,
+html[data-theme="dark"] .audit-report-btn:hover,
+html[data-theme="dark"] .csv-btn:hover,
+html[data-theme="dark"] .report-download-btn:hover {
+    background: #475569 !important;
+}
+
+/* white background last-rescue inside reports */
+html[data-theme="dark"] .reports-page [style*="background: white"],
+html[data-theme="dark"] .reports-page [style*="background:white"],
+html[data-theme="dark"] .reports-page [style*="background-color: white"],
+html[data-theme="dark"] .reports-page [style*="background-color:white"],
+html[data-theme="dark"] .reports-analytics-page [style*="background: white"],
+html[data-theme="dark"] .reports-analytics-page [style*="background:white"],
+html[data-theme="dark"] .reports-analytics-page [style*="background-color: white"],
+html[data-theme="dark"] .reports-analytics-page [style*="background-color:white"] {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+}
