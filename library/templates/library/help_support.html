@@ -1,0 +1,171 @@
+{% extends 'library/base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'library/css/support_style.css' %}">
+
+<div class="support-container">
+    <div class="support-header">
+        <h2>Help & Support Center</h2>
+        <p>
+            {% if request.user.role|lower == 'admin' or request.user.role|lower == 'librarian' %}
+                Welcome to the Support Control Panel. Manage and resolve user support tickets here.
+            {% else %}
+                How can we help you today? Browse FAQs, reach us directly, or raise a support ticket.
+            {% endif %}
+        </p>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="support-grid">
+        
+        {% if request.user.role|lower == 'admin' or request.user.role|lower == 'librarian' %}
+        <div class="support-main" style="grid-column: 1 / -1;">
+            <div class="form-section">
+                <h3>User Support Tickets Management (Admin Panel)</h3>
+                <div class="ticket-list">
+                    {% if all_tickets %}
+                        {% for ticket in all_tickets %}
+                            <div class="ticket-card" style="margin-bottom: 20px; padding: 20px; border-left: 4px solid {% if ticket.status == 'pending' %}#d97706{% else %}#16a34a{% endif %};">
+                                <div class="ticket-meta">
+                                    <span><strong>User:</strong> {{ ticket.user.username }} ({{ ticket.user.email }})</span>
+                                    <span class="badge {{ ticket.status }}">{{ ticket.status|upper }}</span>
+                                </div>
+                                <h4 style="margin: 10px 0; font-size: 15px; color: #1e293b;">Subject: {{ ticket.subject }}</h4>
+                                <p class="user-msg" style="background: #f8fafc; padding: 12px; border-radius: 8px; color: #475569; line-height: 1.5;">
+                                    <strong>User Message:</strong> {{ ticket.message }}
+                                </p>
+                                
+                                {% if ticket.status == 'pending' %}
+                                    <form method="POST" style="margin-top: 15px;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                                        <div class="form-group">
+                                            <textarea name="admin_reply" rows="2" placeholder="Write your official response here..." style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px;" required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn-submit" style="padding: 8px 16px; font-size: 13px; margin-top: 5px;">Send Reply & Resolve</button>
+                                    </form>
+                                {% else %}
+                                    <div class="admin-reply" style="margin-top: 12px; padding: 10px; background-color: #f0fdf4; border-left: 3px solid #16a34a; border-radius: 4px; font-size: 13px; color: #14532d;">
+                                        <p><strong>Your Reply:</strong> {{ ticket.admin_reply }}</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="no-tickets" style="text-align: center; color: #94a3b8; padding: 30px;">No user tickets found in the system.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+        <div class="support-main">
+            <section class="faq-section">
+                <h3>Frequently Asked Questions</h3>
+                <div class="faq-item">
+                    <details>
+                        <summary>How do I borrow a book from BookNest?</summary>
+                        <p>Go to the 'Book Search' tab from the sidebar, find your desired book, and click the 'Borrow' button if copies are available.</p>
+                    </details>
+                </div>
+                <div class="faq-item">
+                    <details>
+                        <summary>What is the penalty for overdue books?</summary>
+                        <p>According to library policy, a fine of ৳5 per day is automatically calculated after the due date passes.</p>
+                    </details>
+                </div>
+                <div class="faq-item">
+                    <details>
+                        <summary>How can I read premium content?</summary>
+                        <p>You need to purchase access via the 'Online Payment' options available for individual premium books or notes.</p>
+                    </details>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <h3>Create a Support Ticket</h3>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="subject">Subject / Issue</label>
+                        <input type="text" id="subject" name="subject" placeholder="e.g., Unable to download research paper" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Detailed Description</label>
+                        <textarea id="message" name="message" rows="5" placeholder="Explain your issue here..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">Submit Ticket</button>
+                </form>
+            </section>
+        </div>
+
+        <div class="support-sidebar">
+            <div class="ticket-tracking-section">
+                <h3>My Support Tickets</h3>
+                <div class="ticket-list">
+                    {% if my_tickets %}
+                        {% for ticket in my_tickets %}
+                            <div class="ticket-card">
+                                <div class="ticket-meta">
+                                    <span class="ticket-date">{{ ticket.created_at|date:"d M, Y" }}</span>
+                                    <span class="badge {{ ticket.status }}">{{ ticket.status|upper }}</span>
+                                </div>
+                                <h4>{{ ticket.subject }}</h4>
+                                <p class="user-msg"><strong>Q:</strong> {{ ticket.message }}</p>
+                                
+                                {% if ticket.admin_reply %}
+                                    <div class="admin-reply">
+                                        <p><strong>Reply:</strong> {{ ticket.admin_reply }}</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="no-tickets">You haven't opened any support tickets yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <hr class="sidebar-divider">
+
+            <div class="direct-contact-section">
+                <h3>Direct Contact Info</h3>
+                <p class="contact-subtext">If your issue is urgent, reach out to our team directly during library hours.</p>
+                <div class="contact-info-list">
+                    <div class="contact-info-item">
+                        <span class="contact-icon">📧</span>
+                        <div class="contact-details">
+                            <span class="contact-label">Email Support</span>
+                            <a href="mailto:booknest123@gmail.com" class="contact-value">booknest123@gmail.com</a>
+                        </div>
+                    </div>
+                    <div class="contact-info-item">
+                        <span class="contact-icon">📞</span>
+                        <div class="contact-details">
+                            <span class="contact-label">Helpline</span>
+                            <a href="tel:+8801700000000" class="contact-value">+880 1700-000000</a>
+                        </div>
+                    </div>
+                    <div class="contact-info-item">
+                        <span class="contact-icon">⏰</span>
+                        <div class="contact-details">
+                            <span class="contact-label">Available Hours</span>
+                            <span class="contact-value">Sat - Thu: 9:00 AM - 8:00 PM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

@@ -84,5 +84,6 @@ urlpatterns = [
     path('wishlist/', views.wishlist_page, name='wishlist_page'),
     path('wishlist/add/<int:book_id>/', views.add_to_wishlist, name='add_to_wishlist'),
     path('wishlist/remove/<int:wishlist_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
+    path('help-support/', views.help_support_page, name='help_support_page'),
 
 ]

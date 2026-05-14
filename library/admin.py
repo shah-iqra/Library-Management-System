@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from .models import SupportTicket
 from .models import (
     Book,
     BookReview,
@@ -102,3 +103,9 @@ class PaymentAdmin(admin.ModelAdmin):
     list_display = ['user', 'amount', 'method', 'transaction_id', 'status', 'payment_date']
     list_filter = ['status', 'method', 'payment_date']
     search_fields = ['user__username', 'transaction_id']
+
+@admin.register(SupportTicket)
+class SupportTicketAdmin(admin.ModelAdmin):
+    list_display = ('user', 'subject', 'status', 'created_at')
+    list_filter = ('status',)
+    search_fields = ('subject', 'message')

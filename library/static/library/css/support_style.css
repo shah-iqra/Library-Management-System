@@ -1,0 +1,269 @@
+.support-container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+.support-header {
+    margin-bottom: 30px;
+}
+
+.support-header h2 {
+    font-size: 26px;
+    color: #1e293b;
+    font-weight: 700;
+}
+
+.support-header p {
+    color: #64748b;
+    font-size: 15px;
+}
+
+/* সাকসেস অ্যালার্ট */
+.alert-success {
+    background-color: #d1fae5;
+    color: #065f46;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+/* গ্রিড স্ট্রাকচার */
+.support-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+@media (max-width: 900px) {
+    .support-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* সেকশন স্টাইল */
+.faq-section, .form-section, .support-sidebar {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+}
+
+.faq-section h3, .form-section h3, .support-sidebar h3 {
+    font-size: 18px;
+    color: #1e293b;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* FAQ অ্যাকোর্ডিয়ন */
+.faq-item details {
+    border-bottom: 1px solid #e2e8f0;
+    padding: 12px 0;
+}
+
+.faq-item summary {
+    font-weight: 500;
+    color: #334155;
+    cursor: pointer;
+    outline: none;
+    font-size: 15px;
+}
+
+.faq-item details p {
+    padding-top: 10px;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* ফর্ম কম্পোনেন্ট */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #475569;
+    margin-bottom: 6px;
+}
+
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: #f8fafc;
+    transition: all 0.3s;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+    border-color: #15803d; /* আপনার ড্যাশবোর্ডের গ্রিন থিম */
+    outline: none;
+    background-color: #ffffff;
+}
+
+.btn-submit {
+    background-color: #15803d;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-submit:hover {
+    background-color: #166534;
+}
+
+/* টিকিট ট্র্যাকিং কার্ড */
+.ticket-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.ticket-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 15px;
+    background: #fafafa;
+}
+
+.ticket-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.ticket-date {
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+.badge {
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.badge.pending {
+    background-color: #fef3c7;
+    color: #d97706;
+}
+
+.badge.resolved {
+    background-color: #d1fae5;
+    color: #059669;
+}
+
+.ticket-card h4 {
+    font-size: 14px;
+    color: #1e293b;
+    margin: 0 0 5px 0;
+}
+
+.user-msg {
+    font-size: 13px;
+    color: #475569;
+    margin: 0;
+}
+
+.admin-reply {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f0fdf4;
+    border-left: 3px solid #16a34a;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #14532d;
+}
+
+.no-tickets {
+    font-size: 13px;
+    color: #94a3b8;
+    text-align: center;
+}
+
+/* কন্ট্যাক্ট সেন্টারের নতুন CSS */
+.sidebar-divider {
+    border: 0;
+    height: 1px;
+    background: #e2e8f0;
+    margin: 25px 0;
+}
+
+.contact-subtext {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.contact-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.contact-info-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    transition: background 0.3s;
+}
+
+.contact-info-item:hover {
+    background: #f1f5f9;
+}
+
+.contact-icon {
+    font-size: 20px;
+    background: #ffffff;
+    padding: 8px;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contact-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.contact-value {
+    font-size: 14px;
+    color: #334155;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+
+a.contact-value:hover {
+    color: #15803d; 
+    text-decoration: underline;
+}
