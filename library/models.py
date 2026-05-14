@@ -263,3 +263,15 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"Notification for {self.user.username} - {self.message[:20]}"
+    
+# --- Wishlist Model ---
+class Wishlist(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='wishlist')
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='wished_by')
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'book') # যেন একই বই একজন ইউজার বারবার যুক্ত করতে না পারে
+
+    def __str__(self):
+        return f"{self.user.username} - {self.book.title}"

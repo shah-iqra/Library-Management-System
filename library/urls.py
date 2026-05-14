@@ -80,4 +80,9 @@ urlpatterns = [
     path('reports-analytics/', views.reports_analytics, name='reports_analytics'),
     path('premium-content/delete/<int:pk>/', views.premium_content_delete, name='premium_content_delete'),
     path('notifications/', views.notification_page, name='notification_page'),
+
+    path('wishlist/', views.wishlist_page, name='wishlist_page'),
+    path('wishlist/add/<int:book_id>/', views.add_to_wishlist, name='add_to_wishlist'),
+    path('wishlist/remove/<int:wishlist_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
+
 ]
