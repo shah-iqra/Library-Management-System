@@ -1,0 +1,36 @@
+{% extends 'library/base.html' %} {% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'library/css/notifications_style.css' %}">
+
+<div class="notification-container">
+    <div class="notification-header">
+        <h2>Notifications & Alerts</h2>
+       <p>See the latest updates and notices for your library account here.</p>
+    </div>
+    
+    <hr class="section-divider">
+
+    <div class="notification-list">
+        {% if notifications %}
+            {% for notification in notifications %}
+                <div class="notification-card {% if not notification.is_read %}unread{% endif %}">
+                    <div class="notification-icon">
+                        {% if "book" in notification.message %} 📚 {% else %} 📄 {% endif %}
+                    </div>
+                    <div class="notification-content">
+                        <p class="notification-text">{{ notification.message }}</p>
+                        <span class="notification-time">{{ notification.created_at|timesince }} before</span>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-notification">
+                <div class="empty-icon">📭</div>
+               <h3>No notification</h3>
+                <p>You currently have no new or old notifications.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

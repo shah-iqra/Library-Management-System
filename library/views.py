@@ -9,6 +9,8 @@ from django.http import FileResponse, HttpResponseForbidden, HttpResponse
 import csv
 import uuid
 from django.db.models import Count
+from .models import Borrow, ResearchPaper, Notification 
+
 
 from .models import (
     Book,
@@ -1168,3 +1170,34 @@ def dashboard(request):
     if not request.user.is_staff:
         return redirect('home')
     return render(request, 'library/home.html')
+
+
+
+
+
+@login_required
+def notification_page(request):
+    user = request.user
+    
+    
+    overdue_books = Borrow.objects.filter(member=user, due_date__lt=date.today(), is_returned=False)
+    for borrow in overdue_books:
+        
+        if not Notification.objects.filter(user=user, message__contains=borrow.book.title).exists():
+            message = f"The deposit date for your borrowed book '{borrow.book.title}' has passed!"
+            Notification.objects.create(user=user, message=message)
+            
+
+    if user.role in ['admin', 'librarian']:
+        pending_papers = ResearchPaper.objects.filter(status='pending')
+        for paper in pending_papers:
+           
+            if not Notification.objects.filter(user=user, message__contains=paper.title).exists():
+                message = f"A new paper '{paper.title}' is pending approval."
+                Notification.objects.create(user=user, message=message)
+
+    
+    notifications = Notification.objects.filter(user=user).order_by('-created_at')
+    Notification.objects.filter(user=user, is_read=False).update(is_read=True)
+
+    return render(request, 'library/notifications.html', {'notifications': notifications})
