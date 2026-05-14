@@ -165,3 +165,85 @@
     font-size: 14px;
     color: #94a3b8;
 }
+
+/* =====================================================
+   DARK MODE - WISHLIST
+   Paste at the VERY END of wishlist_style.css
+===================================================== */
+
+html[data-theme="dark"] .wishlist-container {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25) !important;
+}
+
+html[data-theme="dark"] .wishlist-header h2 {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .wishlist-header p {
+    color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .section-divider {
+    background: #334155 !important;
+}
+
+html[data-theme="dark"] .wishlist-card {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .wishlist-card:hover {
+    box-shadow: 0 8px 18px rgba(0,0,0,0.35) !important;
+}
+
+html[data-theme="dark"] .book-cover-wrapper {
+    background: #020617 !important;
+}
+
+html[data-theme="dark"] .book-title {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .book-author {
+    color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .badge {
+    background: #3b1111 !important;
+    color: #fca5a5 !important;
+}
+
+html[data-theme="dark"] .btn-view {
+    background: #334155 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .btn-view:hover {
+    background: #475569 !important;
+}
+
+html[data-theme="dark"] .btn-remove {
+    background: #2d1515 !important;
+    color: #fca5a5 !important;
+    border-color: #7f1d1d !important;
+}
+
+html[data-theme="dark"] .btn-remove:hover {
+    background: #7f1d1d !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .no-wishlist h3 {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .no-wishlist p {
+    color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .empty-icon {
+    color: #64748b !important;
+}

@@ -267,3 +267,99 @@ a.contact-value:hover {
     color: #15803d; 
     text-decoration: underline;
 }
+
+/* =====================================================
+   DARK MODE - HELP & SUPPORT
+   Paste at the VERY END of support_style.css
+===================================================== */
+
+html[data-theme="dark"] .support-container {
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .support-header h2 {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .support-header p {
+    color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .faq-section,
+html[data-theme="dark"] .form-section,
+html[data-theme="dark"] .support-sidebar {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+    border-color: #334155 !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25) !important;
+}
+
+html[data-theme="dark"] .faq-section h3,
+html[data-theme="dark"] .form-section h3,
+html[data-theme="dark"] .support-sidebar h3 {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .faq-item details {
+    border-bottom-color: #334155 !important;
+}
+
+html[data-theme="dark"] .faq-item summary {
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .faq-item details p,
+html[data-theme="dark"] .contact-subtext,
+html[data-theme="dark"] .user-msg,
+html[data-theme="dark"] .no-tickets {
+    color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .form-group label {
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .form-group input,
+html[data-theme="dark"] .form-group textarea {
+    background: #0f172a !important;
+    color: #e5e7eb !important;
+    border-color: #475569 !important;
+}
+
+html[data-theme="dark"] .form-group input:focus,
+html[data-theme="dark"] .form-group textarea:focus {
+    background: #111827 !important;
+    border-color: #22c55e !important;
+}
+
+html[data-theme="dark"] .ticket-card,
+html[data-theme="dark"] .contact-info-item {
+    background: #0f172a !important;
+    color: #e5e7eb !important;
+    border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .ticket-card h4,
+html[data-theme="dark"] .contact-value {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .ticket-date,
+html[data-theme="dark"] .contact-label {
+    color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .admin-reply {
+    background: #052e16 !important;
+    color: #bbf7d0 !important;
+    border-left-color: #22c55e !important;
+}
+
+html[data-theme="dark"] .sidebar-divider {
+    background: #334155 !important;
+}
+
+html[data-theme="dark"] .contact-icon {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+}

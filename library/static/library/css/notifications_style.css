@@ -102,3 +102,61 @@
     font-size: 14px;
     color: #94a3b8;
 }
+/* =====================================================
+   DARK MODE - NOTIFICATIONS
+   Paste at the VERY END of notifications_style.css
+===================================================== */
+
+html[data-theme="dark"] .notification-container {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25) !important;
+}
+
+html[data-theme="dark"] .notification-header h2 {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .notification-header p {
+    color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .section-divider {
+    background: #334155 !important;
+}
+
+html[data-theme="dark"] .notification-card {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .notification-card:hover {
+    box-shadow: 0 6px 14px rgba(0,0,0,0.35) !important;
+}
+
+html[data-theme="dark"] .notification-card.unread {
+    background: #1f1b0b !important;
+    border-left-color: #f59e0b !important;
+}
+
+html[data-theme="dark"] .notification-icon {
+    background: #334155 !important;
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .notification-text {
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .notification-time {
+    color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .no-notification h3 {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .no-notification p {
+    color: #cbd5e1 !important;
+}
