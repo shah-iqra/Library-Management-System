@@ -1,0 +1,26 @@
+{% extends 'library/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="upload-container">
+    <div class="upload-header">
+        <h2>{{ content.title }}</h2>
+        <p>{{ content.description }}</p>
+    </div>
+
+    <div style="margin-top: 20px;">
+        {% if content.file %}
+            <a href="{{ content.file.url }}" 
+               class="btn btn-primary" 
+               target="_blank">
+               📄 Open File
+            </a>
+            <a href="{{ content.file.url }}" 
+               class="btn btn-secondary" 
+               download>
+               ⬇️ Download
+            </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

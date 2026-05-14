@@ -19,14 +19,15 @@
         </div>
 
         <div class="form-row-two-col">
-            <div class="form-group">
-                <label for="id_content_type">Content Type</label>
-                <select id="id_content_type" name="content_type">
-                    <option value="Notes">Notes</option>
-                    <option value="PDF">PDF Booklet</option>
-                    <option value="Video">Video Lecture</option>
-                </select>
-            </div>
+    <div class="form-group">
+        <label for="id_content_type">Content Type</label>
+
+        <select id="id_content_type" name="content_type">
+            <option value="notes">Notes</option>
+            <option value="course">Course</option>
+        </select>
+    </div>
+
             
             <div class="form-group">
                 <label for="id_price">Price (BDT)</label>
@@ -41,10 +42,11 @@
 
         <div class="form-group file-upload-group">
             <label>Upload File (PDF/DOC/VIDEO)</label>
-            <div class="file-drop-area">
-                <span class="fake-btn">Choose File</span>
+            <div class="file-drop-area" id="drop-area">
+                <!-- ✅ FIX: label for="id_file" দিয়ে file input trigger করা হচ্ছে -->
+                <label for="id_file" class="fake-btn" style="cursor: pointer;">Choose File</label>
                 <span class="file-msg" id="file-msg-text">or drag and drop file here</span>
-                <input class="file-input" type="file" name="file" id="id_file" required>
+                <input class="file-input" type="file" name="file" id="id_file" required style="display: none;">
             </div>
         </div>
 
@@ -56,9 +58,34 @@
 </div>
 
 <script>
+    // ✅ File select হলে নাম দেখাও
     document.getElementById('id_file').addEventListener('change', function(e) {
         var fileName = e.target.files[0] ? e.target.files[0].name : "or drag and drop file here";
         document.getElementById('file-msg-text').textContent = fileName;
+    });
+
+    // ✅ Drag & Drop support
+    const dropArea = document.getElementById('drop-area');
+    const fileInput = document.getElementById('id_file');
+
+    dropArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        dropArea.style.borderColor = '#2ecc71';
+    });
+
+    dropArea.addEventListener('dragleave', function() {
+        dropArea.style.borderColor = '';
+    });
+
+    dropArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        dropArea.style.borderColor = '';
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files; // ✅ dropped file টা input এ set করো
+            document.getElementById('file-msg-text').textContent = files[0].name;
+        }
     });
 </script>
 

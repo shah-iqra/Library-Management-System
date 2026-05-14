@@ -78,4 +78,5 @@ urlpatterns = [
     path('fines-dues/', views.fines_dues, name='fines_dues'),
     path('system-monitoring/', views.system_monitoring, name='system_monitoring'),
     path('reports-analytics/', views.reports_analytics, name='reports_analytics'),
+    path('premium-content/delete/<int:pk>/', views.premium_content_delete, name='premium_content_delete'),
 ]
