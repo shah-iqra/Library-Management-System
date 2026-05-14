@@ -72,22 +72,23 @@
             </a>
 
             <!-- ✅ NOTIFICATION BUTTON ADDED -->
-            <a href="{% url 'notification_page' %}"
-               class="sidebar-link menu-item {% if request.resolver_match.url_name == 'notification_page' %}active{% endif %}">
-                <span class="icon">🔔</span>
-                <span class="text">Notifications</span>
-            </a>
+<a href="{% url 'notification_page' %}"
+   class="sidebar-link menu-item {% if request.resolver_match.url_name == 'notification_page' %}active{% endif %}">
+    <span class="icon">🔔</span>
+    <span class="text">Notifications</span>
+</a>
 
-            <a href="{% url 'wishlist_page' %}" class="sidebar-link">
-                <span class="icon">❤️</span>
-                <span class="text">Wishlist</span>
-            </a>
+<a href="{% url 'wishlist_page' %}"
+   class="sidebar-link menu-item {% if request.resolver_match.url_name == 'wishlist_page' %}active{% endif %}">
+    <span class="icon">❤️</span>
+    <span class="text">Wishlist</span>
+</a>
 
-            <a href="{% url 'help_support_page' %}" class="sidebar-link">
-                <span class="icon">🙋‍♂️</span>
-                <span class="text">Help & Support</span>
-            </a>
-
+<a href="{% url 'help_support_page' %}"
+   class="sidebar-link menu-item {% if request.resolver_match.url_name == 'help_support_page' %}active{% endif %}">
+    <span class="icon">🙋‍♂️</span>
+    <span class="text">Help & Support</span>
+</a>
         </div>
 
         <!-- ================= SERVICES ================= -->
@@ -301,6 +302,31 @@
         updateThemeButton(newTheme);
     });
 
+</script>
+
+<script>
+    // Sidebar scroll position save + restore
+    document.addEventListener("DOMContentLoaded", function () {
+        const sidebar = document.querySelector(".sidebar");
+
+        if (sidebar) {
+            const savedScroll = localStorage.getItem("booknestSidebarScroll");
+
+            if (savedScroll !== null) {
+                sidebar.scrollTop = parseInt(savedScroll, 10);
+            }
+
+            sidebar.addEventListener("scroll", function () {
+                localStorage.setItem("booknestSidebarScroll", sidebar.scrollTop);
+            });
+
+            document.querySelectorAll(".sidebar a").forEach(function (link) {
+                link.addEventListener("click", function () {
+                    localStorage.setItem("booknestSidebarScroll", sidebar.scrollTop);
+                });
+            });
+        }
+    });
 </script>
 
 {% block extra_js %}

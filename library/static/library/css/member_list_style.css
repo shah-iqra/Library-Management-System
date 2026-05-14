@@ -164,3 +164,87 @@
     border-color: #94a3b8;
     color: #1e293b;
 }
+
+/* =====================================================
+   DARK MODE - MEMBER LIST
+   Paste at the VERY END of member_list_style.css
+===================================================== */
+
+html[data-theme="dark"] .member-container {
+    background: #111827 !important;
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .header-left h2 {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .header-left p {
+    color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .table-card {
+    background: #1e293b !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25) !important;
+}
+
+html[data-theme="dark"] .table-actions {
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .search-box input {
+    background: #0f172a !important;
+    color: #e5e7eb !important;
+    border-color: #475569 !important;
+}
+
+html[data-theme="dark"] .search-box i {
+    color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .member-table th {
+    background: #020617 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .member-table td {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+    border-bottom-color: #334155 !important;
+}
+
+html[data-theme="dark"] .member-table tbody tr:hover td {
+    background: #334155 !important;
+}
+
+html[data-theme="dark"] .member-name-desc strong {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .member-name-desc span {
+    color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .btn-filter,
+html[data-theme="dark"] .btn-export {
+    background: #0f172a !important;
+    color: #e5e7eb !important;
+    border-color: #475569 !important;
+}
+
+html[data-theme="dark"] .btn-filter:hover,
+html[data-theme="dark"] .btn-export:hover {
+    background: #334155 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .btn-icon.edit {
+    background: #334155 !important;
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .btn-icon.delete {
+    background: #3b1111 !important;
+    color: #fca5a5 !important;
+}

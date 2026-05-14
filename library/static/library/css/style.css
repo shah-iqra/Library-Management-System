@@ -3033,3 +3033,350 @@ html[data-theme="dark"] .reports-analytics-page [style*="background-color:white"
     background: #1e293b !important;
     color: #e5e7eb !important;
 }
+
+/* ===============================
+   DARK MODE - PREMIUM UPLOAD PAGE FINAL
+================================ */
+
+html[data-theme="dark"] .upload-container {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25) !important;
+}
+
+html[data-theme="dark"] .upload-header {
+    border-bottom-color: #334155 !important;
+}
+
+html[data-theme="dark"] .upload-header h2 {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .upload-header p {
+    color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .upload-form small,
+html[data-theme="dark"] .upload-form small b {
+    color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .file-drop-area {
+    background: #0f172a !important;
+    border-color: #475569 !important;
+}
+
+html[data-theme="dark"] .file-drop-area:hover {
+    background: #111827 !important;
+    border-color: #facc15 !important;
+}
+
+html[data-theme="dark"] .fake-btn {
+    background: #334155 !important;
+    color: #e5e7eb !important;
+    border-color: #475569 !important;
+}
+
+html[data-theme="dark"] .file-msg {
+    color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .btn-secondary {
+    background: #334155 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .btn-secondary:hover {
+    background: #475569 !important;
+    color: #ffffff !important;
+}
+
+/* =====================================================
+   DARK MODE FIX - RESEARCH PAPERS + PREMIUM CONTENT
+   Paste at the VERY END of style.css
+===================================================== */
+
+/* =========================
+   RESEARCH PAPERS PAGE FIX
+========================= */
+
+html[data-theme="dark"] .research-page,
+html[data-theme="dark"] .research-container,
+html[data-theme="dark"] .research-wrapper,
+html[data-theme="dark"] .paper-page,
+html[data-theme="dark"] .paper-container,
+html[data-theme="dark"] .papers-container,
+html[data-theme="dark"] .research-content,
+html[data-theme="dark"] .paper-content {
+    background: #111827 !important;
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .research-page h1,
+html[data-theme="dark"] .research-page h2,
+html[data-theme="dark"] .research-page h3,
+html[data-theme="dark"] .research-container h1,
+html[data-theme="dark"] .research-container h2,
+html[data-theme="dark"] .research-container h3,
+html[data-theme="dark"] .papers-container h1,
+html[data-theme="dark"] .papers-container h2,
+html[data-theme="dark"] .papers-container h3 {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .research-page p,
+html[data-theme="dark"] .research-container p,
+html[data-theme="dark"] .papers-container p {
+    color: #cbd5e1 !important;
+}
+
+/* cream/white search area and paper section */
+html[data-theme="dark"] .research-card,
+html[data-theme="dark"] .paper-card,
+html[data-theme="dark"] .papers-card,
+html[data-theme="dark"] .research-box,
+html[data-theme="dark"] .paper-box,
+html[data-theme="dark"] .papers-box,
+html[data-theme="dark"] .search-box-card,
+html[data-theme="dark"] .search-panel,
+html[data-theme="dark"] .filter-panel,
+html[data-theme="dark"] .research-table-card,
+html[data-theme="dark"] .paper-table-card,
+html[data-theme="dark"] .papers-table-card {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+    border-color: #334155 !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25) !important;
+}
+
+/* if the page uses a plain white/cream container */
+html[data-theme="dark"] .research-page > div,
+html[data-theme="dark"] .research-container > div,
+html[data-theme="dark"] .papers-container > div {
+    border-color: #334155;
+}
+
+/* table fix */
+html[data-theme="dark"] .research-table,
+html[data-theme="dark"] .paper-table,
+html[data-theme="dark"] .papers-table {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .research-table th,
+html[data-theme="dark"] .paper-table th,
+html[data-theme="dark"] .papers-table th {
+    background: #020617 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .research-table td,
+html[data-theme="dark"] .paper-table td,
+html[data-theme="dark"] .papers-table td {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+    border-bottom-color: #334155 !important;
+}
+
+html[data-theme="dark"] .research-table tr:hover td,
+html[data-theme="dark"] .paper-table tr:hover td,
+html[data-theme="dark"] .papers-table tr:hover td {
+    background: #334155 !important;
+}
+
+/* author / muted text fix */
+html[data-theme="dark"] .paper-author,
+html[data-theme="dark"] .paper-authors,
+html[data-theme="dark"] .research-author,
+html[data-theme="dark"] .research-authors,
+html[data-theme="dark"] .muted-text {
+    color: #94a3b8 !important;
+}
+
+/* search inputs */
+html[data-theme="dark"] .research-page input,
+html[data-theme="dark"] .research-page select,
+html[data-theme="dark"] .research-container input,
+html[data-theme="dark"] .research-container select,
+html[data-theme="dark"] .papers-container input,
+html[data-theme="dark"] .papers-container select {
+    background: #0f172a !important;
+    color: #e5e7eb !important;
+    border-color: #475569 !important;
+}
+
+html[data-theme="dark"] .research-page input::placeholder,
+html[data-theme="dark"] .research-container input::placeholder,
+html[data-theme="dark"] .papers-container input::placeholder {
+    color: #94a3b8 !important;
+}
+
+/* approved badge */
+html[data-theme="dark"] .approved,
+html[data-theme="dark"] .approved-badge,
+html[data-theme="dark"] .status-approved {
+    background: #dcfce7 !important;
+    color: #166534 !important;
+}
+
+/* view/download buttons */
+html[data-theme="dark"] .btn-view,
+html[data-theme="dark"] .btn-download,
+html[data-theme="dark"] .download-btn,
+html[data-theme="dark"] .view-btn {
+    color: #ffffff !important;
+}
+
+
+/* =========================
+   PREMIUM CONTENT PAGE FIX
+========================= */
+
+/* Upload Content button readable */
+html[data-theme="dark"] .admin-upload-btn {
+    background: #facc15 !important;
+    color: #111827 !important;
+    border: 1px solid #facc15 !important;
+}
+
+html[data-theme="dark"] .admin-upload-btn i,
+html[data-theme="dark"] .admin-upload-btn span {
+    color: #111827 !important;
+}
+
+html[data-theme="dark"] .admin-upload-btn:hover {
+    background: #eab308 !important;
+    color: #111827 !important;
+}
+
+/* Premium filter buttons */
+html[data-theme="dark"] .filter-btn {
+    background: #0f172a !important;
+    color: #e5e7eb !important;
+    border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .filter-btn i,
+html[data-theme="dark"] .filter-btn span {
+    color: inherit !important;
+}
+
+html[data-theme="dark"] .filter-btn:hover,
+html[data-theme="dark"] .filter-btn.active {
+    background: #d4a63c !important;
+    color: #111827 !important;
+    border-color: #d4a63c !important;
+}
+
+/* Premium cards */
+html[data-theme="dark"] .content-card {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .card-body {
+    background: #1e293b !important;
+}
+
+html[data-theme="dark"] .card-title {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .card-desc {
+    color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .card-footer {
+    border-top-color: #334155 !important;
+}
+
+html[data-theme="dark"] .price-tag {
+    color: #facc15 !important;
+}
+
+html[data-theme="dark"] .price-tag .currency {
+    color: #facc15 !important;
+}
+
+/* Type badges readable */
+html[data-theme="dark"] .card-type-badge.badge-notes,
+html[data-theme="dark"] .badge-notes {
+    background: #dbeafe !important;
+    color: #1e40af !important;
+}
+
+html[data-theme="dark"] .card-type-badge.badge-course,
+html[data-theme="dark"] .badge-course {
+    background: #fef3c7 !important;
+    color: #92400e !important;
+}
+
+/* Placeholder thumbnails */
+html[data-theme="dark"] .card-thumb-placeholder,
+html[data-theme="dark"] .notes-thumb,
+html[data-theme="dark"] .course-thumb {
+    background: #0f172a !important;
+    color: #e5e7eb !important;
+}
+
+/* Buy / access buttons */
+html[data-theme="dark"] .btn-buy {
+    background: #d4a63c !important;
+    color: #111827 !important;
+}
+
+html[data-theme="dark"] .btn-buy:hover {
+    background: #eab308 !important;
+    color: #111827 !important;
+}
+
+html[data-theme="dark"] .btn-access {
+    background: #16a34a !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .btn-access:hover {
+    background: #15803d !important;
+    color: #ffffff !important;
+}
+
+/* Delete button on premium cards */
+html[data-theme="dark"] .content-card .btn-delete,
+html[data-theme="dark"] .content-card .delete-btn {
+    background: #ef4444 !important;
+    color: #ffffff !important;
+}
+
+/* =====================================================
+   SIDEBAR STABLE SCROLL FIX
+   Paste at the VERY END of style.css
+===================================================== */
+
+.sidebar {
+    height: calc(100vh - 40px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: sticky;
+    top: 20px;
+}
+
+/* nice scrollbar */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 20px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.45);
+}
