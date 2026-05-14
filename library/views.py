@@ -949,13 +949,23 @@ def purchase_premium(request, pk):
     if request.method == 'POST':
         form = PremiumPurchaseForm(request.POST)
         if form.is_valid():
+            transaction_id = form.cleaned_data['transaction_id'].strip()
+
+            # ✅ একই transaction_id আগে use হয়েছে কিনা check করো
+            if PremiumPurchase.objects.filter(transaction_id=transaction_id).exists():
+                messages.error(request, '❌ This Transaction ID has already been used! Please enter a valid one.')
+                return render(request, 'library/purchase_premium.html', {
+                    'content': content,
+                    'form': form
+                })
+
             PremiumPurchase.objects.create(
                 user=request.user,
                 content=content,
                 amount_paid=content.price,
-                transaction_id=form.cleaned_data['transaction_id']
+                transaction_id=transaction_id
             )
-            messages.success(request, "Purchase successful! You now have access.")
+            messages.success(request, "✅ Purchase successful! You now have access.")
             return redirect('view_premium', pk=pk)
     else:
         form = PremiumPurchaseForm()
@@ -978,8 +988,22 @@ def view_premium_content(request, pk):
         messages.error(request, "Please purchase this content first.")
         return redirect('purchase_premium', pk=pk)
 
-    return render(request, 'library/view_premium_content.html', {'content': content})
+    # ✅ YouTube URL auto-clean
+    video_url = content.video_url
+    if video_url:
+        if 'watch?v=' in video_url:
+            video_id = video_url.split('watch?v=')[-1].split('&')[0]
+            video_url = f'https://www.youtube.com/embed/{video_id}'
+        elif 'youtu.be/' in video_url:
+            video_id = video_url.split('youtu.be/')[-1].split('?')[0]
+            video_url = f'https://www.youtube.com/embed/{video_id}'
+        elif 'embed/' in video_url:
+            video_url = 'https://www.youtube.com/embed/' + video_url.split('embed/')[-1].split('?')[0]
 
+    return render(request, 'library/view_premium_content.html', {
+        'content': content,
+        'video_url': video_url,
+    })
 
 @login_required
 def admin_upload_premium(request):

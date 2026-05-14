@@ -19,16 +19,14 @@
         </div>
 
         <div class="form-row-two-col">
-    <div class="form-group">
-        <label for="id_content_type">Content Type</label>
+            <div class="form-group">
+                <label for="id_content_type">Content Type</label>
+                <select id="id_content_type" name="content_type">
+                    <option value="notes">Notes</option>
+                    <option value="course">Course</option>
+                </select>
+            </div>
 
-        <select id="id_content_type" name="content_type">
-            <option value="notes">Notes</option>
-            <option value="course">Course</option>
-        </select>
-    </div>
-
-            
             <div class="form-group">
                 <label for="id_price">Price (BDT)</label>
                 <input type="number" id="id_price" name="price" placeholder="e.g. 500" step="0.01" min="0" required>
@@ -40,14 +38,26 @@
             <textarea id="id_description" name="description" rows="4" placeholder="Describe the content briefly..."></textarea>
         </div>
 
+        <!-- FILE UPLOAD SECTION -->
         <div class="form-group file-upload-group">
             <label>Upload File (PDF/DOC/VIDEO)</label>
             <div class="file-drop-area" id="drop-area">
-                <!-- ✅ FIX: label for="id_file" দিয়ে file input trigger করা হচ্ছে -->
                 <label for="id_file" class="fake-btn" style="cursor: pointer;">Choose File</label>
                 <span class="file-msg" id="file-msg-text">or drag and drop file here</span>
                 <input class="file-input" type="file" name="file" id="id_file" required style="display: none;">
             </div>
+        </div>
+
+        <!-- ✅ NEW VIDEO URL FIELD -->
+        <div class="form-group">
+            <label for="id_video_url">YouTube Embed URL (optional)</label>
+            <input type="url" id="id_video_url" name="video_url" 
+                   class="form-control"
+                   placeholder="https://www.youtube.com/embed/VIDEO_ID">
+            <small style="color:#888;">
+                Embed from YouTube link: 
+                watch?v=<b>ABC123</b> → embed/<b>ABC123</b>
+            </small>
         </div>
 
         <div class="form-actions">
@@ -58,13 +68,13 @@
 </div>
 
 <script>
-    // ✅ File select হলে নাম দেখাও
+    // File select হলে নাম দেখাও
     document.getElementById('id_file').addEventListener('change', function(e) {
         var fileName = e.target.files[0] ? e.target.files[0].name : "or drag and drop file here";
         document.getElementById('file-msg-text').textContent = fileName;
     });
 
-    // ✅ Drag & Drop support
+    // Drag & Drop support
     const dropArea = document.getElementById('drop-area');
     const fileInput = document.getElementById('id_file');
 
@@ -83,7 +93,7 @@
         
         const files = e.dataTransfer.files;
         if (files.length > 0) {
-            fileInput.files = files; // ✅ dropped file টা input এ set করো
+            fileInput.files = files;
             document.getElementById('file-msg-text').textContent = files[0].name;
         }
     });
