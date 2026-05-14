@@ -10,6 +10,7 @@ import csv
 import uuid
 from django.db.models import Count
 from .models import Borrow, ResearchPaper, Notification 
+from .models import Book, Wishlist
 
 
 from .models import (
@@ -1201,3 +1202,23 @@ def notification_page(request):
     Notification.objects.filter(user=user, is_read=False).update(is_read=True)
 
     return render(request, 'library/notifications.html', {'notifications': notifications})
+
+
+
+
+@login_required
+def wishlist_page(request):
+    wishlist_items = Wishlist.objects.filter(user=request.user).order_by('-added_at')
+    return render(request, 'library/wishlist.html', {'wishlist_items': wishlist_items})
+
+@login_required
+def add_to_wishlist(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    Wishlist.objects.get_or_create(user=request.user, book=book)
+    return redirect('wishlist_page')
+
+@login_required
+def remove_from_wishlist(request, wishlist_id):
+    item = get_object_or_404(Wishlist, id=wishlist_id, user=request.user)
+    item.delete()
+    return redirect('wishlist_page')

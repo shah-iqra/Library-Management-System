@@ -1,0 +1,47 @@
+{% extends 'library/base.html' %} 
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'library/css/wishlist_style.css' %}">
+
+<div class="wishlist-container">
+    <div class="wishlist-header">
+        <h2>My Wishlist ❤️</h2>
+        <p>List of books you like and save for later reading.</p>
+    </div>
+    
+    <hr class="section-divider">
+
+    <div class="wishlist-grid">
+        {% if wishlist_items %}
+            {% for item in wishlist_items %}
+                <div class="wishlist-card">
+                    <div class="book-cover-wrapper">
+                        {% if item.book.cover_image %}
+                            <img src="{{ item.book.cover_image.url }}" alt="{{ item.book.title }}" class="book-cover">
+                        {% else %}
+                            <div class="no-cover">📚</div>
+                        {% endif %}
+                    </div>
+                    <div class="book-details">
+                        <h3 class="book-title">{{ item.book.title }}</h3>
+                        <p class="book-author">By {{ item.book.author }}</p>
+                        <p class="book-category"><span class="badge">{{ item.book.category.name }}</span></p>
+                        
+                        <div class="action-buttons">
+                            <a href="{% url 'book_page' %}" class="btn-view">Borrow Now</a>
+                            <a href="{% url 'remove_from_wishlist' item.id %}" class="btn-remove" title="Remove from wishlist">🗑️ Delete</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-wishlist">
+                <div class="empty-icon">❤️</div>
+                <h3>Your wishlist is empty!</h3>
+                <p>Go to the book search page and add your favorite books to the wishlist.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
