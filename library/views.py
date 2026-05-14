@@ -11,6 +11,7 @@ import uuid
 from django.db.models import Count
 from .models import Borrow, ResearchPaper, Notification 
 from .models import Book, Wishlist
+from .models import SupportTicket
 
 
 from .models import (
@@ -1222,3 +1223,35 @@ def remove_from_wishlist(request, wishlist_id):
     item = get_object_or_404(Wishlist, id=wishlist_id, user=request.user)
     item.delete()
     return redirect('wishlist_page')
+
+@login_required
+def help_support_page(request):
+    user = request.user
+    
+    # এখানে .lower() যোগ করা হয়েছে যেন 'Admin' বা 'Librarian' লেখা থাকলেও ধরে ফেলে
+    if user.role.lower() in ['admin', 'librarian']:
+        if request.method == 'POST':
+            ticket_id = request.POST.get('ticket_id')
+            admin_reply = request.POST.get('admin_reply')
+            if ticket_id and admin_reply:
+                ticket = get_object_or_404(SupportTicket, id=ticket_id)
+                ticket.admin_reply = admin_reply
+                ticket.status = 'resolved'
+                ticket.save()
+                messages.success(request, f"Replied to {ticket.user.username}'s ticket successfully!")
+                return redirect('help_support_page')
+                
+        all_tickets = SupportTicket.objects.all().order_by('status', '-created_at')
+        return render(request, 'library/help_support.html', {'all_tickets': all_tickets})
+        
+    else:
+        if request.method == 'POST':
+            subject = request.POST.get('subject')
+            message_text = request.POST.get('message')
+            if subject and message_text:
+                SupportTicket.objects.create(user=user, subject=subject, message=message_text)
+                messages.success(request, "Your support ticket has been submitted successfully!")
+                return redirect('help_support_page')
+
+        my_tickets = SupportTicket.objects.filter(user=user).order_by('-created_at')
+        return render(request, 'library/help_support.html', {'my_tickets': my_tickets})
