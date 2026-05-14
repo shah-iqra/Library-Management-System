@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.http import FileResponse, HttpResponseForbidden, HttpResponse
 import csv
 import uuid
+from django.db.models import Count
 
 from .models import (
     Book,
@@ -59,13 +60,93 @@ def is_librarian_or_admin(user):
     )
 
 
+
 @login_required
 def home(request):
-    return render(request, 'library/home.html', {
-        'total_books': Book.objects.count(),
-        'total_members': User.objects.filter(role=User.REGULAR_USER).count(),
-        'total_borrows': Borrow.objects.filter(is_returned=False).count(),
-    })
+    user = request.user
+    today = date.today()
+
+    # ── Common stats (সবার জন্য) ──────────────────────
+    total_books        = Book.objects.count()
+    total_members      = User.objects.filter(role=User.REGULAR_USER).count()
+    active_borrows     = Borrow.objects.filter(is_returned=False).count()
+    overdue_books      = Borrow.objects.filter(
+                             is_returned=False,
+                             due_date__lt=today
+                         ).count()
+
+    # ── Collection Summary (real category data) ───────
+    category_data = (
+        Book.objects
+        .values('category__name')
+        .annotate(count=Count('id'))
+        .order_by('-count')
+    )
+    total_book_count = total_books if total_books > 0 else 1
+    collection_summary = [
+        {
+            'name':    item['category__name'] or 'Uncategorized',
+            'count':   item['count'],
+            'percent': round(item['count'] / total_book_count * 100),
+        }
+        for item in category_data
+    ]
+
+    # ── Recent Activity (last 5 system logs) ──────────
+    recent_logs = SystemLog.objects.select_related('user').order_by('-timestamp')[:5]
+
+    # ── Role-specific data ────────────────────────────
+    context = {
+        'total_books':        total_books,
+        'total_members':      total_members,
+        'active_borrows':     active_borrows,
+        'overdue_books':      overdue_books,
+        'collection_summary': collection_summary,
+        'recent_logs':        recent_logs,
+    }
+
+    if user.role == User.ADMIN or user.is_superuser:
+        # Admin extra stats
+        context.update({
+            'total_fines':       sum(
+                                     b.fine_amount
+                                     for b in Borrow.objects.filter(fine_amount__gt=0)
+                                 ),
+            'total_payments':    Payment.objects.count(),
+            'pending_papers':    ResearchPaper.objects.filter(status='pending').count(),
+            'total_premium':     PremiumContent.objects.filter(is_active=True).count(),
+            'recent_borrows':    Borrow.objects.select_related('book','member')
+                                     .order_by('-borrow_date')[:5],
+        })
+        return render(request, 'library/home.html', context)
+
+    elif user.role == User.LIBRARIAN:
+        # Librarian extra stats
+        context.update({
+            'pending_papers':    ResearchPaper.objects.filter(status='pending').count(),
+            'recent_borrows':    Borrow.objects.select_related('book','member')
+                                     .order_by('-borrow_date')[:5],
+            'overdue_borrows':   Borrow.objects.filter(
+                                     is_returned=False, due_date__lt=today
+                                 ).select_related('book','member')[:5],
+        })
+        return render(request, 'library/home.html', context)
+
+    else:
+        # Regular User — শুধু নিজের data
+        my_borrows       = Borrow.objects.filter(member=user, is_returned=False)
+        my_overdue       = my_borrows.filter(due_date__lt=today).count()
+        my_total_borrow  = Borrow.objects.filter(member=user).count()
+        my_fine          = sum(b.fine_amount for b in my_borrows if b.fine_amount)
+
+        context.update({
+            'my_active_borrows':  my_borrows.count(),
+            'my_overdue':         my_overdue,
+            'my_total_borrow':    my_total_borrow,
+            'my_fine':            my_fine,
+            'my_borrow_list':     my_borrows.select_related('book').order_by('-borrow_date')[:5],
+        })
+        return render(request, 'library/home.html', context)
 
 
 def login_view(request):
