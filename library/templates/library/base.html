@@ -1,12 +1,18 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Book Nest - Library System{% endblock %}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
     <link rel="stylesheet" href="{% static 'library/css/style.css' %}">
 
     {% block extra_css %}{% endblock %}
@@ -22,68 +28,135 @@
 <body>
 
 <div class="layout">
+
+    <!-- ================= SIDEBAR ================= -->
     <aside class="sidebar">
-        <div class="logo">📚 <span>Book</span>Nest</div>
 
+        <div class="logo">
+            📚 <span>Book</span>Nest
+        </div>
+
+        <!-- ================= MAIN MENU ================= -->
         <div class="menu-section">
+
             <div class="menu-title">Main</div>
-            <a href="{% url 'home' %}" class="menu-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
-                <i class="fas fa-th-large"></i> Dashboard
+
+            <a href="{% url 'home' %}"
+               class="menu-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                <i class="fas fa-th-large"></i>
+                Dashboard
             </a>
-            <a href="{% url 'book_list' %}" class="menu-item {% if request.resolver_match.url_name == 'book_list' %}active{% endif %}">
-                <i class="fas fa-search"></i> Book Search
+
+            <a href="{% url 'book_list' %}"
+               class="menu-item {% if request.resolver_match.url_name == 'book_list' %}active{% endif %}">
+                <i class="fas fa-search"></i>
+                Book Search
             </a>
-            <a href="{% url 'digital_resources' %}" class="menu-item {% if request.resolver_match.url_name == 'digital_resources' %}active{% endif %}">
-                <i class="fas fa-file-pdf"></i> Digital Resources
+
+            <a href="{% url 'digital_resources' %}"
+               class="menu-item {% if request.resolver_match.url_name == 'digital_resources' %}active{% endif %}">
+                <i class="fas fa-file-pdf"></i>
+                Digital Resources
             </a>
-            <a href="{% url 'research_papers' %}" class="menu-item {% if request.resolver_match.url_name == 'research_papers' %}active{% endif %}">
-                <i class="fas fa-microscope"></i> Research Papers
+
+            <a href="{% url 'research_papers' %}"
+               class="menu-item {% if request.resolver_match.url_name == 'research_papers' %}active{% endif %}">
+                <i class="fas fa-microscope"></i>
+                Research Papers
             </a>
-            <a href="{% url 'premium_content' %}" class="menu-item premium {% if request.resolver_match.url_name == 'premium_content' %}active{% endif %}">
-                <i class="fas fa-crown"></i> Premium Content
+
+            <a href="{% url 'premium_content' %}"
+               class="menu-item premium {% if request.resolver_match.url_name == 'premium_content' %}active{% endif %}">
+                <i class="fas fa-crown"></i>
+                Premium Content
             </a>
+
+            <!-- ✅ NOTIFICATION BUTTON ADDED -->
+            <a href="{% url 'notification_page' %}"
+               class="sidebar-link menu-item {% if request.resolver_match.url_name == 'notification_page' %}active{% endif %}">
+                <span class="icon">🔔</span>
+                <span class="text">Notifications</span>
+            </a>
+
         </div>
 
+        <!-- ================= SERVICES ================= -->
         <div class="menu-section">
+
             <div class="menu-title">Services</div>
-            <a href="{% url 'borrow_list' %}" class="menu-item {% if request.resolver_match.url_name == 'borrow_list' %}active{% endif %}">
-                <i class="fas fa-exchange-alt"></i> Borrow & Return
+
+            <a href="{% url 'borrow_list' %}"
+               class="menu-item {% if request.resolver_match.url_name == 'borrow_list' %}active{% endif %}">
+                <i class="fas fa-exchange-alt"></i>
+                Borrow & Return
             </a>
-            <a href="{% url 'online_payment' %}" class="menu-item {% if request.resolver_match.url_name == 'online_payment' %}active{% endif %}">
-                <i class="fas fa-credit-card"></i> Online Payment
+
+            <a href="{% url 'online_payment' %}"
+               class="menu-item {% if request.resolver_match.url_name == 'online_payment' %}active{% endif %}">
+                <i class="fas fa-credit-card"></i>
+                Online Payment
             </a>
-            <a href="{% url 'payment_history' %}" class="menu-item {% if request.resolver_match.url_name == 'payment_history' %}active{% endif %}">
-                <i class="fas fa-history"></i> Payment History
+
+            <a href="{% url 'payment_history' %}"
+               class="menu-item {% if request.resolver_match.url_name == 'payment_history' %}active{% endif %}">
+                <i class="fas fa-history"></i>
+                Payment History
             </a>
-            <a href="{% url 'fines_dues' %}" class="menu-item {% if request.resolver_match.url_name == 'fines_dues' %}active{% endif %}">
-                <i class="fas fa-clock"></i> Fines & Dues
+
+            <a href="{% url 'fines_dues' %}"
+               class="menu-item {% if request.resolver_match.url_name == 'fines_dues' %}active{% endif %}">
+                <i class="fas fa-clock"></i>
+                Fines & Dues
             </a>
+
         </div>
 
+        <!-- ================= ADMIN SECTION ================= -->
         {% if user.role == 'admin' or user.role == 'librarian' or user.is_superuser %}
+
         <div class="menu-section">
+
             <div class="menu-title">Administrative</div>
-            <a href="{% url 'member_list' %}" class="menu-item {% if request.resolver_match.url_name == 'member_list' %}active{% endif %}">
-                <i class="fas fa-users-cog"></i> Manage Users
+
+            <a href="{% url 'member_list' %}"
+               class="menu-item {% if request.resolver_match.url_name == 'member_list' %}active{% endif %}">
+                <i class="fas fa-users-cog"></i>
+                Manage Users
             </a>
-            <a href="{% url 'category_list' %}" class="menu-item {% if request.resolver_match.url_name == 'category_list' %}active{% endif %}">
-                <i class="fas fa-tags"></i> Manage Categories
+
+            <a href="{% url 'category_list' %}"
+               class="menu-item {% if request.resolver_match.url_name == 'category_list' %}active{% endif %}">
+                <i class="fas fa-tags"></i>
+                Manage Categories
             </a>
-            <a href="{% url 'system_monitoring' %}" class="menu-item {% if request.resolver_match.url_name == 'system_monitoring' %}active{% endif %}">
-                <i class="fas fa-chart-line"></i> System Monitoring
+
+            <a href="{% url 'system_monitoring' %}"
+               class="menu-item {% if request.resolver_match.url_name == 'system_monitoring' %}active{% endif %}">
+                <i class="fas fa-chart-line"></i>
+                System Monitoring
             </a>
-            <a href="{% url 'reports_analytics' %}" class="menu-item {% if request.resolver_match.url_name == 'reports_analytics' %}active{% endif %}">
-                <i class="fas fa-file-invoice"></i> Reports & Analytics
+
+            <a href="{% url 'reports_analytics' %}"
+               class="menu-item {% if request.resolver_match.url_name == 'reports_analytics' %}active{% endif %}">
+                <i class="fas fa-file-invoice"></i>
+                Reports & Analytics
             </a>
+
         </div>
+
         {% endif %}
 
+        <!-- ================= PROFILE SECTION ================= -->
         <div class="profile-sidebar-section">
+
             <a href="{% url 'manage_profile' %}" class="profile-link-card">
+
                 <div class="avatar-icon">
                     <i class="fas fa-user-circle"></i>
                 </div>
+
                 <div class="profile-info-text">
+
                     <div class="profile-name">
                         {% if user.is_authenticated %}
                             {{ user.get_full_name|default:user.username }}
@@ -91,78 +164,137 @@
                             My Profile
                         {% endif %}
                     </div>
-                    <div class="profile-role">View & Edit Profile</div>
+
+                    <div class="profile-role">
+                        View & Edit Profile
+                    </div>
+
                 </div>
+
                 <i class="fas fa-chevron-right profile-chevron"></i>
+
             </a>
 
             <div class="logout-link">
                 <a href="{% url 'logout' %}">
-                    <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
                 </a>
             </div>
+
         </div>
+
     </aside>
 
+    <!-- ================= MAIN CONTENT ================= -->
     <main class="main-container">
+
         <header class="top-nav">
-            <h2>{% block page_title %}Library Dashboard{% endblock %}</h2>
+
+            <h2>
+                {% block page_title %}
+                    Library Dashboard
+                {% endblock %}
+            </h2>
 
             <div class="top-nav-right">
-                <button type="button" class="theme-toggle-btn" id="themeToggleBtn">
+
+                <button type="button"
+                        class="theme-toggle-btn"
+                        id="themeToggleBtn">
+
                     <i class="fas fa-moon"></i>
                     <span>Dark</span>
+
                 </button>
 
                 <div class="user-profile">
+
                     <i class="fas fa-user-circle"></i>
+
                     <span>{{ user.username }}</span>
-                    <span class="role-tag">{{ user.role|upper }}</span>
+
+                    <span class="role-tag">
+                        {{ user.role|upper }}
+                    </span>
+
                 </div>
+
             </div>
+
         </header>
 
+        <!-- ================= ALERT MESSAGES ================= -->
         {% if messages %}
+
         <div class="messages">
+
             {% for message in messages %}
+
             <div class="alert {{ message.tags }}">
                 {{ message }}
             </div>
+
             {% endfor %}
+
         </div>
+
         {% endif %}
 
-        {% block content %}{% endblock %}
+        <!-- ================= PAGE CONTENT ================= -->
+        {% block content %}
+        {% endblock %}
 
     </main>
+
 </div>
 
+<!-- ================= THEME SCRIPT ================= -->
 <script>
+
     const themeToggleBtn = document.getElementById("themeToggleBtn");
     const htmlTag = document.documentElement;
 
     function updateThemeButton(theme) {
+
         if (theme === "dark") {
-            themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i><span>Light</span>';
+
+            themeToggleBtn.innerHTML =
+                '<i class="fas fa-sun"></i><span>Light</span>';
+
         } else {
-            themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i><span>Dark</span>';
+
+            themeToggleBtn.innerHTML =
+                '<i class="fas fa-moon"></i><span>Dark</span>';
         }
     }
 
-    const currentTheme = localStorage.getItem("booknestTheme") || "light";
+    const currentTheme =
+        localStorage.getItem("booknestTheme") || "light";
+
     htmlTag.setAttribute("data-theme", currentTheme);
+
     updateThemeButton(currentTheme);
 
     themeToggleBtn.addEventListener("click", function () {
-        const current = htmlTag.getAttribute("data-theme");
-        const newTheme = current === "dark" ? "light" : "dark";
+
+        const current =
+            htmlTag.getAttribute("data-theme");
+
+        const newTheme =
+            current === "dark" ? "light" : "dark";
+
         htmlTag.setAttribute("data-theme", newTheme);
+
         localStorage.setItem("booknestTheme", newTheme);
+
         updateThemeButton(newTheme);
     });
+
 </script>
 
-{% block extra_js %}{% endblock %}
+{% block extra_js %}
+{% endblock %}
 
 </body>
 </html>
