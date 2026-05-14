@@ -148,12 +148,16 @@ class ResearchPaperForm(forms.ModelForm):
 class PremiumContentForm(forms.ModelForm):
     class Meta:
         model = PremiumContent
-        fields = ['title', 'description', 'content_type', 'file', 'thumbnail', 'price']
+        fields = ['title', 'description', 'content_type', 'file', 'video_url', 'thumbnail', 'price']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
             'content_type': forms.Select(attrs={'class': 'form-control'}),
             'file': forms.FileInput(attrs={'class': 'form-control'}),
+            'video_url': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'https://www.youtube.com/embed/VIDEO_ID'
+            }),
             'thumbnail': forms.FileInput(attrs={'class': 'form-control'}),
             'price': forms.NumberInput(attrs={'class': 'form-control', 'min': '0', 'step': '0.01'}),
         }

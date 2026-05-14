@@ -196,7 +196,8 @@ class PremiumContent(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     content_type = models.CharField(max_length=10, choices=CONTENT_TYPE)
-    file = models.FileField(upload_to='premium_content/')
+    file = models.FileField(upload_to='premium_content/', blank=True, null=True)  # ✅ optional করা
+    video_url = models.URLField(blank=True, null=True)  # ✅ নতুন field
     thumbnail = models.ImageField(upload_to='premium_thumbnails/', blank=True, null=True)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
