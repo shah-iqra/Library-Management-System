@@ -987,21 +987,48 @@ def admin_upload_premium(request):
         form = PremiumContentForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Content uploaded successfully!')
-            return redirect('premium_content')
+            messages.success(request, '✅ Content uploaded successfully!')
+            return redirect('premium_content')  # ✅ সঠিক url name
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'❌ {field}: {error}')
     else:
         form = PremiumContentForm()
-
     return render(request, 'library/admin_upload_premium.html', {'form': form})
 
+
+@login_required
+def premium_content(request):
+    # ✅ এখন database থেকে data আনা হচ্ছে
+    contents = PremiumContent.objects.filter(is_active=True).order_by('-id')
+    purchased_ids = PremiumPurchase.objects.filter(
+        user=request.user
+    ).values_list('content_id', flat=True)
+
+    return render(request, 'library/premium_content.html', {
+        'contents': contents,
+        'purchased_ids': list(purchased_ids),
+    })
 
 @login_required
 def admin_premium_purchases(request):
     if not request.user.is_staff:
         return redirect('home')
-
     purchases = PremiumPurchase.objects.all().select_related('user', 'content')
     return render(request, 'library/admin_premium_purchases.html', {'purchases': purchases})
+
+@login_required
+def premium_content_delete(request, pk):
+    if not (request.user.is_staff or request.user.role == 'admin'):
+        messages.error(request, '❌ Permission denied!')
+        return redirect('premium_content')
+    
+    content = get_object_or_404(PremiumContent, pk=pk)
+    content.file.delete(save=False)      # ফাইলও disk থেকে মুছবে
+    content.delete()
+    messages.success(request, '✅ Content deleted successfully!')
+    return redirect('premium_content')
 
 
 def export_members_csv(request):

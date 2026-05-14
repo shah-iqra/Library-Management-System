@@ -10,7 +10,7 @@
 {% block content %}
 <div class="container-fluid px-0">
 
-  <!-- ── Hero Banner ── -->
+  <!-- Hero Banner -->
   <div class="premium-hero">
     <h1 class="hero-title">
       <span class="crown-icon">👑</span>
@@ -33,20 +33,17 @@
     </div>
   </div>
 
-  <!-- ── Filter Bar ── -->
+  <!-- Filter Bar -->
   <div class="filter-bar">
     <a href="?type=" class="filter-btn {% if not request.GET.type %}active{% endif %}">All</a>
     <a href="?type=notes" class="filter-btn {% if request.GET.type == 'notes' %}active{% endif %}">📄 Notes</a>
     <a href="?type=course" class="filter-btn {% if request.GET.type == 'course' %}active{% endif %}">🎓 Courses</a>
-
     {% if request.user.is_staff %}
-      <a href="{% url 'admin_upload_premium' %}" class="admin-upload-btn">
-        ➕ Upload Content
-      </a>
+      <a href="{% url 'admin_upload_premium' %}" class="admin-upload-btn">➕ Upload Content</a>
     {% endif %}
   </div>
 
-  <!-- ── Messages ── -->
+  <!-- Messages -->
   {% if messages %}
     {% for message in messages %}
       <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show mb-3" role="alert">
@@ -56,12 +53,21 @@
     {% endfor %}
   {% endif %}
 
-  <!-- ── Content Grid ── -->
+  <!-- Content Grid -->
   {% if contents %}
   <div class="content-grid">
     {% for content in contents %}
       {% if not request.GET.type or request.GET.type == content.content_type %}
       <div class="content-card">
+
+        <!-- Admin Delete Button -->
+        {% if request.user.is_staff %}
+          <a href="{% url 'premium_content_delete' content.pk %}"
+             class="delete-badge"
+             onclick="return confirm('⚠️ Delete \"{{ content.title }}\"?')">
+            🗑️ Delete
+          </a>
+        {% endif %}
 
         <!-- Owned Badge -->
         {% if content.id in purchased_ids %}
@@ -84,7 +90,6 @@
           <span class="card-type-badge {% if content.content_type == 'notes' %}badge-notes{% else %}badge-course{% endif %}">
             {{ content.get_content_type_display }}
           </span>
-
           <h5 class="card-title">{{ content.title }}</h5>
           <p class="card-desc">{{ content.description }}</p>
 
@@ -92,15 +97,10 @@
             <div class="price-tag">
               <span class="currency">৳</span>{{ content.price }}
             </div>
-
             {% if content.id in purchased_ids %}
-              <a href="{% url 'view_premium' content.pk %}" class="btn-access">
-                ▶ Access
-              </a>
+              <a href="{% url 'view_premium' content.pk %}" class="btn-access">▶ Access</a>
             {% else %}
-              <a href="{% url 'purchase_premium' content.pk %}" class="btn-buy">
-                🛒 Buy Now
-              </a>
+              <a href="{% url 'purchase_premium' content.pk %}" class="btn-buy">🛒 Buy Now</a>
             {% endif %}
           </div>
         </div>
@@ -111,20 +111,41 @@
   </div>
 
   {% else %}
-
-  <!-- ── Empty State ── -->
+  <!-- Empty State -->
   <div class="empty-state">
     <div class="empty-icon">👑</div>
     <h4>No premium content available yet</h4>
     <p>Check back soon — exclusive materials are being added.</p>
     {% if request.user.is_staff %}
-      <a href="{% url 'admin_upload_premium' %}" class="btn-buy mt-2">
-        ➕ Upload First Content
-      </a>
+      <a href="{% url 'admin_upload_premium' %}" class="btn-buy mt-2">➕ Upload First Content</a>
     {% endif %}
   </div>
-
   {% endif %}
 
 </div>
+
+<style>
+  .content-card {
+    position: relative;
+  }
+  .delete-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #e74c3c;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    z-index: 10;
+    transition: background 0.2s;
+  }
+  .delete-badge:hover {
+    background: #c0392b;
+    color: white;
+  }
+</style>
+
 {% endblock %}

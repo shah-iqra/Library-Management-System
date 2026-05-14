@@ -1,0 +1,31 @@
+{% extends 'library/base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'library/css/style.css' %}">
+
+<div class="upload-container">
+    <div class="upload-header">
+        <h2>🛒 Purchase Premium Content</h2>
+        <p>Complete your payment to get access to <strong>{{ content.title }}</strong></p>
+    </div>
+
+    <div style="background:#f9f9f9; border-radius:10px; padding:20px; margin-bottom:24px;">
+        <h4>{{ content.title }}</h4>
+        <p>{{ content.description }}</p>
+        <p><strong>Price: ৳{{ content.price }}</strong></p>
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Transaction ID (bKash/Nagad/Rocket)</label>
+            {{ form.transaction_id }}
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">✅ Confirm Purchase</button>
+            <a href="{% url 'premium_content' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
