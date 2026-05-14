@@ -1,106 +1,343 @@
 {% extends 'library/base.html' %}
+{% load static %}
 {% block title %}Dashboard{% endblock %}
+{% block page_title %}Library Dashboard{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'library/css/home_dashboard.css' %}">
+{% endblock %}
 
 {% block content %}
-
 <div class="dashboard-page">
 
-    <div class="dashboard-header">
-        <div>
-            <h2>📊 Dashboard</h2>
-            <p>Good day, {{ request.user.first_name|default:request.user.username }} 👋</p>
+  <!-- ═══════════════════════════════════════════════
+       HEADER
+  ═══════════════════════════════════════════════ -->
+  <div class="dashboard-header">
+    <div>
+      <h2>📊 Dashboard</h2>
+      <p>Good day, {{ request.user.first_name|default:request.user.username }} 👋</p>
+    </div>
+    <div class="header-icon">📚</div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       ADMIN DASHBOARD
+  ═══════════════════════════════════════════════ -->
+  {% if request.user.role == 'admin' or request.user.is_superuser %}
+
+  <div class="role-badge admin-badge">🛡️ Administrator View</div>
+
+  <div class="dashboard-stats">
+    <div class="dash-card">
+      <div class="dash-icon">📚</div>
+      <h3>{{ total_books }}</h3>
+      <p>Total Books</p>
+    </div>
+    <div class="dash-card">
+      <div class="dash-icon">👥</div>
+      <h3>{{ total_members }}</h3>
+      <p>Total Members</p>
+    </div>
+    <div class="dash-card">
+      <div class="dash-icon">🔄</div>
+      <h3>{{ active_borrows }}</h3>
+      <p>Active Borrowings</p>
+    </div>
+    <div class="dash-card {% if overdue_books > 0 %}card-warning{% endif %}">
+      <div class="dash-icon">⚠️</div>
+      <h3>{{ overdue_books }}</h3>
+      <p>Overdue Books</p>
+    </div>
+    <div class="dash-card">
+      <div class="dash-icon">💳</div>
+      <h3>{{ total_payments }}</h3>
+      <p>Total Payments</p>
+    </div>
+    <div class="dash-card {% if pending_papers > 0 %}card-warning{% endif %}">
+      <div class="dash-icon">📄</div>
+      <h3>{{ pending_papers }}</h3>
+      <p>Pending Papers</p>
+    </div>
+    <div class="dash-card">
+      <div class="dash-icon">⭐</div>
+      <h3>{{ total_premium }}</h3>
+      <p>Premium Content</p>
+    </div>
+    <div class="dash-card">
+      <div class="dash-icon">💰</div>
+      <h3>৳{{ total_fines|floatformat:0 }}</h3>
+      <p>Total Fines</p>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+
+    <!-- Collection Summary -->
+    <div class="dashboard-panel">
+      <h3>Collection Summary</h3>
+      <div class="summary-list">
+        {% for item in collection_summary %}
+        <div class="summary-row">
+          <span>{{ item.name }}</span>
+          <div class="summary-bar-wrap">
+            <div class="summary-bar" style="width: {{ item.percent }}%;"></div>
+          </div>
+          <b>{{ item.percent }}%</b>
         </div>
-        <div class="header-icon">📚</div>
+        {% empty %}
+        <p class="empty-msg">No categories yet.</p>
+        {% endfor %}
+      </div>
     </div>
 
-    <div class="dashboard-stats">
-        <div class="dash-card">
-            <div class="dash-icon">📚</div>
-            <h3>{{ total_books }}</h3>
-            <p>Total Books</p>
+    <!-- Recent Borrowings -->
+    <div class="dashboard-panel">
+      <h3>Recent Borrowings</h3>
+      <div class="activity-table">
+        {% for b in recent_borrows %}
+        <div class="activity-row">
+          <div>
+            <strong>{{ b.book.title|truncatechars:25 }}</strong>
+            <small>{{ b.member.username }}</small>
+          </div>
+          <span class="status-badge status-{{ b.status }}">{{ b.status }}</span>
         </div>
-
-        <div class="dash-card">
-            <div class="dash-icon">👥</div>
-            <h3>{{ total_members }}</h3>
-            <p>Total Members</p>
-        </div>
-
-        <div class="dash-card">
-            <div class="dash-icon">🔄</div>
-            <h3>{{ total_borrows }}</h3>
-            <p>Active Borrowings</p>
-        </div>
-
-        <div class="dash-card">
-            <div class="dash-icon">⚠️</div>
-            <h3>0</h3>
-            <p>Overdue Books</p>
-        </div>
+        {% empty %}
+        <p class="empty-msg">No recent borrowings.</p>
+        {% endfor %}
+      </div>
     </div>
 
-    <div class="dashboard-grid">
-
-        <div class="dashboard-panel">
-            <h3>Borrowing Activity</h3>
-
-            <div class="bar-chart">
-                <div class="bar" style="height: 45%;"></div>
-                <div class="bar" style="height: 70%;"></div>
-                <div class="bar" style="height: 55%;"></div>
-                <div class="bar active" style="height: 85%;"></div>
-                <div class="bar" style="height: 65%;"></div>
-                <div class="bar active" style="height: 78%;"></div>
-                <div class="bar" style="height: 50%;"></div>
-            </div>
-
-            <div class="chart-days">
-                <span>Mon</span>
-                <span>Tue</span>
-                <span>Wed</span>
-                <span>Thu</span>
-                <span>Fri</span>
-                <span>Sat</span>
-                <span>Sun</span>
-            </div>
-        </div>
-
-        <div class="dashboard-panel">
-            <h3>Collection Summary</h3>
-
-            <div class="summary-list">
-                <div><span>Science & Tech</span><b>32%</b></div>
-                <div><span>Literature</span><b>24%</b></div>
-                <div><span>History</span><b>20%</b></div>
-                <div><span>Medical</span><b>14%</b></div>
-                <div><span>Others</span><b>10%</b></div>
-            </div>
-        </div>
-
-        <div class="dashboard-panel">
-            <h3>Recent Activity</h3>
-
-            <ul class="activity-list">
-                <li>New book added to library</li>
-                <li>Member profile updated</li>
-                <li>Book borrowed successfully</li>
-                <li>Payment record checked</li>
-            </ul>
-        </div>
-
-        <div class="dashboard-panel">
-            <h3>Quick Actions</h3>
-
-            <div class="quick-actions">
-                <a href="{% url 'book_list' %}">📚 Books</a>
-                <a href="{% url 'member_list' %}">👥 Members</a>
-                <a href="{% url 'borrow_list' %}">🔄 Borrow</a>
-                <a href="{% url 'reports_analytics' %}">📊 Reports</a>
-            </div>
-        </div>
-
+    <!-- Recent Activity Logs -->
+    <div class="dashboard-panel">
+      <h3>Recent Activity</h3>
+      <ul class="activity-list">
+        {% for log in recent_logs %}
+        <li>
+          <span class="log-user">{{ log.user.username }}</span>
+          {{ log.action }}
+          <small>{{ log.timestamp|timesince }} ago</small>
+        </li>
+        {% empty %}
+        <li class="empty-msg">No recent activity.</li>
+        {% endfor %}
+      </ul>
     </div>
+
+    <!-- Quick Actions -->
+    <div class="dashboard-panel">
+      <h3>Quick Actions</h3>
+      <div class="quick-actions">
+        <a href="{% url 'book_list' %}">📚 Books</a>
+        <a href="{% url 'member_list' %}">👥 Members</a>
+        <a href="{% url 'borrow_list' %}">🔄 Borrow</a>
+        <a href="{% url 'reports_analytics' %}">📊 Reports</a>
+        <a href="{% url 'system_monitoring' %}">🖥️ System</a>
+        <a href="{% url 'category_list' %}">🗂️ Categories</a>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       LIBRARIAN DASHBOARD
+  ═══════════════════════════════════════════════ -->
+  {% elif request.user.role == 'librarian' %}
+
+  <div class="role-badge librarian-badge">📖 Librarian View</div>
+
+  <div class="dashboard-stats">
+    <div class="dash-card">
+      <div class="dash-icon">📚</div>
+      <h3>{{ total_books }}</h3>
+      <p>Total Books</p>
+    </div>
+    <div class="dash-card">
+      <div class="dash-icon">👥</div>
+      <h3>{{ total_members }}</h3>
+      <p>Total Members</p>
+    </div>
+    <div class="dash-card">
+      <div class="dash-icon">🔄</div>
+      <h3>{{ active_borrows }}</h3>
+      <p>Active Borrowings</p>
+    </div>
+    <div class="dash-card {% if overdue_books > 0 %}card-warning{% endif %}">
+      <div class="dash-icon">⚠️</div>
+      <h3>{{ overdue_books }}</h3>
+      <p>Overdue Books</p>
+    </div>
+    <div class="dash-card {% if pending_papers > 0 %}card-warning{% endif %}">
+      <div class="dash-icon">📄</div>
+      <h3>{{ pending_papers }}</h3>
+      <p>Pending Approval</p>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+
+    <!-- Collection Summary -->
+    <div class="dashboard-panel">
+      <h3>Collection Summary</h3>
+      <div class="summary-list">
+        {% for item in collection_summary %}
+        <div class="summary-row">
+          <span>{{ item.name }}</span>
+          <div class="summary-bar-wrap">
+            <div class="summary-bar" style="width: {{ item.percent }}%;"></div>
+          </div>
+          <b>{{ item.percent }}%</b>
+        </div>
+        {% empty %}
+        <p class="empty-msg">No categories yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Recent Borrowings -->
+    <div class="dashboard-panel">
+      <h3>Recent Borrowings</h3>
+      <div class="activity-table">
+        {% for b in recent_borrows %}
+        <div class="activity-row">
+          <div>
+            <strong>{{ b.book.title|truncatechars:25 }}</strong>
+            <small>{{ b.member.username }}</small>
+          </div>
+          <span class="status-badge status-{{ b.status }}">{{ b.status }}</span>
+        </div>
+        {% empty %}
+        <p class="empty-msg">No recent borrowings.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Overdue Alert -->
+    <div class="dashboard-panel">
+      <h3>⚠️ Overdue Borrowings</h3>
+      <div class="activity-table">
+        {% for b in overdue_borrows %}
+        <div class="activity-row overdue-row">
+          <div>
+            <strong>{{ b.book.title|truncatechars:25 }}</strong>
+            <small>{{ b.member.username }} · Due: {{ b.due_date }}</small>
+          </div>
+          <span class="status-badge status-overdue">overdue</span>
+        </div>
+        {% empty %}
+        <p class="empty-msg">✅ No overdue books!</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="dashboard-panel">
+      <h3>Quick Actions</h3>
+      <div class="quick-actions">
+        <a href="{% url 'book_list' %}">📚 Books</a>
+        <a href="{% url 'borrow_list' %}">🔄 Borrow</a>
+        <a href="{% url 'digital_resources' %}">💾 Resources</a>
+        <a href="{% url 'approval_access_control' %}">✅ Approvals</a>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       REGULAR USER DASHBOARD
+  ═══════════════════════════════════════════════ -->
+  {% else %}
+
+  <div class="role-badge user-badge">👤 Member View</div>
+
+  <div class="dashboard-stats">
+    <div class="dash-card">
+      <div class="dash-icon">📚</div>
+      <h3>{{ total_books }}</h3>
+      <p>Books in Library</p>
+    </div>
+    <div class="dash-card">
+      <div class="dash-icon">🔄</div>
+      <h3>{{ my_active_borrows }}</h3>
+      <p>My Active Borrows</p>
+    </div>
+    <div class="dash-card {% if my_overdue > 0 %}card-warning{% endif %}">
+      <div class="dash-icon">⚠️</div>
+      <h3>{{ my_overdue }}</h3>
+      <p>My Overdue Books</p>
+    </div>
+    <div class="dash-card">
+      <div class="dash-icon">📖</div>
+      <h3>{{ my_total_borrow }}</h3>
+      <p>Total Borrowed</p>
+    </div>
+    {% if my_fine > 0 %}
+    <div class="dash-card card-warning">
+      <div class="dash-icon">💸</div>
+      <h3>৳{{ my_fine|floatformat:0 }}</h3>
+      <p>My Outstanding Fine</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="dashboard-grid">
+
+    <!-- My Current Borrows -->
+    <div class="dashboard-panel">
+      <h3>My Current Borrows</h3>
+      <div class="activity-table">
+        {% for b in my_borrow_list %}
+        <div class="activity-row {% if b.status == 'overdue' %}overdue-row{% endif %}">
+          <div>
+            <strong>{{ b.book.title|truncatechars:28 }}</strong>
+            <small>Due: {{ b.due_date }}</small>
+          </div>
+          <span class="status-badge status-{{ b.status }}">{{ b.status }}</span>
+        </div>
+        {% empty %}
+        <p class="empty-msg">You have no active borrows.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Collection Summary (read-only) -->
+    <div class="dashboard-panel">
+      <h3>Library Collection</h3>
+      <div class="summary-list">
+        {% for item in collection_summary %}
+        <div class="summary-row">
+          <span>{{ item.name }}</span>
+          <div class="summary-bar-wrap">
+            <div class="summary-bar" style="width: {{ item.percent }}%;"></div>
+          </div>
+          <b>{{ item.count }} books</b>
+        </div>
+        {% empty %}
+        <p class="empty-msg">No categories yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Quick Actions for users -->
+    <div class="dashboard-panel">
+      <h3>Quick Actions</h3>
+      <div class="quick-actions">
+        <a href="{% url 'book_list' %}">📚 Browse Books</a>
+        <a href="{% url 'borrow_list' %}">🔄 My Borrows</a>
+        <a href="{% url 'digital_resources' %}">💾 Resources</a>
+        <a href="{% url 'payment_history' %}">💳 Payments</a>
+        <a href="{% url 'fines_dues' %}">💰 Fines</a>
+        <a href="{% url 'premium_content' %}">⭐ Premium</a>
+      </div>
+    </div>
+
+  </div>
+
+  {% endif %}
 
 </div>
-
 {% endblock %}
