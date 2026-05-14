@@ -1070,17 +1070,17 @@ def view_premium_content(request, pk):
         return redirect('purchase_premium', pk=pk)
 
     # ✅ YouTube URL auto-clean
+    # ✅ YouTube URL auto-clean (nocookie = no Error 153)
     video_url = content.video_url
     if video_url:
         if 'watch?v=' in video_url:
             video_id = video_url.split('watch?v=')[-1].split('&')[0]
-            video_url = f'https://www.youtube.com/embed/{video_id}'
+            video_url = f'https://www.youtube-nocookie.com/embed/{video_id}'
         elif 'youtu.be/' in video_url:
             video_id = video_url.split('youtu.be/')[-1].split('?')[0]
-            video_url = f'https://www.youtube.com/embed/{video_id}'
+            video_url = f'https://www.youtube-nocookie.com/embed/{video_id}'
         elif 'embed/' in video_url:
-            video_url = 'https://www.youtube.com/embed/' + video_url.split('embed/')[-1].split('?')[0]
-
+            video_url = 'https://www.youtube-nocookie.com/embed/' + video_url.split('embed/')[-1].split('?')[0]
     return render(request, 'library/view_premium_content.html', {
         'content': content,
         'video_url': video_url,
