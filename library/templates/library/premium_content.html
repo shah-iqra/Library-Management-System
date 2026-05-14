@@ -38,7 +38,7 @@
     <a href="?type=" class="filter-btn {% if not request.GET.type %}active{% endif %}">All</a>
     <a href="?type=notes" class="filter-btn {% if request.GET.type == 'notes' %}active{% endif %}">📄 Notes</a>
     <a href="?type=course" class="filter-btn {% if request.GET.type == 'course' %}active{% endif %}">🎓 Courses</a>
-    {% if request.user.is_staff %}
+    {% if request.user.is_staff or request.user.role == 'admin' %}
       <a href="{% url 'admin_upload_premium' %}" class="admin-upload-btn">➕ Upload Content</a>
     {% endif %}
   </div>
@@ -61,7 +61,7 @@
       <div class="content-card">
 
         <!-- Admin Delete Button -->
-        {% if request.user.is_staff %}
+        {% if request.user.is_staff or request.user.role == 'admin' %}
           <a href="{% url 'premium_content_delete' content.pk %}"
              class="delete-badge"
              onclick="return confirm('⚠️ Delete \"{{ content.title }}\"?')">
@@ -116,7 +116,7 @@
     <div class="empty-icon">👑</div>
     <h4>No premium content available yet</h4>
     <p>Check back soon — exclusive materials are being added.</p>
-    {% if request.user.is_staff %}
+    {% if request.user.is_staff or request.user.role == 'admin' %}
       <a href="{% url 'admin_upload_premium' %}" class="btn-buy mt-2">➕ Upload First Content</a>
     {% endif %}
   </div>
