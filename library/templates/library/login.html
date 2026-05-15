@@ -5,17 +5,22 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Book Nest - Login</title>
+
     <link rel="stylesheet" href="{% static 'library/css/style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
 </head>
 
 <body>
+
 <div class="login-landing-page">
 
     <!-- ===== NAVBAR ===== -->
     <nav class="login-navbar">
-        <a href="{% url 'home' %}" class="login-nav-logo">Library<span>.</span></a>
+        <a href="{% url 'home' %}" class="login-nav-logo">
+            Library<span>.</span>
+        </a>
+
         <div class="login-nav-buttons">
             <a href="{% url 'login' %}" class="login-nav-btn-outline">Login</a>
             <a href="{% url 'register' %}" class="login-nav-btn-solid">Sign Up</a>
@@ -27,51 +32,73 @@
 
         <!-- LEFT: HERO -->
         <div class="login-hero-left">
-            <div class="login-hero-tag">✦ YOUR DIGITAL LIBRARY</div>
+
+            <div class="login-hero-tag">
+                ✦ YOUR DIGITAL LIBRARY
+            </div>
+
             <h1 class="login-hero-title">
-                Read Your<br><span>Book</span>
+                Read Your<br>
+                <span>Book</span>
             </h1>
+
             <p class="login-hero-desc">
                 Discover thousands of books, manage your borrowings,
                 and explore our growing library collection — all in one place.
                 Your knowledge journey starts here.
             </p>
+
             <div class="login-hero-buttons">
-                <a href="{% url 'book_list' %}" class="login-hero-btn-green">Explore Books</a>
-                <a href="{% url 'register' %}" class="login-hero-btn-white">Join Free →</a>
+                <a href="{% url 'book_list' %}" class="login-hero-btn-green">
+                    Explore Books
+                </a>
+
+                <a href="{% url 'register' %}" class="login-hero-btn-white">
+                    Join Free →
+                </a>
             </div>
+
         </div>
 
         <!-- RIGHT: LOGIN CARD -->
         <div class="login-card-right">
 
-            <!-- Brand Row -->
+            <!-- BRAND -->
             <div class="login-card-brand-row">
-                <span class="login-card-brand">📚 <span>Book</span> Nest</span>
+                <span class="login-card-brand">
+                    📚 <span>Book</span> Nest
+                </span>
                 <span class="login-card-icon">📚</span>
             </div>
 
-            <h2 class="login-card-title">Log in</h2>
+            <h2 class="login-card-title">
+                Log in
+            </h2>
 
-            <!-- Error Messages -->
+            <!-- ERRORS -->
             {% if error %}
-            <div class="login-error-box">⚠️ {{ error }}</div>
+            <div class="login-error-box">
+                ⚠️ {{ error }}
+            </div>
             {% endif %}
 
             {% if form.errors %}
-            <div class="login-error-box">⚠️ Invalid username or password. Please try again.</div>
+            <div class="login-error-box">
+                ⚠️ Invalid username or password. Please try again.
+            </div>
             {% endif %}
 
             {% if messages %}
                 {% for message in messages %}
-                <div class="login-error-box" style="background:#dcfce7; border-color:#86efac; color:#166534;">
+                <div class="login-error-box"
+                     style="background:#dcfce7; border-color:#86efac; color:#166534;">
                     {{ message }}
                 </div>
                 {% endfor %}
             {% endif %}
 
-            <!-- Form -->
-            <form method="POST" action="/login/" autocomplete="off">
+            <!-- FORM -->
+            <form method="POST" action="{% url 'login' %}" autocomplete="off">
                 {% csrf_token %}
 
                 <div class="login-field-group">
@@ -85,6 +112,7 @@
 
                 <div class="login-field-group">
                     <label>Password</label>
+
                     <div style="position: relative;">
                         <input type="password"
                                id="password"
@@ -92,25 +120,37 @@
                                placeholder="••••••••"
                                required
                                style="padding-right: 44px;"/>
+
                         <span onclick="togglePassword()"
-                              style="position:absolute; right:13px; top:50%;
-                                     transform:translateY(-50%); cursor:pointer;
-                                     font-size:17px; user-select:none;">
+                              style="position:absolute;
+                                     right:13px;
+                                     top:50%;
+                                     transform:translateY(-50%);
+                                     cursor:pointer;
+                                     font-size:17px;
+                                     user-select:none;">
                             🙈
                         </span>
                     </div>
+
                 </div>
 
                 <div class="login-forgot-row">
-                    <a href="#" style="pointer-events:none; color:#aaa;">Forgot Password?</a>
+                    <a href="#" style="pointer-events:none; color:#aaa;">
+                        Forgot Password?
+                    </a>
                 </div>
 
-                <button type="submit" class="login-submit-btn">Log In</button>
+                <button type="submit" class="login-submit-btn">
+                    Log In
+                </button>
+
             </form>
 
-            <!-- Social -->
+            <!-- SOCIAL -->
             <div class="login-social-section">
                 <p>Log in with</p>
+
                 <div class="login-social-icons">
                     <a href="#"><i class="fab fa-google"></i></a>
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -120,21 +160,53 @@
             </div>
 
         </div>
+
     </div>
+
+    <!-- ===== STATS SECTION (ADDED BELOW DIV) ===== -->
+    <div class="stats-container">
+        <div class="stats-grid">
+
+            <div class="stat-card">
+                <h2>12,400<span>+</span></h2>
+                <p>Books Available</p>
+            </div>
+
+            <div class="stat-card">
+                <h2>3,200<span>+</span></h2>
+                <p>Active Members</p>
+            </div>
+
+            <div class="stat-card">
+                <h2>850<span>+</span></h2>
+                <p>Digital Resources</p>
+            </div>
+
+            <div class="stat-card">
+                <h2>98<span>%</span></h2>
+                <p>Member Satisfaction</p>
+            </div>
+
+        </div>
+    </div>
+
 </div>
 
+<!-- PASSWORD TOGGLE -->
 <script>
 function togglePassword() {
     const input = document.getElementById('password');
-    const btn = input.nextElementSibling;
+    const icon = event.target;
+
     if (input.type === 'password') {
         input.type = 'text';
-        btn.innerHTML = '👁️';
+        icon.innerHTML = '👁️';
     } else {
         input.type = 'password';
-        btn.innerHTML = '🙈';
+        icon.innerHTML = '🙈';
     }
 }
 </script>
+
 </body>
 </html>
