@@ -127,36 +127,33 @@
 
             <div class="book-actions">
 
-    <a href="{% url 'toggle_wishlist' book.id %}" class="wishlist-link">
-        <button type="button" style="width: 100%; margin-bottom: 8px; background-color: #fff; border: 1.5px solid #ff4757; color: #ff4757; padding: 6px; border-radius: 6px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 5px;">
-            ❤️ Add to Wishlist
-        </button>
-    </a>
-    {% if book.available_copies > 0 %}
-        <a href="{% url 'issue_book' book.id %}"
-           class="btn btn-primary">
-            Borrow
-        </a>
-    {% else %}
-        <button class="btn btn-delete" disabled>
-            Out of Stock
-        </button>
-    {% endif %}
+                <a href="{% url 'add_to_wishlist' book.id %}" class="btn wishlist-action">
+                    <i class="fas fa-heart"></i> Wishlist
+                </a>
 
-    {% if user.role == 'admin' or user.role == 'librarian' %}
-        <a href="{% url 'book_edit' book.pk %}"
-           class="btn btn-edit">
-            Edit
-        </a>
+                {% if book.available_copies > 0 %}
+                    <a href="{% url 'issue_book' book.id %}" class="btn btn-primary">
+                        Borrow
+                    </a>
+                {% else %}
+                    <button class="btn btn-delete" disabled>
+                        Out of Stock
+                    </button>
+                {% endif %}
 
-        <a href="{% url 'book_delete' book.pk %}"
-           class="btn btn-delete"
-           onclick="return confirm('Delete this book?')">
-            Delete
-        </a>
-    {% endif %}
+                {% if user.role == 'admin' or user.role == 'librarian' %}
+                    <a href="{% url 'book_edit' book.pk %}" class="btn btn-edit">
+                        Edit
+                    </a>
 
-</div>
+                    <a href="{% url 'book_delete' book.pk %}"
+                       class="btn btn-delete"
+                       onclick="return confirm('Delete this book?')">
+                        Delete
+                    </a>
+                {% endif %}
+
+            </div>
         </div>
 
         {% empty %}
