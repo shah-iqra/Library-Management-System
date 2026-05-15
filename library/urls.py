@@ -88,4 +88,5 @@ urlpatterns = [
 
     # --- Help ---
     path('help-support/', views.help_support_page, name='help_support_page'),
+    path('wishlist/toggle/<int:book_id>/', views.toggle_wishlist, name='toggle_wishlist'),
 ]
