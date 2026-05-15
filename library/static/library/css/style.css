@@ -3386,8 +3386,8 @@ html[data-theme="dark"] .content-card .delete-btn {
 ========================= */
 
 .login-landing-page {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #f8e8f0 0%, #e8f5e9 50%, #f3e8ff 100%);
+    height: 100vh; 
+    overflow: hidden; 
     display: flex;
     flex-direction: column;
 }
@@ -3397,7 +3397,7 @@ html[data-theme="dark"] .content-card .delete-btn {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 18px 56px;
+    padding: 15px 5%;
     background: transparent;
 }
 
@@ -3455,13 +3455,15 @@ html[data-theme="dark"] .content-card .delete-btn {
 
 /* Login Two-Column Layout */
 .login-main-flex {
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     flex: 1;
-    padding: 20px 60px 40px 60px;
+    padding: 0 5%;
     gap: 60px;
     min-height: calc(100vh - 80px);
+    margin-top: -40px;
 }
 
 .login-hero-left {
@@ -3492,10 +3494,10 @@ html[data-theme="dark"] .content-card .delete-btn {
 
 .login-hero-title {
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: 4.5rem;
-    line-height: 1.08;
+    font-size: 3.5rem;
+    line-height: 1.1;
     color: #1a2e1a;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     font-weight: 700;
 }
 
@@ -3767,30 +3769,28 @@ html[data-theme="dark"] .login-social-icons a {
 /* --- Statistics Section Design (Improved Spacing) --- */
 .stats-container {
     width: 100%;
-    /* প্যাডিং কমিয়ে দেওয়া হয়েছে যাতে কার্ডগুলো উপরে উঠে আসে */
-    padding: 0 5% 50px 5%; 
+    padding: 0 5% 30px 5%; 
     display: flex;
     justify-content: center;
     background: transparent;
-    /* নেগেটিভ মার্জিন ব্যবহার করে কার্ডগুলোকে হিরো সেকশনের আরও কাছে আনা হয়েছে */
-    margin-top: -60px; 
+    margin-top: -80px; 
     position: relative;
-    z-index: 5;
+    z-index: 10;
 }
 
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    gap: 15px;
     width: 100%;
-    max-width: 1100px; /* গ্রিড একটু ছোট করা হয়েছে যাতে দেখতে সুন্দর লাগে */
+    max-width: 1100px; 
 }
 
 .stat-card {
-    background: rgba(255, 255, 255, 0.8); /* ট্রান্সপারেন্সি একটু বাড়ানো হয়েছে */
+    background: rgba(255, 255, 255, 0.8); 
     backdrop-filter: blur(10px);
-    padding: 25px 15px; /* কার্ডের ভেতরের স্পেস কমানো হয়েছে */
-    border-radius: 20px;
+    padding: 15px 10px;
+    border-radius: 15px;
     text-align: center;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.5);
@@ -3803,7 +3803,7 @@ html[data-theme="dark"] .login-social-icons a {
 
 .stat-card h2 {
     font-family: 'Playfair Display', serif;
-    font-size: 2.2rem; /* ফন্ট সাইজ সামান্য ছোট করা হয়েছে */
+    font-size: 1.8rem;
     color: #1a2e1a;
     margin: 0;
     font-weight: 800;
@@ -3818,7 +3818,7 @@ html[data-theme="dark"] .login-social-icons a {
 .stat-card p {
     color: #666;
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     margin-top: 5px;
     font-weight: 600;
 }
