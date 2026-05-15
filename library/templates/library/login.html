@@ -2,82 +2,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Book Nest - Login</title>
     <link rel="stylesheet" href="{% static 'library/css/style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
 </head>
 
-<body class="modern-login-body">
+<body>
+<div class="login-landing-page">
 
-<div class="modern-login-wrapper">
-    <div class="card-header">
-        <div class="logo">
-            📚 <span class="brand-first" style="color: #b58055;">Book</span> Nest
+    <!-- ===== NAVBAR ===== -->
+    <nav class="login-navbar">
+        <a href="{% url 'home' %}" class="login-nav-logo">Library<span>.</span></a>
+        <div class="login-nav-buttons">
+            <a href="{% url 'login' %}" class="login-nav-btn-outline">Login</a>
+            <a href="{% url 'register' %}" class="login-nav-btn-solid">Sign Up</a>
         </div>
-        <div class="header-right">
-            Don't have an account?
-            <a href="{% url 'register' %}" class="dark-pill-btn">Sign Up</a>
+    </nav>
+
+    <!-- ===== MAIN TWO COLUMN ===== -->
+    <div class="login-main-flex">
+
+        <!-- LEFT: HERO -->
+        <div class="login-hero-left">
+            <div class="login-hero-tag">✦ YOUR DIGITAL LIBRARY</div>
+            <h1 class="login-hero-title">
+                Read Your<br><span>Book</span>
+            </h1>
+            <p class="login-hero-desc">
+                Discover thousands of books, manage your borrowings,
+                and explore our growing library collection — all in one place.
+                Your knowledge journey starts here.
+            </p>
+            <div class="login-hero-buttons">
+                <a href="{% url 'book_list' %}" class="login-hero-btn-green">Explore Books</a>
+                <a href="{% url 'register' %}" class="login-hero-btn-white">Join Free →</a>
+            </div>
         </div>
-    </div>
 
-    <div class="login-content-box">
-        <div class="login-form-side">
-            <h1>Log in</h1>
+        <!-- RIGHT: LOGIN CARD -->
+        <div class="login-card-right">
 
+            <!-- Brand Row -->
+            <div class="login-card-brand-row">
+                <span class="login-card-brand">📚 <span>Book</span> Nest</span>
+                <span class="login-card-icon">📚</span>
+            </div>
+
+            <h2 class="login-card-title">Log in</h2>
+
+            <!-- Error Messages -->
             {% if error %}
-                <div class="error-msg" style="background:#ffe0e0; color:#c0392b; padding:10px; border-radius:8px; margin-bottom:15px; font-size:14px;">
-                    {{ error }}
-                </div>
+            <div class="login-error-box">⚠️ {{ error }}</div>
             {% endif %}
 
-            <form method="POST" autocomplete="off">
+            {% if form.errors %}
+            <div class="login-error-box">⚠️ Invalid username or password. Please try again.</div>
+            {% endif %}
+
+            {% if messages %}
+                {% for message in messages %}
+                <div class="login-error-box" style="background:#dcfce7; border-color:#86efac; color:#166534;">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Form -->
+            <form method="POST" action="/login/" autocomplete="off">
                 {% csrf_token %}
 
-                <div class="modern-form-group">
-                    <label for="username" style="font-size:13px; font-weight:600; display:block; margin-bottom:4px;">Username or Email</label>
-                    <input type="text" id="username" name="username"
-                           placeholder="Enter your username or email" required
-                           style="width:100%; padding:9px 12px; border:1.5px solid #ddd; border-radius:8px; font-size:14px; box-sizing:border-box; background:#f8f9ff;">
+                <div class="login-field-group">
+                    <label>Username or Email</label>
+                    <input type="text"
+                           name="username"
+                           placeholder="admin"
+                           required
+                           value="{{ request.POST.username|default:'' }}"/>
                 </div>
 
-                <div class="modern-form-group" style="margin-top:10px;">
-                    <label for="password" style="font-size:13px; font-weight:600; display:block; margin-bottom:4px;">Password</label>
+                <div class="login-field-group">
+                    <label>Password</label>
                     <div style="position: relative;">
-                        <input type="password" id="password" name="password"
-                               placeholder="Enter your password" required
-                               style="width:100%; padding:9px 45px 9px 12px; border:1.5px solid #ddd; border-radius:8px; font-size:14px; box-sizing:border-box; background:#f8f9ff;">
-                        
-                        <span id="monkey-toggle" onclick="togglePassword()"
-                              style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px; user-select: none;">
+                        <input type="password"
+                               id="password"
+                               name="password"
+                               placeholder="••••••••"
+                               required
+                               style="padding-right: 44px;"/>
+                        <span onclick="togglePassword()"
+                              style="position:absolute; right:13px; top:50%;
+                                     transform:translateY(-50%); cursor:pointer;
+                                     font-size:17px; user-select:none;">
                             🙈
                         </span>
                     </div>
                 </div>
 
-                <div class="forgot-pass" style="text-align: right; margin: 10px 0;">
-                    <a href="#" style="font-size: 13px; color: #b58055; text-decoration: none;">Forgot Password?</a>
+                <div class="login-forgot-row">
+                    <a href="#" style="pointer-events:none; color:#aaa;">Forgot Password?</a>
                 </div>
 
-                <button type="submit" class="dark-full-btn" style="margin-top: 10px;">Log In</button>
+                <button type="submit" class="login-submit-btn">Log In</button>
             </form>
 
-            <div class="social-login-section" style="text-align: center; margin-top: 25px;">
-                <p style="font-size: 13px; color: #888;">Log in with</p>
-                <div class="social-icons" style="display: flex; justify-content: center; gap: 15px; margin-top: 10px;">
-                    <i class="fab fa-google" style="cursor:pointer;"></i>
-                    <i class="fab fa-facebook-f" style="cursor:pointer;"></i>
-                    <i class="fab fa-instagram" style="cursor:pointer;"></i>
-                    <i class="fab fa-linkedin-in" style="cursor:pointer;"></i>
+            <!-- Social -->
+            <div class="login-social-section">
+                <p>Log in with</p>
+                <div class="login-social-icons">
+                    <a href="#"><i class="fab fa-google"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
-        </div>
 
-        <div class="login-image-side">
-            <img src="{% static 'library/images/stack_of_books.png' %}"
-                 alt="Stack of Books"
-                 class="login-img">
         </div>
     </div>
 </div>
@@ -85,17 +126,15 @@
 <script>
 function togglePassword() {
     const input = document.getElementById('password');
-    const monkey = document.getElementById('monkey-toggle');
-    
+    const btn = input.nextElementSibling;
     if (input.type === 'password') {
         input.type = 'text';
-        monkey.innerHTML = '🙈'; 
+        btn.innerHTML = '👁️';
     } else {
         input.type = 'password';
-        monkey.innerHTML = '👁️'; 
+        btn.innerHTML = '🙈';
     }
 }
 </script>
-
 </body>
 </html>

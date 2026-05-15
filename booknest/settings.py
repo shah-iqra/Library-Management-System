@@ -104,5 +104,5 @@ AUTH_USER_MODEL = 'library.User'
 
 # ---------------- LOGIN SETTINGS ----------------
 LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/login/'

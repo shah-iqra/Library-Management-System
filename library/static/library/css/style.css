@@ -3380,3 +3380,382 @@ html[data-theme="dark"] .content-card .delete-btn {
 .sidebar::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.45);
 }
+
+/* =========================
+   LOGIN LANDING PAGE
+========================= */
+
+.login-landing-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8e8f0 0%, #e8f5e9 50%, #f3e8ff 100%);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Login Navbar */
+.login-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 56px;
+    background: transparent;
+}
+
+.login-nav-logo {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1a2e1a;
+    text-decoration: none;
+}
+
+.login-nav-logo span {
+    color: #1a2e1a;
+}
+
+.login-nav-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.login-nav-btn-outline {
+    padding: 10px 26px;
+    border: 2px solid #1a3a1a;
+    background: transparent;
+    color: #1a3a1a;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.login-nav-btn-outline:hover {
+    background: rgba(0,0,0,0.06);
+    color: #1a3a1a;
+    text-decoration: none;
+}
+
+.login-nav-btn-solid {
+    padding: 10px 26px;
+    background: #2d6a4f;
+    color: white;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.login-nav-btn-solid:hover {
+    background: #245a42;
+    color: white;
+    text-decoration: none;
+}
+
+/* Login Two-Column Layout */
+.login-main-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    padding: 40px 80px 60px 80px;
+    gap: 40px;
+    min-height: calc(100vh - 80px);
+}
+
+/* Hero Left */
+.login-hero-left {
+    flex: 1;
+    max-width: 520px;
+}
+
+.login-hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(45, 106, 79, 0.15);
+    color: #2d6a4f;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+}
+
+.login-hero-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 4rem;
+    line-height: 1.08;
+    color: #1a2e1a;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.login-hero-title span {
+    color: #2d6a4f;
+}
+
+.login-hero-desc {
+    font-size: 1.05rem;
+    color: #4a5568;
+    line-height: 1.75;
+    margin-bottom: 36px;
+}
+
+.login-hero-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.login-hero-btn-green {
+    padding: 14px 30px;
+    background: #2d6a4f;
+    color: white;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.login-hero-btn-green:hover {
+    background: #245a42;
+    color: white;
+    text-decoration: none;
+}
+
+.login-hero-btn-white {
+    padding: 14px 30px;
+    background: white;
+    color: #1a2e1a;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.login-hero-btn-white:hover {
+    background: #f0f0f0;
+    color: #1a2e1a;
+    text-decoration: none;
+}
+
+/* Login Card Right */
+.login-card-right {
+    background: #faf8f3;
+    border-radius: 20px;
+    padding: 40px 44px;
+    width: 430px;
+    min-width: 390px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.10);
+}
+
+.login-card-brand-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+}
+
+.login-card-brand {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #8B4513;
+    text-decoration: none;
+}
+
+.login-card-brand span {
+    color: #333;
+}
+
+.login-card-icon {
+    font-size: 2rem;
+}
+
+.login-card-title {
+    font-size: 2.1rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 28px;
+}
+
+/* Form fields inside login card */
+.login-field-group {
+    margin-bottom: 18px;
+}
+
+.login-field-group label {
+    display: block;
+    font-size: 0.88rem;
+    color: #666;
+    margin-bottom: 7px;
+    font-weight: 500;
+}
+
+.login-field-group input {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #efe9dc;
+    font-size: 0.95rem;
+    outline: none;
+    color: #333;
+    transition: 0.2s;
+}
+
+.login-field-group input:focus {
+    border-color: #2d6a4f;
+    background: #fff;
+}
+
+.login-forgot-row {
+    text-align: right;
+    margin-top: 6px;
+    margin-bottom: 20px;
+}
+
+.login-forgot-row a {
+    font-size: 0.85rem;
+    color: #8B4513;
+    text-decoration: none;
+}
+
+.login-forgot-row a:hover {
+    text-decoration: underline;
+}
+
+.login-submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: #1a2e1a;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 24px;
+    transition: 0.2s;
+}
+
+.login-submit-btn:hover {
+    background: #2d6a4f;
+}
+
+.login-social-section {
+    border-top: 1px solid #e0ddd5;
+    padding-top: 22px;
+    text-align: center;
+}
+
+.login-social-section p {
+    font-size: 0.85rem;
+    color: #aaa;
+    margin-bottom: 14px;
+}
+
+.login-social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+}
+
+.login-social-icons a {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.login-social-icons a:hover {
+    background: #f0f0f0;
+    color: #333;
+    text-decoration: none;
+}
+
+.login-error-box {
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 0.88rem;
+    color: #b91c1c;
+}
+
+/* Dark mode for login landing */
+html[data-theme="dark"] .login-landing-page {
+    background: linear-gradient(135deg, #1a0d1a 0%, #0d1a0d 50%, #150d20 100%) !important;
+}
+
+html[data-theme="dark"] .login-nav-logo,
+html[data-theme="dark"] .login-hero-title {
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .login-hero-title span {
+    color: #6ee7b7 !important;
+}
+
+html[data-theme="dark"] .login-nav-btn-outline {
+    border-color: #e5e7eb !important;
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .login-hero-desc {
+    color: #cbd5e1 !important;
+}
+
+html[data-theme="dark"] .login-card-right {
+    background: #1e293b !important;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4) !important;
+}
+
+html[data-theme="dark"] .login-card-title {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .login-field-group input {
+    background: #0f172a !important;
+    color: #e5e7eb !important;
+    border-color: #475569 !important;
+}
+
+html[data-theme="dark"] .login-field-group input:focus {
+    border-color: #6ee7b7 !important;
+    background: #1e293b !important;
+}
+
+html[data-theme="dark"] .login-social-section {
+    border-top-color: #334155 !important;
+}
+
+html[data-theme="dark"] .login-social-icons a {
+    border-color: #334155 !important;
+    color: #cbd5e1 !important;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+    .login-main-flex {
+        flex-direction: column;
+        padding: 30px 24px;
+    }
+    .login-hero-title { font-size: 2.8rem; }
+    .login-card-right { width: 100%; min-width: unset; }
+    .login-navbar { padding: 16px 24px; }
+}

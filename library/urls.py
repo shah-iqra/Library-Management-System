@@ -68,6 +68,7 @@ urlpatterns = [
     path('premium-content/purchase/<int:pk>/', views.purchase_premium, name='purchase_premium'),
     path('premium-content/view/<int:pk>/', views.view_premium_content, name='view_premium'),
     path('premium-content/purchases/', views.admin_premium_purchases, name='admin_premium_purchases'),
+    path('premium-content/delete/<int:pk>/', views.premium_content_delete, name='premium_content_delete'),
 
     # --- Payment System ---
     path('online-payment/', views.online_payment, name='online_payment'),
@@ -78,12 +79,13 @@ urlpatterns = [
     path('fines-dues/', views.fines_dues, name='fines_dues'),
     path('system-monitoring/', views.system_monitoring, name='system_monitoring'),
     path('reports-analytics/', views.reports_analytics, name='reports_analytics'),
-    path('premium-content/delete/<int:pk>/', views.premium_content_delete, name='premium_content_delete'),
     path('notifications/', views.notification_page, name='notification_page'),
 
+    # --- Wishlist ---
     path('wishlist/', views.wishlist_page, name='wishlist_page'),
     path('wishlist/add/<int:book_id>/', views.add_to_wishlist, name='add_to_wishlist'),
     path('wishlist/remove/<int:wishlist_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
-    path('help-support/', views.help_support_page, name='help_support_page'),
 
+    # --- Help ---
+    path('help-support/', views.help_support_page, name='help_support_page'),
 ]
