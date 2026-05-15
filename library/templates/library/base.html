@@ -43,33 +43,33 @@
 
             <a href="{% url 'home' %}"
                class="menu-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
-                <i class="fas fa-th-large"></i>
-                Dashboard
-            </a>
+            <span>🎛️</span>
+           Dashboard
+          </a>
 
             <a href="{% url 'book_list' %}"
                class="menu-item {% if request.resolver_match.url_name == 'book_list' %}active{% endif %}">
-                <i class="fas fa-search"></i>
-                Book Search
-            </a>
+            <span>🔎</span>
+             Book Search
+          </a>
 
             <a href="{% url 'digital_resources' %}"
                class="menu-item {% if request.resolver_match.url_name == 'digital_resources' %}active{% endif %}">
-                <i class="fas fa-file-pdf"></i>
-                Digital Resources
-            </a>
+               <span>📂</span>
+             Digital Resources
+              </a>
 
             <a href="{% url 'research_papers' %}"
-               class="menu-item {% if request.resolver_match.url_name == 'research_papers' %}active{% endif %}">
-                <i class="fas fa-microscope"></i>
-                Research Papers
-            </a>
+   class="menu-item {% if request.resolver_match.url_name == 'research_papers' %}active{% endif %}">
+    <span>🔬</span>
+    Research Papers
+</a>
 
             <a href="{% url 'premium_content' %}"
-               class="menu-item premium {% if request.resolver_match.url_name == 'premium_content' %}active{% endif %}">
-                <i class="fas fa-crown"></i>
-                Premium Content
-            </a>
+   class="menu-item premium {% if request.resolver_match.url_name == 'premium_content' %}active{% endif %}">
+    <span>💎</span>
+    Premium Content
+</a>
 
             <a href="{% url 'notification_page' %}"
                class="sidebar-link menu-item {% if request.resolver_match.url_name == 'notification_page' %}active{% endif %}">
@@ -97,29 +97,28 @@
             <div class="menu-title">Services</div>
 
             <a href="{% url 'borrow_list' %}"
-               class="menu-item {% if request.resolver_match.url_name == 'borrow_list' %}active{% endif %}">
-                <i class="fas fa-exchange-alt"></i>
-                Borrow & Return
-            </a>
+   class="menu-item {% if request.resolver_match.url_name == 'borrow_list' %}active{% endif %}">
+    <span>🔄</span>
+    Borrow & Return
+</a>
 
             <a href="{% url 'online_payment' %}"
-               class="menu-item {% if request.resolver_match.url_name == 'online_payment' %}active{% endif %}">
-                <i class="fas fa-credit-card"></i>
-                Online Payment
-            </a>
+   class="menu-item {% if request.resolver_match.url_name == 'online_payment' %}active{% endif %}">
+    <span>💳</span>
+    Online Payment
+</a>
 
             <a href="{% url 'payment_history' %}"
-               class="menu-item {% if request.resolver_match.url_name == 'payment_history' %}active{% endif %}">
-                <i class="fas fa-history"></i>
-                Payment History
-            </a>
+   class="menu-item {% if request.resolver_match.url_name == 'payment_history' %}active{% endif %}">
+    <span>📜</span>
+    Payment History
+</a>
 
             <a href="{% url 'fines_dues' %}"
-               class="menu-item {% if request.resolver_match.url_name == 'fines_dues' %}active{% endif %}">
-                <i class="fas fa-clock"></i>
-                Fines & Dues
-            </a>
-
+   class="menu-item {% if request.resolver_match.url_name == 'fines_dues' %}active{% endif %}">
+    <span>🕒</span>
+    Fines & Dues
+</a>
         </div>
 
         <!-- ================= ADMIN SECTION ================= -->
@@ -130,28 +129,28 @@
             <div class="menu-title">Administrative</div>
 
             <a href="{% url 'member_list' %}"
-               class="menu-item {% if request.resolver_match.url_name == 'member_list' %}active{% endif %}">
-                <i class="fas fa-users-cog"></i>
-                Manage Users
-            </a>
+   class="menu-item {% if request.resolver_match.url_name == 'member_list' %}active{% endif %}">
+    <span>👥</span>
+    Manage Users
+</a>
 
             <a href="{% url 'category_list' %}"
-               class="menu-item {% if request.resolver_match.url_name == 'category_list' %}active{% endif %}">
-                <i class="fas fa-tags"></i>
-                Manage Categories
-            </a>
+   class="menu-item {% if request.resolver_match.url_name == 'category_list' %}active{% endif %}">
+    <span>🏷️</span>
+    Manage Categories
+</a>
 
             <a href="{% url 'system_monitoring' %}"
-               class="menu-item {% if request.resolver_match.url_name == 'system_monitoring' %}active{% endif %}">
-                <i class="fas fa-chart-line"></i>
-                System Monitoring
-            </a>
+   class="menu-item {% if request.resolver_match.url_name == 'system_monitoring' %}active{% endif %}">
+    <span>📈</span>
+    System Monitoring
+</a>
 
             <a href="{% url 'reports_analytics' %}"
-               class="menu-item {% if request.resolver_match.url_name == 'reports_analytics' %}active{% endif %}">
-                <i class="fas fa-file-invoice"></i>
-                Reports & Analytics
-            </a>
+   class="menu-item {% if request.resolver_match.url_name == 'reports_analytics' %}active{% endif %}">
+    <span>📊</span>
+    Reports & Analytics
+</a>
 
         </div>
 
