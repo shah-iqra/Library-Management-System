@@ -3831,3 +3831,36 @@ html[data-theme="dark"] .login-social-icons a {
     padding-right: 20px;
     box-sizing: border-box;
 }
+
+.book-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+.book-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.book-actions .btn {
+    min-width: 80px;
+    text-align: center;
+}
+
+.wishlist-action {
+    background: #c0844f;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.wishlist-action:hover {
+    background: #a86c3c;
+    color: white;
+}
