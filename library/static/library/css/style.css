@@ -3457,11 +3457,16 @@ html[data-theme="dark"] .content-card .delete-btn {
 .login-main-flex {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     flex: 1;
-    padding: 40px 80px 60px 80px;
-    gap: 40px;
+    padding: 20px 60px 40px 60px;
+    gap: 60px;
     min-height: calc(100vh - 80px);
+}
+
+.login-hero-left {
+    flex: 1;
+    max-width: 480px;
 }
 
 /* Hero Left */
@@ -3487,7 +3492,7 @@ html[data-theme="dark"] .content-card .delete-btn {
 
 .login-hero-title {
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: 4rem;
+    font-size: 4.5rem;
     line-height: 1.08;
     color: #1a2e1a;
     margin-bottom: 20px;
@@ -3758,4 +3763,60 @@ html[data-theme="dark"] .login-social-icons a {
     .login-hero-title { font-size: 2.8rem; }
     .login-card-right { width: 100%; min-width: unset; }
     .login-navbar { padding: 16px 24px; }
+}
+/* --- Statistics Section Design --- */
+.stats-container {
+    width: 100%;
+    padding: 20px 5% 80px 5%; /* নিচে একটু বেশি গ্যাপ দেওয়া হয়েছে */
+    display: flex;
+    justify-content: center;
+    background: transparent;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* এক লাইনে ৪টা কার্ড ফিক্সড */
+    gap: 25px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.7); /* সাদা হালকা ট্রান্সপারেন্ট */
+    backdrop-filter: blur(8px); /* গ্লাস ইফেক্ট */
+    padding: 35px 25px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    transition: transform 0.3s ease;
+}
+
+/* মাউস নিলে কার্ডটি হালকা নড়বে */
+.stat-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.stat-card h2 {
+    font-family: 'Playfair Display', serif; /* আপনার পেজের ফন্টের সাথে মিল রেখে */
+    font-size: 2.8rem;
+    color: #1a2e1a; /* ডার্ক গ্রিন */
+    margin: 0;
+    font-weight: 800;
+}
+
+.stat-card h2 span {
+    color: #4fac8e; /* সবুজ প্লাস/পারসেন্টেজ */
+    font-size: 1.8rem;
+    margin-left: 5px;
+}
+
+.stat-card p {
+    color: #666;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.05rem;
+    margin-top: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
