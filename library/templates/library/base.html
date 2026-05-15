@@ -71,24 +71,24 @@
                 Premium Content
             </a>
 
-            <!-- ✅ NOTIFICATION BUTTON ADDED -->
-<a href="{% url 'notification_page' %}"
-   class="sidebar-link menu-item {% if request.resolver_match.url_name == 'notification_page' %}active{% endif %}">
-    <span class="icon">🔔</span>
-    <span class="text">Notifications</span>
-</a>
+            <a href="{% url 'notification_page' %}"
+               class="sidebar-link menu-item {% if request.resolver_match.url_name == 'notification_page' %}active{% endif %}">
+                <span class="icon">🔔</span>
+                <span class="text">Notifications</span>
+            </a>
 
-<a href="{% url 'wishlist_page' %}"
-   class="sidebar-link menu-item {% if request.resolver_match.url_name == 'wishlist_page' %}active{% endif %}">
-    <span class="icon">❤️</span>
-    <span class="text">Wishlist</span>
-</a>
+            <a href="{% url 'wishlist_page' %}"
+               class="sidebar-link menu-item {% if request.resolver_match.url_name == 'wishlist_page' %}active{% endif %}">
+                <span class="icon">❤️</span>
+                <span class="text">Wishlist</span>
+            </a>
 
-<a href="{% url 'help_support_page' %}"
-   class="sidebar-link menu-item {% if request.resolver_match.url_name == 'help_support_page' %}active{% endif %}">
-    <span class="icon">🙋‍♂️</span>
-    <span class="text">Help & Support</span>
-</a>
+            <a href="{% url 'help_support_page' %}"
+               class="sidebar-link menu-item {% if request.resolver_match.url_name == 'help_support_page' %}active{% endif %}">
+                <span class="icon">🙋‍♂️</span>
+                <span class="text">Help & Support</span>
+            </a>
+
         </div>
 
         <!-- ================= SERVICES ================= -->
@@ -186,11 +186,32 @@
 
             </a>
 
+            <!-- ================= FIXED LOGOUT ================= -->
             <div class="logout-link">
-                <a href="{% url 'logout' %}">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Logout</span>
-                </a>
+
+                <form method="POST" action="{% url 'logout' %}">
+                    {% csrf_token %}
+
+                    <button type="submit"
+                            style="
+                            background:none;
+                            border:none;
+                            cursor:pointer;
+                            color:rgba(255,255,255,0.5);
+                            font-size:0.7rem;
+                            display:inline-flex;
+                            align-items:center;
+                            gap:6px;
+                            transition:all 0.2s;
+                            padding:0;">
+
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+
+                    </button>
+
+                </form>
+
             </div>
 
         </div>
@@ -235,24 +256,16 @@
 
         </header>
 
-        <!-- ================= ALERT MESSAGES ================= -->
         {% if messages %}
-
         <div class="messages">
-
             {% for message in messages %}
-
-            <div class="alert {{ message.tags }}">
-                {{ message }}
-            </div>
-
+                <div class="alert {{ message.tags }}">
+                    {{ message }}
+                </div>
             {% endfor %}
-
         </div>
-
         {% endif %}
 
-        <!-- ================= PAGE CONTENT ================= -->
         {% block content %}
         {% endblock %}
 
@@ -267,45 +280,29 @@
     const htmlTag = document.documentElement;
 
     function updateThemeButton(theme) {
-
         if (theme === "dark") {
-
-            themeToggleBtn.innerHTML =
-                '<i class="fas fa-sun"></i><span>Light</span>';
-
+            themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i><span>Light</span>';
         } else {
-
-            themeToggleBtn.innerHTML =
-                '<i class="fas fa-moon"></i><span>Dark</span>';
+            themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i><span>Dark</span>';
         }
     }
 
-    const currentTheme =
-        localStorage.getItem("booknestTheme") || "light";
-
+    const currentTheme = localStorage.getItem("booknestTheme") || "light";
     htmlTag.setAttribute("data-theme", currentTheme);
-
     updateThemeButton(currentTheme);
 
     themeToggleBtn.addEventListener("click", function () {
-
-        const current =
-            htmlTag.getAttribute("data-theme");
-
-        const newTheme =
-            current === "dark" ? "light" : "dark";
+        const current = htmlTag.getAttribute("data-theme");
+        const newTheme = current === "dark" ? "light" : "dark";
 
         htmlTag.setAttribute("data-theme", newTheme);
-
         localStorage.setItem("booknestTheme", newTheme);
-
         updateThemeButton(newTheme);
     });
 
 </script>
 
 <script>
-    // Sidebar scroll position save + restore
     document.addEventListener("DOMContentLoaded", function () {
         const sidebar = document.querySelector(".sidebar");
 
@@ -329,8 +326,7 @@
     });
 </script>
 
-{% block extra_js %}
-{% endblock %}
+{% block extra_js %}{% endblock %}
 
 </body>
 </html>
