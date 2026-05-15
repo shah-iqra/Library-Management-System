@@ -12,7 +12,7 @@ from django.db.models import Count
 from .models import Borrow, ResearchPaper, Notification 
 from .models import Book, Wishlist
 from .models import SupportTicket
-
+from django.http import JsonResponse
 
 from .models import (
     Book,
@@ -1255,3 +1255,31 @@ def help_support_page(request):
 
         my_tickets = SupportTicket.objects.filter(user=user).order_by('-created_at')
         return render(request, 'library/help_support.html', {'my_tickets': my_tickets})
+    
+
+    from django.shortcuts import get_object_or_404, redirect
+
+
+def toggle_wishlist(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    wishlist_item = Wishlist.objects.filter(user=request.user, book=book)
+
+    if wishlist_item.exists():
+        wishlist_item.delete()
+        status = "removed"
+    else:
+        Wishlist.objects.create(user=request.user, book=book)
+        status = "added"
+
+    # যদি জাভাস্ক্রিপ্ট (AJAX) থেকে রিকোয়েস্ট আসে
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'status': status})
+
+    # সাধারণ ক্লিকের জন্য আগের মতোই রিডাইরেক্ট
+    return redirect(request.META.get('HTTP_REFERER', 'book_list'))
+
+@login_required
+# views.py এ এরকম হতে হবে
+def wishlist_view(request):
+    wishlist_items = Wishlist.objects.filter(user=request.user)
+    return render(request, 'library/wishlist.html', {'wishlist_items': wishlist_items})
