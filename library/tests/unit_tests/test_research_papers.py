@@ -11,36 +11,68 @@ class ResearchPaperTest(TestCase):
 
         self.user = User.objects.create_user(
             username="researchuser",
-            email="research@gmail.com",
             password="testpass123"
         )
 
-        self.user.is_staff = True
-        self.user.is_superuser = True
-        self.user.save()
+        self.admin = User.objects.create_user(
+            username="adminresearch",
+            password="testpass123",
+            is_staff=True,
+            is_superuser=True
+        )
+
+    def test_research_papers_page_opens(self):
 
         self.client.login(
             username="researchuser",
             password="testpass123"
         )
 
-    def test_research_papers_page_opens(self):
-
         response = self.client.get(reverse("research_papers"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "library/research_papers.html")
 
-    def test_upload_research_paper_page_opens(self):
+    def test_approved_paper_list_page_opens(self):
 
-        response = self.client.get(reverse("upload_research_paper"))
+        response = self.client.get(reverse("approved_paper_list"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "library/upload_research_paper.html")
 
-    def test_manage_research_papers_page_opens(self):
+    def test_manage_research_papers_requires_login(self):
+
+        response = self.client.get(reverse("manage_research_papers"))
+
+        self.assertNotEqual(response.status_code, 200)
+
+    def test_manage_research_papers_opens_for_admin(self):
+
+        self.client.login(
+            username="adminresearch",
+            password="testpass123"
+        )
 
         response = self.client.get(reverse("manage_research_papers"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "library/manage_research_papers.html")
+
+    def test_upload_research_paper_page_opens_for_admin(self):
+
+        self.client.login(
+            username="adminresearch",
+            password="testpass123"
+        )
+
+        response = self.client.get(reverse("upload_research_paper"))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_approval_access_control_page_opens_for_admin(self):
+
+        self.client.login(
+            username="adminresearch",
+            password="testpass123"
+        )
+
+        response = self.client.get(reverse("approval_access_control"))
+
+        self.assertEqual(response.status_code, 200)

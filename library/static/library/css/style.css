@@ -686,9 +686,9 @@ tr:hover td {
 
 .books-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 300px));
-    gap: 24px;
-    justify-content: flex-start;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 25px;
+   width=100%
 }
 
 .book-card {
@@ -3821,4 +3821,13 @@ html[data-theme="dark"] .login-social-icons a {
     font-size: 0.85rem;
     margin-top: 5px;
     font-weight: 600;
+}
+
+.main-content,
+.library-page,
+.book-list-page{
+    width: 100%;
+    max-width: none;
+    padding-right: 20px;
+    box-sizing: border-box;
 }
