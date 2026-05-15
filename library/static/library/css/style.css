@@ -3764,59 +3764,61 @@ html[data-theme="dark"] .login-social-icons a {
     .login-card-right { width: 100%; min-width: unset; }
     .login-navbar { padding: 16px 24px; }
 }
-/* --- Statistics Section Design --- */
+/* --- Statistics Section Design (Improved Spacing) --- */
 .stats-container {
     width: 100%;
-    padding: 20px 5% 80px 5%; /* নিচে একটু বেশি গ্যাপ দেওয়া হয়েছে */
+    /* প্যাডিং কমিয়ে দেওয়া হয়েছে যাতে কার্ডগুলো উপরে উঠে আসে */
+    padding: 0 5% 50px 5%; 
     display: flex;
     justify-content: center;
     background: transparent;
+    /* নেগেটিভ মার্জিন ব্যবহার করে কার্ডগুলোকে হিরো সেকশনের আরও কাছে আনা হয়েছে */
+    margin-top: -60px; 
+    position: relative;
+    z-index: 5;
 }
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* এক লাইনে ৪টা কার্ড ফিক্সড */
-    gap: 25px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1100px; /* গ্রিড একটু ছোট করা হয়েছে যাতে দেখতে সুন্দর লাগে */
 }
 
 .stat-card {
-    background: rgba(255, 255, 255, 0.7); /* সাদা হালকা ট্রান্সপারেন্ট */
-    backdrop-filter: blur(8px); /* গ্লাস ইফেক্ট */
-    padding: 35px 25px;
+    background: rgba(255, 255, 255, 0.8); /* ট্রান্সপারেন্সি একটু বাড়ানো হয়েছে */
+    backdrop-filter: blur(10px);
+    padding: 25px 15px; /* কার্ডের ভেতরের স্পেস কমানো হয়েছে */
     border-radius: 20px;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     transition: transform 0.3s ease;
 }
 
-/* মাউস নিলে কার্ডটি হালকা নড়বে */
 .stat-card:hover {
     transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.9);
 }
 
 .stat-card h2 {
-    font-family: 'Playfair Display', serif; /* আপনার পেজের ফন্টের সাথে মিল রেখে */
-    font-size: 2.8rem;
-    color: #1a2e1a; /* ডার্ক গ্রিন */
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem; /* ফন্ট সাইজ সামান্য ছোট করা হয়েছে */
+    color: #1a2e1a;
     margin: 0;
     font-weight: 800;
 }
 
 .stat-card h2 span {
-    color: #4fac8e; /* সবুজ প্লাস/পারসেন্টেজ */
-    font-size: 1.8rem;
-    margin-left: 5px;
+    color: #4fac8e;
+    font-size: 1.5rem;
+    margin-left: 3px;
 }
 
 .stat-card p {
     color: #666;
     font-family: 'DM Sans', sans-serif;
-    font-size: 1.05rem;
-    margin-top: 10px;
+    font-size: 0.95rem;
+    margin-top: 5px;
     font-weight: 600;
-    letter-spacing: 0.5px;
 }
