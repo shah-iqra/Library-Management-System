@@ -228,12 +228,24 @@ class Payment(models.Model):
         ('Nagad', 'Nagad'),
         ('Rocket', 'Rocket'),
     ]
+
     STATUS_CHOICES = [
         ('Pending', 'Pending'),
         ('Success', 'Success'),
         ('Failed', 'Failed'),
     ]
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    # Added borrow field
+    borrow = models.ForeignKey(
+        'Borrow',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='payments'
+    )
+
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     method = models.CharField(max_length=20, choices=PAYMENT_METHODS)
     transaction_id = models.CharField(max_length=100, unique=True)
@@ -242,7 +254,6 @@ class Payment(models.Model):
 
     def __str__(self):
         return self.user.username + " - " + self.transaction_id
-
 
 # --- System Log Model ---
 class SystemLog(models.Model):

@@ -752,19 +752,39 @@ def premium_content(request):
 
 @login_required
 def online_payment(request):
+    borrow_id = request.GET.get('borrow_id')
+    borrow = None
+    prefill_amount = 0
+
+    if borrow_id:
+        borrow = get_object_or_404(Borrow, id=borrow_id)
+        prefill_amount = borrow.fine_amount if borrow.fine_amount > 0 else 50  # 50 Tk default borrow fee
+
     if request.method == 'POST':
         form = PaymentForm(request.POST)
         if form.is_valid():
             payment = form.save(commit=False)
             payment.user = request.user
             payment.status = 'Success'
+            if borrow:
+                payment.borrow = borrow
             payment.save()
+
+            # Fine পরিশোধ হলে fine_amount 0 করে দাও
+            if borrow and borrow.fine_amount > 0:
+                borrow.fine_amount = 0
+                borrow.save()
+
             messages.success(request, '✅ Payment successful!')
             return redirect('payment_history')
     else:
-        form = PaymentForm()
-    return render(request, 'library/online_payment.html', {'form': form})
+        form = PaymentForm(initial={'amount': prefill_amount})
 
+    return render(request, 'library/online_payment.html', {
+        'form': form,
+        'borrow': borrow,
+        'prefill_amount': prefill_amount,
+    })
 
 @login_required
 def payment_history(request):
