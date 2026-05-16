@@ -9,7 +9,7 @@ from django.http import FileResponse, HttpResponseForbidden, HttpResponse
 import csv
 import uuid
 from django.db.models import Count
-from .models import Borrow, ResearchPaper, Notification 
+from .models import Borrow, ResearchPaper, Notification
 from .models import Book, Wishlist
 from .models import SupportTicket
 from django.http import JsonResponse
@@ -64,22 +64,21 @@ def is_librarian_or_admin(user):
     )
 
 
-
 @login_required
 def home(request):
     user = request.user
     today = date.today()
 
-    # ── Common stats (সবার জন্য) ──────────────────────
-    total_books        = Book.objects.count()
-    total_members      = User.objects.filter(role=User.REGULAR_USER).count()
-    active_borrows     = Borrow.objects.filter(is_returned=False).count()
-    overdue_books      = Borrow.objects.filter(
-                             is_returned=False,
-                             due_date__lt=today
-                         ).count()
+    # Common stats for all roles
+    total_books = Book.objects.count()
+    total_members = User.objects.filter(role=User.REGULAR_USER).count()
+    active_borrows = Borrow.objects.filter(is_returned=False).count()
+    overdue_books = Borrow.objects.filter(
+        is_returned=False,
+        due_date__lt=today
+    ).count()
 
-    # ── Collection Summary (real category data) ───────
+    # Collection Summary by category
     category_data = (
         Book.objects
         .values('category__name')
@@ -89,66 +88,64 @@ def home(request):
     total_book_count = total_books if total_books > 0 else 1
     collection_summary = [
         {
-            'name':    item['category__name'] or 'Uncategorized',
-            'count':   item['count'],
+            'name': item['category__name'] or 'Uncategorized',
+            'count': item['count'],
             'percent': round(item['count'] / total_book_count * 100),
         }
         for item in category_data
     ]
 
-    # ── Recent Activity (last 5 system logs) ──────────
+    # Recent Activity (last 5 system logs)
     recent_logs = SystemLog.objects.select_related('user').order_by('-timestamp')[:5]
 
-    # ── Role-specific data ────────────────────────────
+    # Role-specific data
     context = {
-        'total_books':        total_books,
-        'total_members':      total_members,
-        'active_borrows':     active_borrows,
-        'overdue_books':      overdue_books,
+        'total_books': total_books,
+        'total_members': total_members,
+        'active_borrows': active_borrows,
+        'overdue_books': overdue_books,
         'collection_summary': collection_summary,
-        'recent_logs':        recent_logs,
+        'recent_logs': recent_logs,
     }
 
     if user.role == User.ADMIN or user.is_superuser:
-        # Admin extra stats
         context.update({
-            'total_fines':       sum(
-                                     b.fine_amount
-                                     for b in Borrow.objects.filter(fine_amount__gt=0)
-                                 ),
-            'total_payments':    Payment.objects.count(),
-            'pending_papers':    ResearchPaper.objects.filter(status='pending').count(),
-            'total_premium':     PremiumContent.objects.filter(is_active=True).count(),
-            'recent_borrows':    Borrow.objects.select_related('book','member')
-                                     .order_by('-borrow_date')[:5],
+            'total_fines': sum(
+                b.fine_amount
+                for b in Borrow.objects.filter(fine_amount__gt=0)
+            ),
+            'total_payments': Payment.objects.count(),
+            'pending_papers': ResearchPaper.objects.filter(status='pending').count(),
+            'total_premium': PremiumContent.objects.filter(is_active=True).count(),
+            'recent_borrows': Borrow.objects.select_related('book', 'member')
+                .order_by('-borrow_date')[:5],
         })
         return render(request, 'library/home.html', context)
 
     elif user.role == User.LIBRARIAN:
-        # Librarian extra stats
         context.update({
-            'pending_papers':    ResearchPaper.objects.filter(status='pending').count(),
-            'recent_borrows':    Borrow.objects.select_related('book','member')
-                                     .order_by('-borrow_date')[:5],
-            'overdue_borrows':   Borrow.objects.filter(
-                                     is_returned=False, due_date__lt=today
-                                 ).select_related('book','member')[:5],
+            'pending_papers': ResearchPaper.objects.filter(status='pending').count(),
+            'recent_borrows': Borrow.objects.select_related('book', 'member')
+                .order_by('-borrow_date')[:5],
+            'overdue_borrows': Borrow.objects.filter(
+                is_returned=False, due_date__lt=today
+            ).select_related('book', 'member')[:5],
         })
         return render(request, 'library/home.html', context)
 
     else:
-        # Regular User — শুধু নিজের data
-        my_borrows       = Borrow.objects.filter(member=user, is_returned=False)
-        my_overdue       = my_borrows.filter(due_date__lt=today).count()
-        my_total_borrow  = Borrow.objects.filter(member=user).count()
-        my_fine          = sum(b.fine_amount for b in my_borrows if b.fine_amount)
+        # Regular User — only their own data
+        my_borrows = Borrow.objects.filter(member=user, is_returned=False)
+        my_overdue = my_borrows.filter(due_date__lt=today).count()
+        my_total_borrow = Borrow.objects.filter(member=user).count()
+        my_fine = sum(b.fine_amount for b in my_borrows if b.fine_amount)
 
         context.update({
-            'my_active_borrows':  my_borrows.count(),
-            'my_overdue':         my_overdue,
-            'my_total_borrow':    my_total_borrow,
-            'my_fine':            my_fine,
-            'my_borrow_list':     my_borrows.select_related('book').order_by('-borrow_date')[:5],
+            'my_active_borrows': my_borrows.count(),
+            'my_overdue': my_overdue,
+            'my_total_borrow': my_total_borrow,
+            'my_fine': my_fine,
+            'my_borrow_list': my_borrows.select_related('book').order_by('-borrow_date')[:5],
         })
         return render(request, 'library/home.html', context)
 
@@ -451,6 +448,11 @@ def issue_book(request, book_id):
         status='borrowed'
     )
 
+    Notification.objects.create(
+        user=request.user,
+        message=f"✅ You have borrowed '{book.title}'. Due date: {due_date}"
+    )
+
     book.available_copies -= 1
     book.save()
 
@@ -524,6 +526,11 @@ def borrow_book(request):
             notes=request.POST.get('notes', '')
         )
 
+        Notification.objects.create(
+            user=member,
+            message=f"📚 '{book.title}' has been issued to you. Due date: {due_date}"
+        )
+
         book.available_copies -= 1
         book.save()
 
@@ -551,6 +558,11 @@ def return_book(request, pk):
     borrow.return_date = timezone.now().date()
     borrow.status = 'returned'
     borrow.save()
+
+    Notification.objects.create(
+        user=borrow.member,
+        message=f"🔄 '{borrow.book.title}' has been returned successfully."
+    )
 
     borrow.book.available_copies += 1
     borrow.book.save()
@@ -648,32 +660,26 @@ def member_list(request):
     })
 
 
-# ==================================================
-# ✅ FIXED: member_add — username এখন email থেকে নেওয়া হয়
-# ==================================================
-
 @login_required
 @user_passes_test(is_librarian_or_admin, login_url='/')
 def member_add(request):
     error = ''
     if request.method == 'POST':
-        name  = request.POST.get('name', '').strip()
+        name = request.POST.get('name', '').strip()
         email = request.POST.get('email', '').strip()
         phone = request.POST.get('phone', '').strip()
 
-        # username হিসেবে email ব্যবহার করা হচ্ছে।
-        # email না থাকলে name থেকে username তৈরি হবে।
         username = email if email else name.lower().replace(' ', '_')
 
         if not username:
-            error = '❌ Name অথবা Email দিতে হবে!'
+            error = '❌ Name or Email is required!'
         elif User.objects.filter(username=username).exists():
-            error = '❌ এই email দিয়ে ইতিমধ্যে একজন member আছে!'
+            error = '❌ A member with this email already exists!'
         else:
             user = User.objects.create_user(
                 username=username,
                 email=email,
-                password=uuid.uuid4().hex,   # random password সেট করা হচ্ছে
+                password=uuid.uuid4().hex,
                 first_name=name,
                 phone=phone,
                 role=User.REGULAR_USER,
@@ -741,11 +747,6 @@ def research_papers(request):
     })
 
 
-@login_required
-def premium_content(request):
-    return render(request, 'library/premium_content.html')
-
-
 # ==================================================
 # PAYMENT SYSTEM
 # ==================================================
@@ -758,7 +759,7 @@ def online_payment(request):
 
     if borrow_id:
         borrow = get_object_or_404(Borrow, id=borrow_id)
-        prefill_amount = borrow.fine_amount if borrow.fine_amount > 0 else 50  # 50 Tk default borrow fee
+        prefill_amount = borrow.fine_amount if borrow.fine_amount > 0 else 50
 
     if request.method == 'POST':
         form = PaymentForm(request.POST)
@@ -766,11 +767,13 @@ def online_payment(request):
             payment = form.save(commit=False)
             payment.user = request.user
             payment.status = 'Success'
-            if borrow:
-                payment.borrow = borrow
             payment.save()
 
-            # Fine পরিশোধ হলে fine_amount 0 করে দাও
+            Notification.objects.create(
+                user=request.user,
+                message=f"💳 Payment of ৳{payment.amount} was successful. Transaction ID: {payment.transaction_id}"
+            )
+
             if borrow and borrow.fine_amount > 0:
                 borrow.fine_amount = 0
                 borrow.save()
@@ -785,6 +788,7 @@ def online_payment(request):
         'borrow': borrow,
         'prefill_amount': prefill_amount,
     })
+
 
 @login_required
 def payment_history(request):
@@ -824,9 +828,7 @@ def download_payment_history_pdf(request):
     elements.append(HRFlowable(width="100%"))
     elements.append(Spacer(1, 15))
     payments = Payment.objects.filter(user=request.user).order_by('-payment_date')
-    data = [
-        ['Date', 'Method', 'Amount', 'Transaction ID', 'Status']
-    ]
+    data = [['Date', 'Method', 'Amount', 'Transaction ID', 'Status']]
     for payment in payments:
         data.append([
             payment.payment_date.strftime("%Y-%m-%d"),
@@ -1056,7 +1058,6 @@ def purchase_premium(request, pk):
         if form.is_valid():
             transaction_id = form.cleaned_data['transaction_id'].strip()
 
-            # ✅ একই transaction_id আগে use হয়েছে কিনা check করো
             if PremiumPurchase.objects.filter(transaction_id=transaction_id).exists():
                 messages.error(request, '❌ This Transaction ID has already been used! Please enter a valid one.')
                 return render(request, 'library/purchase_premium.html', {
@@ -1093,8 +1094,6 @@ def view_premium_content(request, pk):
         messages.error(request, "Please purchase this content first.")
         return redirect('purchase_premium', pk=pk)
 
-    # ✅ YouTube URL auto-clean
-    # ✅ YouTube URL auto-clean (nocookie = no Error 153)
     video_url = content.video_url
     if video_url:
         if 'watch?v=' in video_url:
@@ -1105,10 +1104,12 @@ def view_premium_content(request, pk):
             video_url = f'https://www.youtube-nocookie.com/embed/{video_id}'
         elif 'embed/' in video_url:
             video_url = 'https://www.youtube-nocookie.com/embed/' + video_url.split('embed/')[-1].split('?')[0]
+
     return render(request, 'library/view_premium_content.html', {
         'content': content,
         'video_url': video_url,
     })
+
 
 @login_required
 def admin_upload_premium(request):
@@ -1117,7 +1118,7 @@ def admin_upload_premium(request):
         if form.is_valid():
             form.save()
             messages.success(request, '✅ Content uploaded successfully!')
-            return redirect('premium_content')  # ✅ সঠিক url name
+            return redirect('premium_content')
         else:
             for field, errors in form.errors.items():
                 for error in errors:
@@ -1129,7 +1130,6 @@ def admin_upload_premium(request):
 
 @login_required
 def premium_content(request):
-    # ✅ এখন database থেকে data আনা হচ্ছে
     contents = PremiumContent.objects.filter(is_active=True).order_by('-id')
     purchased_ids = PremiumPurchase.objects.filter(
         user=request.user
@@ -1140,6 +1140,7 @@ def premium_content(request):
         'purchased_ids': list(purchased_ids),
     })
 
+
 @login_required
 def admin_premium_purchases(request):
     if not request.user.is_staff:
@@ -1147,14 +1148,15 @@ def admin_premium_purchases(request):
     purchases = PremiumPurchase.objects.all().select_related('user', 'content')
     return render(request, 'library/admin_premium_purchases.html', {'purchases': purchases})
 
+
 @login_required
 def premium_content_delete(request, pk):
     if not (request.user.is_staff or request.user.role == 'admin'):
         messages.error(request, '❌ Permission denied!')
         return redirect('premium_content')
-    
+
     content = get_object_or_404(PremiumContent, pk=pk)
-    content.file.delete(save=False)      # ফাইলও disk থেকে মুছবে
+    content.file.delete(save=False)
     content.delete()
     messages.success(request, '✅ Content deleted successfully!')
     return redirect('premium_content')
@@ -1194,37 +1196,50 @@ def dashboard(request):
     return render(request, 'library/home.html')
 
 
-
-
-
 @login_required
 def notification_page(request):
     user = request.user
-    
-    
-    overdue_books = Borrow.objects.filter(member=user, due_date__lt=date.today(), is_returned=False)
-    for borrow in overdue_books:
-        
-        if not Notification.objects.filter(user=user, message__contains=borrow.book.title).exists():
-            message = f"The deposit date for your borrowed book '{borrow.book.title}' has passed!"
-            Notification.objects.create(user=user, message=message)
-            
 
+    # Overdue notification
+    overdue_books = Borrow.objects.filter(
+        member=user,
+        due_date__lt=date.today(),
+        is_returned=False
+    )
+    for borrow in overdue_books:
+        msg = f"⚠️ '{borrow.book.title}' is overdue! Fine: {borrow.fine_amount} Tk"
+        already_exists = Notification.objects.filter(
+            user=user,
+            message__contains=borrow.book.title
+        ).exists()
+        if not already_exists:
+            Notification.objects.create(user=user, message=msg)
+
+    # Admin/Librarian — pending paper notification
     if user.role in ['admin', 'librarian']:
         pending_papers = ResearchPaper.objects.filter(status='pending')
         for paper in pending_papers:
-           
-            if not Notification.objects.filter(user=user, message__contains=paper.title).exists():
-                message = f"A new paper '{paper.title}' is pending approval."
-                Notification.objects.create(user=user, message=message)
+            if not Notification.objects.filter(
+                user=user,
+                message__contains=paper.title
+            ).exists():
+                Notification.objects.create(
+                    user=user,
+                    message=f"📄 '{paper.title}' paper is pending approval."
+                )
 
-    
-    notifications = Notification.objects.filter(user=user).order_by('-created_at')
-    Notification.objects.filter(user=user, is_read=False).update(is_read=True)
+    notifications = Notification.objects.filter(
+        user=user
+    ).order_by('-created_at')
 
-    return render(request, 'library/notifications.html', {'notifications': notifications})
+    Notification.objects.filter(
+        user=user,
+        is_read=False
+    ).update(is_read=True)
 
-
+    return render(request, 'library/notifications.html', {
+        'notifications': notifications
+    })
 
 
 @login_required
@@ -1232,11 +1247,13 @@ def wishlist_page(request):
     wishlist_items = Wishlist.objects.filter(user=request.user).order_by('-added_at')
     return render(request, 'library/wishlist.html', {'wishlist_items': wishlist_items})
 
+
 @login_required
 def add_to_wishlist(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     Wishlist.objects.get_or_create(user=request.user, book=book)
     return redirect('wishlist_page')
+
 
 @login_required
 def remove_from_wishlist(request, wishlist_id):
@@ -1244,11 +1261,11 @@ def remove_from_wishlist(request, wishlist_id):
     item.delete()
     return redirect('wishlist_page')
 
+
 @login_required
 def help_support_page(request):
     user = request.user
-    
-    # এখানে .lower() যোগ করা হয়েছে যেন 'Admin' বা 'Librarian' লেখা থাকলেও ধরে ফেলে
+
     if user.role.lower() in ['admin', 'librarian']:
         if request.method == 'POST':
             ticket_id = request.POST.get('ticket_id')
@@ -1258,12 +1275,17 @@ def help_support_page(request):
                 ticket.admin_reply = admin_reply
                 ticket.status = 'resolved'
                 ticket.save()
+
+                Notification.objects.create(
+                    user=ticket.user,
+                    message=f"💬 Admin has replied to your '{ticket.subject}' ticket."
+                )
                 messages.success(request, f"Replied to {ticket.user.username}'s ticket successfully!")
                 return redirect('help_support_page')
-                
+
         all_tickets = SupportTicket.objects.all().order_by('status', '-created_at')
         return render(request, 'library/help_support.html', {'all_tickets': all_tickets})
-        
+
     else:
         if request.method == 'POST':
             subject = request.POST.get('subject')
@@ -1275,9 +1297,6 @@ def help_support_page(request):
 
         my_tickets = SupportTicket.objects.filter(user=user).order_by('-created_at')
         return render(request, 'library/help_support.html', {'my_tickets': my_tickets})
-    
-
-    from django.shortcuts import get_object_or_404, redirect
 
 
 def toggle_wishlist(request, book_id):
@@ -1291,15 +1310,13 @@ def toggle_wishlist(request, book_id):
         Wishlist.objects.create(user=request.user, book=book)
         status = "added"
 
-    # যদি জাভাস্ক্রিপ্ট (AJAX) থেকে রিকোয়েস্ট আসে
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return JsonResponse({'status': status})
 
-    # সাধারণ ক্লিকের জন্য আগের মতোই রিডাইরেক্ট
     return redirect(request.META.get('HTTP_REFERER', 'book_list'))
 
+
 @login_required
-# views.py এ এরকম হতে হবে
 def wishlist_view(request):
     wishlist_items = Wishlist.objects.filter(user=request.user)
     return render(request, 'library/wishlist.html', {'wishlist_items': wishlist_items})
