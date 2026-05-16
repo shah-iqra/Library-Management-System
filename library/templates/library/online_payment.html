@@ -18,18 +18,29 @@
 
             <div class="summary-box">
                 <div>
-                    <strong>Library Premium Access</strong>
-                    <span>Membership / Fine Payment</span>
+                    {% if borrow %}
+                        <strong>{{ borrow.book.title }}</strong>
+                        <span>
+                            {% if borrow.fine_amount > 0 %}
+                                Overdue Fine Payment
+                            {% else %}
+                                Book Borrow Fee
+                            {% endif %}
+                        </span>
+                    {% else %}
+                        <strong>Library Payment</strong>
+                        <span>Fine / Membership Payment</span>
+                    {% endif %}
                 </div>
 
                 <div class="summary-price">
-                    ৳499
+                    ৳{{ prefill_amount }}
                 </div>
             </div>
 
             <div class="summary-total">
                 <span>Total</span>
-                <strong>৳499</strong>
+                <strong>৳{{ prefill_amount }}</strong>
             </div>
 
         </div>

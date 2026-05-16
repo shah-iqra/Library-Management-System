@@ -19,6 +19,7 @@
                 <th>Overdue Days</th>
                 <th>Fine Amount</th>
                 <th>Status</th>
+                <th>Action</th>
             </tr>
         </thead>
 
@@ -58,6 +59,14 @@
                         </span>
                     </td>
 
+                    <td>
+                        <a href="{% url 'online_payment' %}?borrow_id={{ borrow.id }}"
+                           class="btn btn-sm"
+                           style="background:#28a745; color:white; padding:5px 12px; border-radius:5px; text-decoration:none;">
+                            💳 Pay Now
+                        </a>
+                    </td>
+
                 </tr>
 
                 {% endif %}
@@ -65,7 +74,7 @@
             {% empty %}
 
             <tr>
-                <td colspan="7" style="text-align:center; padding:20px;">
+                <td colspan="8" style="text-align:center; padding:20px;">
                     No overdue fines found.
                 </td>
             </tr>
